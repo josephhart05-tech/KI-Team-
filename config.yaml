@@ -45,7 +45,20 @@ video:
   untertitel:
     groesse: 70              # vorher 92 – kleiner = weniger Text verdeckt
     farbe: "#FFFFFF"         # normale Wörter (weiß)
-    hervorhebung: "#FFD400"  # gerade gesprochenes Wort (gelb). Alternativen: "#00E676" grün, "#00B0FF" blau, "#FF4081" pink
+    hervorhebung: "#D4AF37"  # gerade gesprochenes Wort (Gold). Alternativen: "#FFD400" gelb, "#00E676" grün
+  # Farbstimmung der Stock-Videos (Schwarz-Gold-Look)
+  look:
+    aktiv: true
+    helligkeit: -0.08        # negativ = dunkler
+    saettigung: 0.85         # unter 1 = gedämpftere Farben
+    gold_ton: 0.15           # 0 = neutral, 0.3 = sehr golden
+    vignette: true           # dunkler Rand
+  # Dein Branding oben im Video
+  marke:
+    text: "dfdigitalefreiheit.com"
+    farbe: "#D4AF37"
+    groesse: 40
+  bildstil: "dunkle, edle Szenen: Nacht, Schreibtisch mit warmem Licht, schwarze Oberflächen, Gold-Akzente, elegant"
   ersatz_suche: "person working on laptop"   # Stock-Video, falls nichts passt
 
 plattformen:
