@@ -9,6 +9,7 @@ Befehle:
   python main.py tiktok-auth          Holt den TikTok-Refresh-Token (Einrichtung, optional)
 """
 import json
+import os
 import sys
 import traceback
 from datetime import datetime, timedelta
@@ -23,19 +24,36 @@ from core.storage import (OUTPUT, env, load_config, load_learnings, load_posts, 
 def create(dry_run=False):
     cfg = load_config()
     posts = load_posts()
+    state = load_state()
     learnings = load_learnings()
 
-    idea = research.pick_topic(cfg, posts, learnings)
-    print(f"Thema: {idea['topic']} ({idea['angle']})")
+    settings = state.get("settings", {})
+    if os.environ.get("GITHUB_EVENT_NAME") == "schedule" and settings.get("pausiert"):
+        print("Automatik pausiert (/weiter in Telegram startet sie wieder).")
+        return
+    if "werbe_anteil" in settings:
+        cfg["werbe_anteil"] = settings["werbe_anteil"]
+    wish = (state.get("ideen") or [None])[0]
 
-    script, problems = None, None
-    for _ in range(3):
-        script = content.write_script(cfg, idea, learnings, feedback="\n".join(problems) if problems else None)
-        ok, problems = reviewer.review(cfg, script)
+    signals = research.collect_signals(cfg)
+    failed_topics = []
+    script, ok, problems = None, False, None
+    for attempt in range(3):  # bis zu 3 Themen, je 3 Skript-Versuche
+        idea = research.pick_topic(cfg, posts, learnings, avoid=failed_topics, signals=signals,
+                                   wish=wish if attempt == 0 else None)
+        print(f"Thema: {idea['topic']} ({idea['angle']})")
+        problems = None
+        for _ in range(3):
+            script = content.write_script(cfg, idea, learnings, feedback="\n".join(problems) if problems else None)
+            ok, problems = reviewer.review(cfg, script)
+            if ok:
+                break
+            print("Prüfer hat Probleme gefunden, neuer Versuch:", problems)
         if ok:
             break
-        print("Prüfer hat Probleme gefunden, neuer Versuch:", problems)
-    else:
+        failed_topics.append(idea["topic"])
+        print("Thema verworfen, wähle ein neues.")
+    if not ok:
         raise RuntimeError(f"Kein Skript hat die Prüfung bestanden: {problems}")
 
     post_id = now().strftime("%Y%m%d-%H%M")
@@ -65,7 +83,73 @@ def create(dry_run=False):
         "caption_instagram": caption_ig, "caption_tiktok": caption_tt, "video_url": video_url,
     })
     save_posts(posts)
+    if wish and state.get("ideen"):
+        state["ideen"].pop(0)
+        save_state(state)
     print(f"Entwurf {post_id} an Telegram geschickt.")
+
+
+COMMANDS = [
+    ("neu", "Sofort ein neues Video erstellen"),
+    ("idee", "Themenwunsch, z. B. /idee Was ist Digistore24?"),
+    ("werbung", "Werbeanteil in Prozent, z. B. /werbung 40"),
+    ("pause", "Automatische Videos anhalten"),
+    ("weiter", "Automatische Videos wieder starten"),
+    ("status", "Überblick über deine Videos"),
+    ("hilfe", "Alle Befehle anzeigen"),
+]
+
+
+def _trigger_workflow(file_name):
+    import requests
+    r = requests.post(
+        f"https://api.github.com/repos/{env('GITHUB_REPOSITORY')}/actions/workflows/{file_name}/dispatches",
+        headers={"Authorization": f"Bearer {env('GITHUB_TOKEN')}", "Accept": "application/vnd.github+json"},
+        json={"ref": os.environ.get("GITHUB_REF_NAME", "main")},
+        timeout=30,
+    )
+    r.raise_for_status()
+
+
+def _handle_command(text, state, posts, cfg):
+    cmd, _, arg = text.strip().partition(" ")
+    cmd = cmd.lstrip("/").split("@")[0].lower()
+    arg = arg.strip()
+    settings = state.setdefault("settings", {})
+
+    if cmd == "neu":
+        _trigger_workflow("create.yml")
+        return "🎬 Alles klar, ich erstelle ein neues Video. Es kommt in ca. 3–5 Minuten."
+    if cmd == "idee":
+        if not arg:
+            return "Schreib dein Thema dahinter, z. B.: /idee Was ist Digistore24?"
+        state.setdefault("ideen", []).append(arg)
+        return f"💡 Notiert! Kommt beim nächsten Video dran ({len(state['ideen'])} Wunsch/Wünsche in der Warteschlange)."
+    if cmd == "werbung":
+        try:
+            pct = max(0, min(100, int(arg.rstrip("%"))))
+        except ValueError:
+            return "Bitte eine Zahl angeben, z. B. /werbung 40"
+        settings["werbe_anteil"] = pct / 100
+        return f"📢 Werbeanteil ist jetzt {pct} %."
+    if cmd == "pause":
+        settings["pausiert"] = True
+        return "⏸ Automatische Videos pausiert. Mit /weiter geht's wieder los – /neu funktioniert trotzdem."
+    if cmd == "weiter":
+        settings["pausiert"] = False
+        return "▶️ Läuft wieder – die nächsten Videos kommen um ca. 7 und 16 Uhr."
+    if cmd == "status":
+        count = lambda s: sum(1 for p in posts if p.get("status") == s)
+        werbung = round(settings.get("werbe_anteil", cfg.get("werbe_anteil", 0.4)) * 100)
+        return (f"📊 Status deines KI-Teams\n\n"
+                f"Videos gesamt: {len(posts)}\n"
+                f"✅ Veröffentlicht: {count('published')}\n"
+                f"❌ Verworfen: {count('rejected')}\n"
+                f"⏳ Warten auf dich: {count('pending')}\n\n"
+                f"Werbeanteil: {werbung} %\n"
+                f"Automatik: {'⏸ pausiert' if settings.get('pausiert') else '▶️ aktiv'}\n"
+                f"Themenwünsche in der Warteschlange: {len(state.get('ideen', []))}")
+    return "🤖 Das kann ich:\n\n" + "\n".join(f"/{c} – {d}" for c, d in COMMANDS)
 
 
 def _publish(cfg, p):
@@ -102,8 +186,20 @@ def check():
     by_id = {p["id"]: p for p in posts}
     my_chat = str(telegram.chat_id())
 
+    if state.get("commands_version") != len(COMMANDS):
+        telegram.set_commands(COMMANDS)
+        state["commands_version"] = len(COMMANDS)
+
     for upd in telegram.get_updates(state["telegram_offset"] + 1):
         state["telegram_offset"] = upd["update_id"]
+        msg = upd.get("message") or {}
+        if str(msg.get("chat", {}).get("id")) == my_chat and msg.get("text", "").startswith("/"):
+            try:
+                reply = _handle_command(msg["text"], state, posts, cfg)
+            except Exception as e:
+                reply = f"⚠️ Befehl fehlgeschlagen: {str(e)[:300]}"
+            telegram.send_message(reply)
+            continue
         cb = upd.get("callback_query")
         if not cb or str(cb["from"]["id"]) != my_chat:
             continue  # nur deine eigenen Klicks zählen

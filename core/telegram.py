@@ -37,6 +37,11 @@ def get_updates(offset):
     return _api("getUpdates", json={"offset": offset, "timeout": 0, "allowed_updates": ["callback_query", "message"]})
 
 
+def set_commands(commands):
+    """Zeigt die Befehle im Telegram-Menü (/) an."""
+    _api("setMyCommands", json={"commands": [{"command": c, "description": d} for c, d in commands]})
+
+
 def answer_callback(callback_id, text):
     try:
         _api("answerCallbackQuery", json={"callback_query_id": callback_id, "text": text})

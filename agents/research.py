@@ -43,7 +43,7 @@ def collect_signals(cfg):
     return {k: list(dict.fromkeys(v))[:60] for k, v in signals.items()}
 
 
-def pick_topic(cfg, posts, learnings, avoid=None, signals=None):
+def pick_topic(cfg, posts, learnings, avoid=None, signals=None, wish=None):
     signals = signals or collect_signals(cfg)
     products = cfg.get("produkte") or []
     promo = bool(products) and random.random() < cfg.get("werbe_anteil", 0.4)
@@ -72,6 +72,7 @@ Diese Themen hatten wir zuletzt schon (NICHT wiederholen):
 
 Diese Themenbereiche sind TABU, niemals wählen: {cfg['nische'].get('tabu_themen', '')}
 {f"Diese Themen sind gerade an der Prüfung gescheitert, wähle etwas deutlich anderes: {avoid}" if avoid else ""}
+{f"WICHTIG: Der Inhaber wünscht sich dieses Thema – nimm es und finde nur den besten Blickwinkel: {wish}" if wish else ""}
 
 {product_task}
 
