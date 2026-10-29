@@ -91,6 +91,33 @@ def _write_ass(marks, font, path):
 
 # ---------- Stock-Videos ----------
 
+def _pixabay_clip(query, used_ids):
+    r = requests.get(
+        "https://pixabay.com/api/videos/",
+        params={"key": env("PIXABAY_API_KEY"), "q": query[:100], "lang": "en",
+                "safesearch": "true", "min_height": 1080, "per_page": 20},
+        timeout=30,
+    )
+    r.raise_for_status()
+    for hit in r.json().get("hits", []):
+        if hit["id"] in used_ids:
+            continue
+        # Pixabay-Videos sind meist Querformat → wir nehmen die größte Version
+        # unter ~80 MB, damit nach dem Zuschnitt auf Hochformat genug Schärfe bleibt
+        for size in ("large", "medium"):
+            v = hit["videos"].get(size) or {}
+            if v.get("url") and v.get("height", 0) >= 1080 and v.get("size", 0) < 80_000_000:
+                used_ids.add(hit["id"])
+                return v["url"]
+    return None
+
+
+def _stock_clip(query, used_ids):
+    if env("PIXABAY_API_KEY", required=False):
+        return _pixabay_clip(query, used_ids)
+    return _pexels_clip(query, used_ids)
+
+
 def _pexels_clip(query, used_ids):
     r = requests.get(
         "https://api.pexels.com/videos/search",
@@ -150,7 +177,7 @@ def render(cfg, script, workdir):
     segments = []
     for i, scene in enumerate(scenes):
         dur = max(total * len(scene["text"]) / char_total, 1.5)
-        url = _pexels_clip(scene["search"], used) or _pexels_clip(vcfg["ersatz_suche"], used)
+        url = _stock_clip(scene["search"], used) or _stock_clip(vcfg["ersatz_suche"], used)
         if not url:
             raise RuntimeError(f"Kein Stock-Video gefunden für '{scene['search']}'")
         raw = workdir / f"raw_{i}.mp4"
