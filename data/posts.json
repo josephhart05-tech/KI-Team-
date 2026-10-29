@@ -113,5 +113,58 @@
     "ig_done": true,
     "tiktok_done": true,
     "published_at": "2026-10-29T14:14:35+00:00"
+  },
+  {
+    "id": "20261029-1438",
+    "status": "pending",
+    "created_at": "2026-10-29T14:40:09+00:00",
+    "topic": "Affiliate-Marketing ohne eigene Reichweite über Pinterest und digitale Leitfäden",
+    "angle": "Wie man als Angestellter mit nur 30 Minuten am Tag Produktempfehlungen automatisiert über Pinterest teilt – ohne das eigene Gesicht zu zeigen",
+    "hook": "Dein Vollzeitjob frisst deine Zeit, aber das Geld reicht kaum?",
+    "product_id": null,
+    "script": {
+      "hook": "Dein Vollzeitjob frisst deine Zeit, aber das Geld reicht kaum?",
+      "scenes": [
+        {
+          "text": "Dein Vollzeitjob frisst deine Zeit, aber das Geld reicht kaum?",
+          "search": "stressed person night desk laptop"
+        },
+        {
+          "text": "Vergiss teures Influencer-Marketing. Als Angestellter brauchst du smarte Automatisierung.",
+          "search": "dark minimalist office night"
+        },
+        {
+          "text": "Die Lösung: Pinterest und digitale Leitfäden. Völlig anonym, ohne eigenes Gesicht zu zeigen.",
+          "search": "pinterest app smartphone dark"
+        },
+        {
+          "text": "Investiere täglich nur 30 Minuten, um Empfehlungen strategisch zu platzieren.",
+          "search": "typing keyboard warm light"
+        },
+        {
+          "text": "Pinterest arbeitet für dich wie eine Suchmaschine – rund um die Uhr, auch während du im Hauptjob bist.",
+          "search": "modern desk gold accents"
+        },
+        {
+          "text": "Speichere dieses Video, wenn du deinen Nebenjob realistisch starten willst.",
+          "search": "close up hands phone dark"
+        }
+      ],
+      "caption_instagram": "Als Angestellter einen Nebenjob aufzubauen, scheitert meistens an der fehlenden Zeit. Mit einer automatisierten Plattform wie Pinterest und digitalen Leitfäden kannst du Empfehlungen teilen, ohne dein Gesicht zu zeigen. Investiere 30 Minuten am Tag und baue dir Schritt für Schritt etwas Eigenes auf. Wie viel Zeit könntest du aktuell täglich investieren?",
+      "caption_tiktok": "So baust du dir als Angestellter anonym ein Nebeneinkommen über Pinterest auf.",
+      "hashtags": [
+        "nebeneinkommen",
+        "affiliatemarketing",
+        "digitale produkte",
+        "nebenbei geld verdienen",
+        "angestellt",
+        "zeitmanagement",
+        "passives einkommen"
+      ],
+      "product_id": null
+    },
+    "caption_instagram": "Als Angestellter einen Nebenjob aufzubauen, scheitert meistens an der fehlenden Zeit. Mit einer automatisierten Plattform wie Pinterest und digitalen Leitfäden kannst du Empfehlungen teilen, ohne dein Gesicht zu zeigen. Investiere 30 Minuten am Tag und baue dir Schritt für Schritt etwas Eigenes auf. Wie viel Zeit könntest du aktuell täglich investieren?\n\n#nebeneinkommen #affiliatemarketing #digitaleprodukte #nebenbeigeldverdienen #angestellt #zeitmanagement #passiveseinkommen",
+    "caption_tiktok": "So baust du dir als Angestellter anonym ein Nebeneinkommen über Pinterest auf.\n\n#nebeneinkommen #affiliatemarketing #digitaleprodukte #nebenbeigeldverdienen #angestellt #zeitmanagement #passiveseinkommen",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793284799/ki-team/lxqgygk9cnr8pdrcoeb2.mp4"
   }
 ]
