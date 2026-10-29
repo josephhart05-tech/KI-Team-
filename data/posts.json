@@ -51,5 +51,62 @@
     "caption_instagram": "Ein digitales Produkt erfordert einmalig Zeit in der Erstellung, kann danach aber unendlich oft heruntergeladen werden. Mit kostenlosen Tools wie Canva erstellst du im Feierabend nützliche Vorlagen oder Checklisten für deine Zielgruppe. Welches Thema beherrschst du so gut, dass du eine kurze Anleitung darüber schreiben könntest?\n\n#nebeneinkommen #digitaleprodukte #passiveseinkommen #canvatipps #nebenjob #finanziellefreiheit #onlinebusinessaufbauen",
     "caption_tiktok": "So erstellst du dein erstes digitales Produkt neben dem Hauptjob. Speichere den Beitrag für später!\n\n#nebeneinkommen #digitaleprodukte #passiveseinkommen #canvatipps #nebenjob #finanziellefreiheit #onlinebusinessaufbauen",
     "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793269563/ki-team/qd2iczfdne11uuwqmrm3.mp4"
+  },
+  {
+    "id": "20261029-1405",
+    "status": "pending",
+    "created_at": "2026-10-29T14:07:07+00:00",
+    "topic": "Nebeneinkommen trotz 40-Stunden-Job versteuern und beim Arbeitgeber anmelden",
+    "angle": "Die rechtlichen und steuerlichen Fallstricke realistisch auflösen, damit Angestellte ohne Angst nebenbei starten können.",
+    "hook": "Darfst du trotz 40-Stunden-Job einfach geld nebenbei verdienen?",
+    "product_id": "beispiel-kurs",
+    "script": {
+      "hook": "Darfst du trotz 40-Stunden-Job einfach geld nebenbei verdienen?",
+      "scenes": [
+        {
+          "text": "Darfst du trotz 40-Stunden-Job einfach geld nebenbei verdienen?",
+          "search": "thoughtful employee desk"
+        },
+        {
+          "text": "Ja, aber prüfe zuerst deinen Arbeitsvertrag. Oft musst du den Nebenerwerb schriftlich genehmigen lassen.",
+          "search": "reading employment contract"
+        },
+        {
+          "text": "Steuerlich wird es erst recht konkret: Nutzt du die Kleinunternehmerregelung nach Paragraph 19 UStG, zahlst du bis 22.000 Euro Umsatz im Vorjahr keine Umsatzsteuer.",
+          "search": "calculator tax document"
+        },
+        {
+          "text": "Und Gewerbesteuer fällt ohnehin erst ab einem Freibetrag von 24.500 Euro Gewinn im Jahr an.",
+          "search": "typing laptop office"
+        },
+        {
+          "text": "Wenn du die rechtlichen Schritte sauber umsetzt, minimierst du dein Risiko von Anfang an.",
+          "search": "person working laptop"
+        },
+        {
+          "text": "Im Online-Kurs Digitales Nebeneinkommen zeigen wir dir Schritt für Schritt, wie du dein Business korrekt aufbaust.",
+          "search": "online course video"
+        },
+        {
+          "text": "Schau dir den Link in meiner Bio an und starte gut vorbereitet.",
+          "search": "smartphone screen bio"
+        }
+      ],
+      "caption_instagram": "Ein Nebeneinkommen aufzubauen ist vollkommen legal, erfordert aber Vorbereitung. Wirf unbedingt einen Blick in deinen Arbeitsvertrag bezüglich der Anmeldepflicht beim Arbeitgeber. Auch steuerlich lohnt sich der Blick auf Paragraf 19 UStG, um zu Beginn Aufwand zu sparen. Hast du deine Nebentätigkeit schon angemeldet oder hast du noch Fragen dazu?",
+      "caption_tiktok": "So startest du dein Nebeneinkommen rechtlich und steuerlich korrekt. Hast du deinen Arbeitsvertrag schon geprüft?",
+      "hashtags": [
+        "nebeneinkommen",
+        "nebengewerbe",
+        "steuernsparen",
+        "kleinunternehmer",
+        "arbeitsrecht",
+        "finanziellefreiheit",
+        "angestellt"
+      ],
+      "product_id": "beispiel-kurs"
+    },
+    "caption_instagram": "Werbung | enthält Affiliate-Link\n\nEin Nebeneinkommen aufzubauen ist vollkommen legal, erfordert aber Vorbereitung. Wirf unbedingt einen Blick in deinen Arbeitsvertrag bezüglich der Anmeldepflicht beim Arbeitgeber. Auch steuerlich lohnt sich der Blick auf Paragraf 19 UStG, um zu Beginn Aufwand zu sparen. Hast du deine Nebentätigkeit schon angemeldet oder hast du noch Fragen dazu?\n\n#nebeneinkommen #nebengewerbe #steuernsparen #kleinunternehmer #arbeitsrecht #finanziellefreiheit #angestellt",
+    "caption_tiktok": "So startest du dein Nebeneinkommen rechtlich und steuerlich korrekt. Hast du deinen Arbeitsvertrag schon geprüft?\n\n#nebeneinkommen #nebengewerbe #steuernsparen #kleinunternehmer #arbeitsrecht #finanziellefreiheit #angestellt\n\n#werbung #affiliate",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793282789/ki-team/a3xzmq2davdepcpbg9ni.mp4"
   }
 ]
