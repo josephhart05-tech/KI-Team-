@@ -11,6 +11,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write   # für /neu: startet "1 - Video erstellen"
 
 jobs:
   check:
@@ -33,6 +34,7 @@ jobs:
           TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
           TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
           TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Gedächtnis speichern
         if: always()
         run: |
