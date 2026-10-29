@@ -5,7 +5,9 @@
 # ============================================================
 
 nische:
-  thema: "Nebeneinkommen aufbauen neben dem Hauptjob"
+  thema: "Nebeneinkommen neben dem Hauptjob aufbauen – mit Affiliate-Marketing und digitalen Produkten über Social Media"
+  # Themen, die das Team NIE wählt (rechtlich heikel oder passen nicht zu deinem Business)
+  tabu_themen: "Geldanlage, Aktien, ETFs, Dividenden, Krypto, Trading, Forex, Immobilien, Kredite, Steuertricks, Glücksspiel"
   zielgruppe: "Angestellte in Deutschland, 25-45 Jahre, wenig Zeit, wollen sich realistisch etwas nebenbei aufbauen"
   tonalitaet: "ehrlich, motivierend, konkret, per du, keine Hype-Sprache"
   sprache: "Deutsch"
