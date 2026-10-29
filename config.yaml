@@ -5,10 +5,12 @@
 # ============================================================
 
 nische:
-  thema: "Nebeneinkommen neben dem Hauptjob aufbauen – mit Affiliate-Marketing und digitalen Produkten über Social Media"
+  thema: "Faceless Nebeneinkommen aufbauen – mit Instagram, Digistore24 und anderen Affiliate-Partnern"
+  # Die eine Botschaft, auf die JEDES Video einzahlt
+  kernbotschaft: "Man kann sich neben dem Job ein Nebeneinkommen aufbauen, ohne sein Gesicht zu zeigen – mit einem faceless Instagram-Account, Digistore24 und anderen Affiliate-Partnern. Es braucht Zeit und Einsatz, aber keine Kamera und kein eigenes Produkt."
   # Themen, die das Team NIE wählt (rechtlich heikel oder passen nicht zu deinem Business)
   tabu_themen: "Geldanlage, Aktien, ETFs, Dividenden, Krypto, Trading, Forex, Immobilien, Kredite, Steuertricks, Glücksspiel"
-  zielgruppe: "Angestellte in Deutschland, 25-45 Jahre, wenig Zeit, wollen sich realistisch etwas nebenbei aufbauen"
+  zielgruppe: "Angestellte in Deutschland, 25-45 Jahre, wenig Zeit, wollen sich realistisch etwas nebenbei aufbauen – viele wollen dafür nicht vor die Kamera"
   tonalitaet: "ehrlich, motivierend, konkret, per du, keine Hype-Sprache"
   sprache: "Deutsch"
 
@@ -29,16 +31,17 @@ werbe_anteil: 0.4
 
 recherche:
   suchbegriffe:
-    - "nebeneinkommen"
-    - "nebenbei geld verdienen"
-    - "passives einkommen"
-    - "nebenjob von zuhause"
-    - "digitale produkte verkaufen"
-    - "side hustle deutschland"
+    - "faceless instagram"
+    - "faceless account"
+    - "digistore24"
+    - "affiliate marketing"
+    - "affiliate marketing instagram"
+    - "nebeneinkommen online"
+    - "digitale produkte"
   subreddits:
-    - "Finanzen"
     - "selbststaendig"
-    - "sidehustle"
+    - "Affiliatemarketing"
+    - "InstagramMarketing"
 
 video:
   stimme: "de-DE-ConradNeural"     # Alternativen: de-DE-KatjaNeural, de-DE-FlorianMultilingualNeural
