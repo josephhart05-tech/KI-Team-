@@ -74,10 +74,14 @@ def _group_words(words, max_words=3, max_chars=16):
     return groups
 
 
-def _write_ass(marks, sub_cfg, font, path):
+def _write_ass(marks, vcfg, path, total):
+    sub_cfg = vcfg.get("untertitel", {})
+    font = vcfg["schriftart"]
     base = _ass_color(sub_cfg.get("farbe", "#FFFFFF"))
     highlight = _ass_color(sub_cfg.get("hervorhebung", "#FFD400"))
     size = sub_cfg.get("groesse", 70)
+    brand = vcfg.get("marke") or {}
+    brand_color = _ass_color(brand.get("farbe", "#D4AF37"))[2:-1]
     groups = _group_words(_word_timings(marks))
 
     lines = [
@@ -86,9 +90,13 @@ def _write_ass(marks, sub_cfg, font, path):
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, "
         "Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
         f"Style: Default,{font},{size},&H00{base[2:-1]},&H00{base[2:-1]},&H00000000,&H96000000,-1,0,0,0,100,100,1,0,1,5,2,2,120,120,560,1",
+        f"Style: Brand,{font},{brand.get('groesse', 40)},&H00{brand_color},&H00{brand_color},&H00000000,&H64000000"
+        ",-1,0,0,0,100,100,3,0,1,3,1,8,60,60,150,1",
         "", "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
+    if brand.get("text"):
+        lines.append(f"Dialogue: 1,{_ass_time(0)},{_ass_time(total)},Brand,,0,0,0,,{brand['text']}")
     for gi, group in enumerate(groups):
         # Gruppe bleibt stehen bis zur nächsten (kein Flackern bei kurzen Pausen)
         next_start = groups[gi + 1][0][0] if gi + 1 < len(groups) else group[-1][1] + 0.3
@@ -160,6 +168,22 @@ def _download(url, path):
 
 # ---------- Zusammenbau ----------
 
+def _look_filter(look):
+    """Einheitliche Farbstimmung für alle Clips (z. B. dunkel + warmer Goldton)."""
+    if not look.get("aktiv"):
+        return ""
+    g = float(look.get("gold_ton", 0.15))
+    parts = [
+        f"eq=brightness={look.get('helligkeit', -0.08)}:saturation={look.get('saettigung', 0.85)}",
+        # Gold = mehr Rot/Grün, weniger Blau – in Schatten und Mitteltönen
+        f"colorbalance=rs={g * 0.6:.3f}:gs={g * 0.25:.3f}:bs={-g * 0.7:.3f}"
+        f":rm={g * 0.5:.3f}:gm={g * 0.2:.3f}:bm={-g * 0.6:.3f}",
+    ]
+    if look.get("vignette", True):
+        parts.append("vignette=PI/5")
+    return "," + ",".join(parts)
+
+
 def _run(cmd, cwd):
     result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
     if result.returncode != 0:
@@ -180,9 +204,10 @@ def render(cfg, script, workdir):
     text = " ".join(s["text"].strip() for s in scenes)
 
     marks = asyncio.run(_tts(text, vcfg["stimme"], vcfg["sprechtempo"], workdir / "voice.mp3"))
-    _write_ass(marks, vcfg.get("untertitel", {}), vcfg["schriftart"], workdir / "subs.ass")
     audio_len = _duration("voice.mp3", workdir)
     total = audio_len + 0.6
+    _write_ass(marks, vcfg, workdir / "subs.ass", total)
+    look = _look_filter(vcfg.get("look") or {})
 
     # Jede Szene bekommt Bildschirmzeit passend zur Länge ihres Textes
     char_total = sum(len(s["text"]) for s in scenes)
@@ -197,7 +222,7 @@ def render(cfg, script, workdir):
         _download(url, raw)
         seg = f"seg_{i}.mp4"
         _run(["ffmpeg", "-y", "-stream_loop", "-1", "-i", raw.name, "-t", f"{dur:.2f}",
-              "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30,setsar=1",
+              "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30,setsar=1{look}",
               "-an", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-pix_fmt", "yuv420p", seg], workdir)
         segments.append(seg)
 

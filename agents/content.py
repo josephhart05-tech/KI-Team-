@@ -36,6 +36,7 @@ Regeln:
 - {cta_rule}
 - "search" ist ein englischer Suchbegriff (2-4 Wörter) für ein passendes Stock-Video im Hochformat,
   z. B. "woman typing laptop", "coffee morning desk". Keine Logos, keine Texte.
+  Bevorzugter Bildstil: {cfg['video'].get('bildstil', 'passend zum Thema')}.
 - caption_instagram: 2-5 Sätze, Mehrwert + Frage an die Community, ohne Hashtags.
 - caption_tiktok: 1-2 kurze Sätze, ohne Hashtags.
 - hashtags: 5-8 passende deutsche Hashtags ohne #.
