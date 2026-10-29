@@ -38,54 +38,67 @@ def _ass_time(t):
     return f"{int(h)}:{int(m):02d}:{s:05.2f}"
 
 
-def _subtitle_chunks(marks, max_words=3):
-    """Teilt Wort- oder Satzmarken in kurze 1-3-Wort-Einblendungen (TikTok-Stil)."""
-    chunks = []
+def _ass_color(hex_color):
+    """'#FFD400' → ASS-Farbe '&H00D4FF&' (ASS speichert Blau-Grün-Rot)."""
+    h = hex_color.lstrip("#").upper()
+    return f"&H{h[4:6]}{h[2:4]}{h[0:2]}&"
+
+
+def _word_timings(marks):
+    """Macht aus Wort- oder Satzmarken eine Liste (start, ende, wort) pro Wort."""
+    words = []
     for start, end, text in marks:
-        words = text.split()
-        groups = [words[i : i + max_words] for i in range(0, len(words), max_words)]
-        total_chars = sum(len(" ".join(g)) for g in groups) or 1
+        parts = text.split()
+        total = sum(len(p) for p in parts) or 1
         t = start
-        for g in groups:
-            part = " ".join(g)
-            d = (end - start) * len(part) / total_chars
-            chunks.append((t, t + d, part))
+        for p in parts:
+            d = (end - start) * len(p) / total
+            words.append((t, t + d, p))
             t += d
-    # Lücken schließen, damit der Text nicht flackert
-    merged = []
-    for i, (s, e, txt) in enumerate(chunks):
-        if i + 1 < len(chunks) and chunks[i + 1][0] - e < 0.4:
-            e = chunks[i + 1][0]
-        merged.append((s, e, txt))
-    return merged
+    return words
 
 
-def _write_ass(marks, font, path):
-    if marks and len(marks[0][2].split()) == 1:  # Wortmarken → zu Gruppen zusammenfassen
-        grouped, buf = [], []
-        for m in marks:
-            buf.append(m)
-            if len(buf) == 3 or m[2].endswith((".", "!", "?", ",")):
-                grouped.append((buf[0][0], buf[-1][1], " ".join(x[2] for x in buf)))
-                buf = []
-        if buf:
-            grouped.append((buf[0][0], buf[-1][1], " ".join(x[2] for x in buf)))
-        chunks = _subtitle_chunks(grouped)
-    else:
-        chunks = _subtitle_chunks(marks)
+def _group_words(words, max_words=3, max_chars=16):
+    """Kurze, gut lesbare Häppchen: max. 3 Wörter / 16 Zeichen, Umbruch nach Satzzeichen."""
+    groups, buf = [], []
+    for w in words:
+        if buf and (len(buf) >= max_words or len(" ".join(x[2] for x in buf + [w])) > max_chars):
+            groups.append(buf)
+            buf = []
+        buf.append(w)
+        if w[2].endswith((".", "!", "?", ",", ":", ";")):
+            groups.append(buf)
+            buf = []
+    if buf:
+        groups.append(buf)
+    return groups
+
+
+def _write_ass(marks, sub_cfg, font, path):
+    base = _ass_color(sub_cfg.get("farbe", "#FFFFFF"))
+    highlight = _ass_color(sub_cfg.get("hervorhebung", "#FFD400"))
+    size = sub_cfg.get("groesse", 70)
+    groups = _group_words(_word_timings(marks))
 
     lines = [
-        "[Script Info]", "ScriptType: v4.00+", f"PlayResX: {W}", f"PlayResY: {H}", "",
+        "[Script Info]", "ScriptType: v4.00+", f"PlayResX: {W}", f"PlayResY: {H}", "WrapStyle: 0", "",
         "[V4+ Styles]",
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, "
         "Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        f"Style: Default,{font},92,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,7,3,2,80,80,560,1",
+        f"Style: Default,{font},{size},&H00{base[2:-1]},&H00{base[2:-1]},&H00000000,&H96000000,-1,0,0,0,100,100,1,0,1,5,2,2,120,120,560,1",
         "", "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
-    for s, e, txt in chunks:
-        clean = txt.replace("{", "(").replace("}", ")").replace("\n", " ").upper()
-        lines.append(f"Dialogue: 0,{_ass_time(s)},{_ass_time(e)},Default,,0,0,0,,{clean}")
+    for gi, group in enumerate(groups):
+        # Gruppe bleibt stehen bis zur nächsten (kein Flackern bei kurzen Pausen)
+        next_start = groups[gi + 1][0][0] if gi + 1 < len(groups) else group[-1][1] + 0.3
+        clean = [w[2].replace("{", "(").replace("}", ")").upper() for w in group]
+        for wi, (s, e, _) in enumerate(group):
+            end = group[wi + 1][0] if wi + 1 < len(group) else next_start
+            text = " ".join(
+                f"{{\\c{highlight}}}{w}{{\\c{base}}}" if i == wi else w for i, w in enumerate(clean)
+            )
+            lines.append(f"Dialogue: 0,{_ass_time(s)},{_ass_time(end)},Default,,0,0,0,,{text}")
     Path(path).write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -167,7 +180,7 @@ def render(cfg, script, workdir):
     text = " ".join(s["text"].strip() for s in scenes)
 
     marks = asyncio.run(_tts(text, vcfg["stimme"], vcfg["sprechtempo"], workdir / "voice.mp3"))
-    _write_ass(marks, vcfg["schriftart"], workdir / "subs.ass")
+    _write_ass(marks, vcfg.get("untertitel", {}), vcfg["schriftart"], workdir / "subs.ass")
     audio_len = _duration("voice.mp3", workdir)
     total = audio_len + 0.6
 
@@ -185,7 +198,7 @@ def render(cfg, script, workdir):
         seg = f"seg_{i}.mp4"
         _run(["ffmpeg", "-y", "-stream_loop", "-1", "-i", raw.name, "-t", f"{dur:.2f}",
               "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30,setsar=1",
-              "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p", seg], workdir)
+              "-an", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-pix_fmt", "yuv420p", seg], workdir)
         segments.append(seg)
 
     (workdir / "list.txt").write_text("".join(f"file '{s}'\n" for s in segments), encoding="utf-8")
