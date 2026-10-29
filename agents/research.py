@@ -58,6 +58,7 @@ def pick_topic(cfg, posts, learnings, avoid=None, signals=None):
     prompt = f"""Du bist Recherche-Experte für Social-Media-Kurzvideos (Instagram Reels, TikTok).
 Nische: {cfg['nische']['thema']}
 Zielgruppe: {cfg['nische']['zielgruppe']}
+Kernbotschaft des Kanals (jedes Thema muss darauf einzahlen): {cfg['nische'].get('kernbotschaft', '')}
 
 Aktuelle Suchanfragen bei Google: {signals['google']}
 Aktuelle Suchanfragen bei YouTube: {signals['youtube']}

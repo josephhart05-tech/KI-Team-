@@ -19,6 +19,7 @@ def write_script(cfg, idea, learnings, feedback=None):
     prompt = f"""Du bist ein erfahrener Short-Video-Texter für Instagram Reels und TikTok.
 Nische: {cfg['nische']['thema']}
 Zielgruppe: {cfg['nische']['zielgruppe']}
+Kernbotschaft des Kanals (das Video zahlt darauf ein): {cfg['nische'].get('kernbotschaft', '')}
 Tonalität: {cfg['nische']['tonalitaet']}
 Sprache: {cfg['nische']['sprache']}
 
