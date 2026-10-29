@@ -59,7 +59,7 @@ kennzeichnung:
   tiktok: "#werbung #affiliate"
 
 llm:
-  gemini_modell: "gemini-2.5-flash"
+  gemini_modell: "gemini-3.6-flash"
   groq_modell: "llama-3.3-70b-versatile"   # Ersatz, falls Gemini nicht erreichbar ist
 
 # Wörter, die bei diesem Thema schnell irreführend oder unseriös wirken.
