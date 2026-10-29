@@ -1,0 +1,74 @@
+# ============================================================
+#  KI-Team Konfiguration – hier stellst du alles ein.
+#  Geheime Schlüssel gehören NICHT hierher, sondern in die
+#  GitHub-Secrets (siehe ANLEITUNG.md).
+# ============================================================
+
+nische:
+  thema: "Nebeneinkommen aufbauen neben dem Hauptjob"
+  zielgruppe: "Angestellte in Deutschland, 25-45 Jahre, wenig Zeit, wollen sich realistisch etwas nebenbei aufbauen"
+  tonalitaet: "ehrlich, motivierend, konkret, per du, keine Hype-Sprache"
+  sprache: "Deutsch"
+
+# Deine Affiliate-Produkte. Trage hier deine echten Produkte ein.
+# "link" ist dein Affiliate-Link (z. B. Digistore24 / CopeCart).
+# Da Links auf Instagram/TikTok nicht klickbar sind, verweisen die Videos
+# auf "Link in Bio" – dort sollte dein Link-Sammelseite (z. B. Linktree) stehen.
+produkte:
+  - id: beispiel-kurs
+    name: "Beispiel: Online-Kurs Digitales Nebeneinkommen"
+    link: "https://www.digistore24.com/redir/XXXX/DEINNAME/"
+    beschreibung: "Schritt-für-Schritt-Kurs, wie man sich mit digitalen Produkten etwas nebenbei aufbaut"
+    passt_zu: "Einstieg, erste Schritte, digitale Produkte, Zeitmanagement"
+
+# Anteil der Videos, die ein Produkt bewerben (0.4 = 40 %).
+# Der Rest ist reiner Mehrwert-Content – das baut Vertrauen und Reichweite auf.
+werbe_anteil: 0.4
+
+recherche:
+  suchbegriffe:
+    - "nebeneinkommen"
+    - "nebenbei geld verdienen"
+    - "passives einkommen"
+    - "nebenjob von zuhause"
+    - "digitale produkte verkaufen"
+    - "side hustle deutschland"
+  subreddits:
+    - "Finanzen"
+    - "selbststaendig"
+    - "sidehustle"
+
+video:
+  stimme: "de-DE-ConradNeural"     # Alternativen: de-DE-KatjaNeural, de-DE-FlorianMultilingualNeural
+  sprechtempo: "+8%"
+  schriftart: "Arial"
+  ersatz_suche: "person working on laptop"   # Stock-Video, falls nichts passt
+
+plattformen:
+  instagram:
+    aktiv: true
+    api_version: "v23.0"
+  tiktok:
+    aktiv: true
+    # "telegram" = Video kommt in Telegram, du lädst es mit 2 Klicks selbst hoch (sofort nutzbar)
+    # "entwurf"  = Video landet automatisch als Entwurf in deiner TikTok-App (braucht TikTok-Entwickler-App)
+    modus: "telegram"
+
+kennzeichnung:
+  instagram: "Werbung | enthält Affiliate-Link"
+  tiktok: "#werbung #affiliate"
+
+llm:
+  gemini_modell: "gemini-2.5-flash"
+  groq_modell: "llama-3.3-70b-versatile"   # Ersatz, falls Gemini nicht erreichbar ist
+
+# Wörter, die bei diesem Thema schnell irreführend oder unseriös wirken.
+# Der Prüfer-Agent lehnt Skripte mit diesen Formulierungen ab.
+verbotene_formulierungen:
+  - "garantiert"
+  - "ohne arbeit"
+  - "schnell reich"
+  - "über nacht"
+  - "risikofrei"
+  - "jeder kann"
+  - "100% sicher"
