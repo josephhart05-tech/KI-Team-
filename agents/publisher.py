@@ -42,7 +42,10 @@ def download_video(url, path):
 # ---------- Instagram (Instagram API mit Instagram-Login) ----------
 
 def _ig_base(cfg):
-    return f"https://graph.instagram.com/{cfg['plattformen']['instagram']['api_version']}"
+    ig = cfg["plattformen"]["instagram"]
+    # "facebook" = Instagram-API über Facebook-Login (Seiten-Token, läuft nicht ab)
+    host = "graph.facebook.com" if ig.get("login") == "facebook" else "graph.instagram.com"
+    return f"https://{host}/{ig['api_version']}"
 
 
 def _ig_check(r):
@@ -81,6 +84,8 @@ def instagram_publish_reel(cfg, video_url, caption):
 
 
 def instagram_refresh_token(cfg):
+    if cfg["plattformen"]["instagram"].get("login") == "facebook":
+        return None  # Seiten-Token läuft nicht ab – nichts zu tun
     r = requests.get("https://graph.instagram.com/refresh_access_token", params={
         "grant_type": "ig_refresh_token", "access_token": env("IG_ACCESS_TOKEN")}, timeout=30)
     return _ig_check(r)["access_token"]

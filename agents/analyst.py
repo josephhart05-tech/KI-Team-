@@ -13,7 +13,8 @@ METRIC_SETS = [
 
 
 def _ig_insights(cfg, media_id):
-    base = f"https://graph.instagram.com/{cfg['plattformen']['instagram']['api_version']}"
+    from agents.publisher import _ig_base
+    base = _ig_base(cfg)
     for metrics in METRIC_SETS:
         r = requests.get(f"{base}/{media_id}/insights", params={
             "metric": metrics, "access_token": env("IG_ACCESS_TOKEN")}, timeout=30)
