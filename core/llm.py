@@ -14,6 +14,7 @@ class _NoKey(Exception):
 # Gemini-Modelle in Reihenfolge der Bevorzugung. Wird bei Problemen um weitere Modelle ergänzt.
 _gemini_models = None
 _gemini_expanded = False
+_no_thinking_cfg = set()
 # 404 = abgeschaltet, 429 = Gratis-Limit erreicht, 5xx = überlastet → nächstes Modell probieren
 _SWITCH_CODES = {404, 429, 500, 502, 503, 504}
 
@@ -55,20 +56,32 @@ def _gemini(prompt, model, json_mode):
     i = 0
     while i < len(_gemini_models):
         name = _gemini_models[i]
-        r = requests.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{name}:generateContent",
-            headers={"x-goog-api-key": key},
-            json=body,
-            timeout=120,
-        )
-        if r.ok:
+        version = re.search(r"gemini-(\d+)", name)
+        # Neue Modelle "denken" sonst minutenlang – für Social-Media-Texte reicht wenig Nachdenken
+        model_body = dict(body, generationConfig=dict(body["generationConfig"]))
+        if version and int(version.group(1)) >= 3 and name not in _no_thinking_cfg:
+            model_body["generationConfig"]["thinkingConfig"] = {"thinkingLevel": "low"}
+        try:
+            r = requests.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{name}:generateContent",
+                headers={"x-goog-api-key": key},
+                json=model_body,
+                timeout=75,
+            )
+        except requests.Timeout:
+            r = None
+        if r is not None and r.status_code == 400 and "thinking" in r.text.lower() and name not in _no_thinking_cfg:
+            _no_thinking_cfg.add(name)  # Modell kennt die Einstellung nicht → ohne erneut
+            continue
+        if r is not None and r.ok:
             if i > 0:  # funktionierendes Modell nach vorne, damit die nächsten Aufrufe es zuerst nehmen
                 _gemini_models.insert(0, _gemini_models.pop(i))
                 print(f"Gemini-Modell gewechselt zu: {name}")
             return r.json()["candidates"][0]["content"]["parts"][0]["text"]
-        if r.status_code not in _SWITCH_CODES:
+        if r is not None and r.status_code not in _SWITCH_CODES:
             r.raise_for_status()
-        last = f"{r.status_code} bei {name}"
+        last = f"{r.status_code if r is not None else 'Zeitüberschreitung'} bei {name}"
+        print(f"Gemini {last} – probiere nächstes Modell")
         if not _gemini_expanded:
             _gemini_expanded = True
             _gemini_models += [m for m in _gemini_flash_models(key) if m not in _gemini_models]
@@ -110,7 +123,8 @@ def ask(prompt, cfg, json_mode=False):
     ]
     last_error = None
     for fn, model in providers:
-        for attempt in range(3):
+        # Gemini probiert intern schon mehrere Modelle durch → bei Problemen schnell zu Groq wechseln
+        for attempt in range(2):
             try:
                 text = fn(prompt, model, json_mode)
                 return parse_json(text) if json_mode else text.strip()
@@ -118,6 +132,6 @@ def ask(prompt, cfg, json_mode=False):
                 break
             except Exception as e:  # Rate-Limit, Netzwerk, kaputtes JSON → erneut versuchen
                 last_error = e
-                print(f"Sprachmodell-Fehler (Versuch {attempt + 1}/3): {e}")
-                time.sleep(15 * (attempt + 1))
+                print(f"Sprachmodell-Fehler (Versuch {attempt + 1}/2): {e}")
+                time.sleep(5)
     raise RuntimeError(f"Kein Sprachmodell erreichbar. Letzter Fehler: {last_error}")
