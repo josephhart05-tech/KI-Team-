@@ -11,11 +11,15 @@ class _NoKey(Exception):
     pass
 
 
-_gemini_model_override = None
+# Gemini-Modelle in Reihenfolge der Bevorzugung. Wird bei Problemen um weitere Modelle ergänzt.
+_gemini_models = None
+_gemini_expanded = False
+# 404 = abgeschaltet, 429 = Gratis-Limit erreicht, 5xx = überlastet → nächstes Modell probieren
+_SWITCH_CODES = {404, 429, 500, 502, 503, 504}
 
 
-def _newest_gemini_flash(key):
-    """Google schaltet alte Modelle ab – dann nehmen wir das neueste verfügbare Flash-Modell."""
+def _gemini_flash_models(key):
+    """Liste aller verfügbaren Flash-Modelle, beste zuerst (stabil vor Preview, neu vor alt)."""
     r = requests.get("https://generativelanguage.googleapis.com/v1beta/models",
                      headers={"x-goog-api-key": key}, params={"pageSize": 200}, timeout=30)
     r.raise_for_status()
@@ -29,36 +33,47 @@ def _newest_gemini_flash(key):
         version = re.search(r"gemini-(\d+(?:\.\d+)?)", name)
         stable = not any(x in name for x in ("preview", "exp"))
         candidates.append((stable, float(version.group(1)) if version else 0, "lite" not in name, name))
-    if not candidates:
-        raise RuntimeError("Kein passendes Gemini-Modell gefunden")
-    best = max(candidates)[3]
-    print(f"Gemini-Modell automatisch gewählt: {best}")
-    return best
+    return [c[3] for c in sorted(candidates, reverse=True)][:6]
 
 
 def _gemini(prompt, model, json_mode):
-    global _gemini_model_override
+    global _gemini_models, _gemini_expanded
     key = os.environ.get("GEMINI_API_KEY", "").strip()
     if not key:
         raise _NoKey()
-    model = _gemini_model_override or model
+    if _gemini_models is None:
+        _gemini_models = [model]
+
     body = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.9},
     }
     if json_mode:
         body["generationConfig"]["responseMimeType"] = "application/json"
-    r = requests.post(
-        f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
-        headers={"x-goog-api-key": key},
-        json=body,
-        timeout=120,
-    )
-    if r.status_code == 404 and not _gemini_model_override:
-        _gemini_model_override = _newest_gemini_flash(key)
-        return _gemini(prompt, model, json_mode)
-    r.raise_for_status()
-    return r.json()["candidates"][0]["content"]["parts"][0]["text"]
+
+    last = None
+    i = 0
+    while i < len(_gemini_models):
+        name = _gemini_models[i]
+        r = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{name}:generateContent",
+            headers={"x-goog-api-key": key},
+            json=body,
+            timeout=120,
+        )
+        if r.ok:
+            if i > 0:  # funktionierendes Modell nach vorne, damit die nächsten Aufrufe es zuerst nehmen
+                _gemini_models.insert(0, _gemini_models.pop(i))
+                print(f"Gemini-Modell gewechselt zu: {name}")
+            return r.json()["candidates"][0]["content"]["parts"][0]["text"]
+        if r.status_code not in _SWITCH_CODES:
+            r.raise_for_status()
+        last = f"{r.status_code} bei {name}"
+        if not _gemini_expanded:
+            _gemini_expanded = True
+            _gemini_models += [m for m in _gemini_flash_models(key) if m not in _gemini_models]
+        i += 1
+    raise RuntimeError(f"Alle Gemini-Modelle gerade nicht verfügbar ({last})")
 
 
 def _groq(prompt, model, json_mode):
@@ -103,5 +118,6 @@ def ask(prompt, cfg, json_mode=False):
                 break
             except Exception as e:  # Rate-Limit, Netzwerk, kaputtes JSON → erneut versuchen
                 last_error = e
-                time.sleep(10 * (attempt + 1))
+                print(f"Sprachmodell-Fehler (Versuch {attempt + 1}/3): {e}")
+                time.sleep(15 * (attempt + 1))
     raise RuntimeError(f"Kein Sprachmodell erreichbar. Letzter Fehler: {last_error}")
