@@ -70,7 +70,12 @@ def create(dry_run=False):
 
 def _publish(cfg, p):
     plats = cfg["plattformen"]
-    if plats["instagram"]["aktiv"] and not p.get("ig_media_id"):
+    if plats["instagram"]["aktiv"] and plats["instagram"].get("modus") == "telegram" and not p.get("ig_done"):
+        telegram.send_message("📸 Instagram: Speichere das Video oben und lade es als Reel hoch. "
+                              "Bei Videos mit Produkt die erste Zeile 'Werbung' drin lassen.\n\n"
+                              f"Caption zum Kopieren:\n{p['caption_instagram']}")
+        p["ig_done"] = True
+    elif plats["instagram"]["aktiv"] and not p.get("ig_media_id"):
         p["ig_media_id"], p["ig_link"] = publisher.instagram_publish_reel(cfg, p["video_url"], p["caption_instagram"])
         telegram.send_message(f"📸 Auf Instagram veröffentlicht: {p['ig_link']}")
 
@@ -135,7 +140,8 @@ def check():
 def learn():
     cfg = load_config()
     posts = load_posts()
-    if cfg["plattformen"]["instagram"]["aktiv"]:
+    ig = cfg["plattformen"]["instagram"]
+    if ig["aktiv"] and ig.get("modus") != "telegram":
         print(f"Zahlen für {analyst.collect_metrics(cfg, posts)} Videos aktualisiert")
     save_posts(posts)
     text = analyst.update_learnings(cfg, posts)
@@ -145,6 +151,9 @@ def learn():
 
 def refresh_ig_token(out_file):
     token = publisher.instagram_refresh_token(load_config())
+    if not token:
+        print("Facebook-Login: Seiten-Token läuft nicht ab, keine Verlängerung nötig.")
+        return
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(token)
     print("Instagram-Token verlängert.")

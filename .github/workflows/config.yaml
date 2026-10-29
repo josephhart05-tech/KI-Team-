@@ -51,6 +51,10 @@ video:
 plattformen:
   instagram:
     aktiv: true
+    # "telegram" = Video + Caption kommen in Telegram, du postest mit 2 Klicks selbst
+    # "auto"     = automatisch posten (braucht IG_ACCESS_TOKEN / IG_USER_ID, siehe ANLEITUNG.md)
+    modus: "telegram"
+    login: "facebook"        # nur für modus "auto": "facebook" (Seiten-Token) oder "instagram"
     api_version: "v23.0"
   tiktok:
     aktiv: true
@@ -63,7 +67,7 @@ kennzeichnung:
   tiktok: "#werbung #affiliate"
 
 llm:
-  gemini_modell: "gemini-2.5-flash"
+  gemini_modell: "gemini-3.6-flash"
   groq_modell: "llama-3.3-70b-versatile"   # Ersatz, falls Gemini nicht erreichbar ist
 
 # Wörter, die bei diesem Thema schnell irreführend oder unseriös wirken.
