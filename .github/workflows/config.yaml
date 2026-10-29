@@ -42,6 +42,10 @@ video:
   stimme: "de-DE-ConradNeural"     # Alternativen: de-DE-KatjaNeural, de-DE-FlorianMultilingualNeural
   sprechtempo: "+8%"
   schriftart: "Arial"
+  untertitel:
+    groesse: 70              # vorher 92 – kleiner = weniger Text verdeckt
+    farbe: "#FFFFFF"         # normale Wörter (weiß)
+    hervorhebung: "#FFD400"  # gerade gesprochenes Wort (gelb). Alternativen: "#00E676" grün, "#00B0FF" blau, "#FF4081" pink
   ersatz_suche: "person working on laptop"   # Stock-Video, falls nichts passt
 
 plattformen:
