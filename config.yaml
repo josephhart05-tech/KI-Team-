@@ -42,11 +42,19 @@ video:
   stimme: "de-DE-ConradNeural"     # Alternativen: de-DE-KatjaNeural, de-DE-FlorianMultilingualNeural
   sprechtempo: "+8%"
   schriftart: "Arial"
+  untertitel:
+    groesse: 70              # vorher 92 – kleiner = weniger Text verdeckt
+    farbe: "#FFFFFF"         # normale Wörter (weiß)
+    hervorhebung: "#FFD400"  # gerade gesprochenes Wort (gelb). Alternativen: "#00E676" grün, "#00B0FF" blau, "#FF4081" pink
   ersatz_suche: "person working on laptop"   # Stock-Video, falls nichts passt
 
 plattformen:
   instagram:
     aktiv: true
+    # "telegram" = Video + Caption kommen in Telegram, du postest mit 2 Klicks selbst
+    # "auto"     = automatisch posten (braucht IG_ACCESS_TOKEN / IG_USER_ID, siehe ANLEITUNG.md)
+    modus: "telegram"
+    login: "facebook"        # nur für modus "auto": "facebook" (Seiten-Token) oder "instagram"
     api_version: "v23.0"
   tiktok:
     aktiv: true
