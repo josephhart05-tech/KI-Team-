@@ -1,0 +1,29 @@
+name: 4 - Instagram-Token verlängern
+
+# Instagram-Tokens laufen nach 60 Tagen ab. Dieser Job verlängert ihn jeden Monat automatisch.
+# Braucht das Secret GH_PAT (siehe ANLEITUNG.md, Schritt 7).
+
+on:
+  schedule:
+    - cron: "0 3 1,15 * *"
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Token verlängern und Secret aktualisieren
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          python main.py refresh-ig-token "$RUNNER_TEMP/ig_token"
+          echo "::add-mask::$(cat "$RUNNER_TEMP/ig_token")"
+          gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/ig_token"
+          rm "$RUNNER_TEMP/ig_token"
