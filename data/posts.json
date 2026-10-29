@@ -1,1 +1,55 @@
-[]
+[
+  {
+    "id": "20261029-1025",
+    "status": "pending",
+    "created_at": "2026-10-29T10:26:06+00:00",
+    "topic": "Digitale Produkte mit Canva erstellen und ohne eigenes Lager verkaufen",
+    "angle": "Wie du als Angestellter mit 3 Stunden pro Woche dein erstes digitales Produkt (z. B. Checklisten oder Vorlagen) erstellst und automatisiert verkaufst.",
+    "hook": "Keine Zeit für ein Nebeneinkommen nach dem Job?",
+    "product_id": null,
+    "script": {
+      "hook": "Keine Zeit für ein Nebeneinkommen nach dem Job?",
+      "scenes": [
+        {
+          "text": "Keine Zeit für ein Nebeneinkommen nach dem Job?",
+          "search": "tired man laptop desk"
+        },
+        {
+          "text": "Erstelle stattdessen einmalig ein digitales Produkt, das du immer wieder verkaufst.",
+          "search": "focused woman working laptop"
+        },
+        {
+          "text": "Mit Canva baust du in drei Stunden eine einfache Checkliste oder Vorlage für deine Nische.",
+          "search": "designing on laptop computer"
+        },
+        {
+          "text": "Über Plattformen wie Tentary läuft der Verkauf danach komplett automatisiert ab.",
+          "search": "person holding smartphone closeup"
+        },
+        {
+          "text": "Du brauchst kein Lager, keinen Versand und verpackst keine Pakete.",
+          "search": "cozy home office desk"
+        },
+        {
+          "text": "Speichere das Video ab und starte diese Woche mit deinem ersten Entwurf.",
+          "search": "smiling person closing laptop"
+        }
+      ],
+      "caption_instagram": "Ein digitales Produkt erfordert einmalig Zeit in der Erstellung, kann danach aber unendlich oft heruntergeladen werden. Mit kostenlosen Tools wie Canva erstellst du im Feierabend nützliche Vorlagen oder Checklisten für deine Zielgruppe. Welches Thema beherrschst du so gut, dass du eine kurze Anleitung darüber schreiben könntest?",
+      "caption_tiktok": "So erstellst du dein erstes digitales Produkt neben dem Hauptjob. Speichere den Beitrag für später!",
+      "hashtags": [
+        "nebeneinkommen",
+        "digitaleprodukte",
+        "passiveseinkommen",
+        "canvatipps",
+        "nebenjob",
+        "finanziellefreiheit",
+        "onlinebusinessaufbauen"
+      ],
+      "product_id": null
+    },
+    "caption_instagram": "Ein digitales Produkt erfordert einmalig Zeit in der Erstellung, kann danach aber unendlich oft heruntergeladen werden. Mit kostenlosen Tools wie Canva erstellst du im Feierabend nützliche Vorlagen oder Checklisten für deine Zielgruppe. Welches Thema beherrschst du so gut, dass du eine kurze Anleitung darüber schreiben könntest?\n\n#nebeneinkommen #digitaleprodukte #passiveseinkommen #canvatipps #nebenjob #finanziellefreiheit #onlinebusinessaufbauen",
+    "caption_tiktok": "So erstellst du dein erstes digitales Produkt neben dem Hauptjob. Speichere den Beitrag für später!\n\n#nebeneinkommen #digitaleprodukte #passiveseinkommen #canvatipps #nebenjob #finanziellefreiheit #onlinebusinessaufbauen",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793269563/ki-team/qd2iczfdne11uuwqmrm3.mp4"
+  }
+]
