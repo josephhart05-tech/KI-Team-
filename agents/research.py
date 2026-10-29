@@ -43,8 +43,8 @@ def collect_signals(cfg):
     return {k: list(dict.fromkeys(v))[:60] for k, v in signals.items()}
 
 
-def pick_topic(cfg, posts, learnings):
-    signals = collect_signals(cfg)
+def pick_topic(cfg, posts, learnings, avoid=None, signals=None):
+    signals = signals or collect_signals(cfg)
     products = cfg.get("produkte") or []
     promo = bool(products) and random.random() < cfg.get("werbe_anteil", 0.4)
     recent = [p["topic"] for p in posts[-40:]]
@@ -68,6 +68,9 @@ Erkenntnisse aus unseren bisherigen Videos (sehr wichtig, daran orientieren):
 
 Diese Themen hatten wir zuletzt schon (NICHT wiederholen):
 {recent}
+
+Diese Themenbereiche sind TABU, niemals wählen: {cfg['nische'].get('tabu_themen', '')}
+{f"Diese Themen sind gerade an der Prüfung gescheitert, wähle etwas deutlich anderes: {avoid}" if avoid else ""}
 
 {product_task}
 

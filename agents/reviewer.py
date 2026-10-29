@@ -22,14 +22,15 @@ def review(cfg, script):
 Skript: {text}
 Instagram-Caption: {script.get('caption_instagram')}
 
-Prüfe streng:
-1. Enthält es Einkommensversprechen oder irreführende Aussagen (UWG, Plattform-Richtlinien)?
-2. Ist der Hook stark genug, damit man in den ersten 2 Sekunden nicht weiterscrollt?
-3. Hat es echten, konkreten Mehrwert – oder ist es leeres Gerede?
-4. Klingt es natürlich gesprochen (keine Schachtelsätze)?
+Setze ok auf false NUR bei einem dieser echten Probleme:
+1. Konkrete Einkommensversprechen oder irreführende Aussagen (UWG, Plattform-Richtlinien).
+2. Anlage-, Steuer- oder Rechtsberatung, oder Tabu-Themen: {cfg['nische'].get('tabu_themen', '')}
+3. Das Skript widerspricht sich selbst oder hat keinerlei konkreten Mehrwert.
 
-Antworte nur als JSON: {{"ok": true/false, "problems": ["..."]}}
-Setze ok nur auf false bei echten Problemen, nicht bei Kleinigkeiten."""
+Stil- und Geschmacksfragen (Hook könnte stärker sein, wenig originell, Klischee) sind KEIN Grund für false –
+darüber entscheidet der Inhaber selbst. Kleine Ungenauigkeiten auch nicht.
+
+Antworte nur als JSON: {{"ok": true/false, "problems": ["..."]}}"""
     try:
         verdict = llm.ask(prompt, cfg, json_mode=True)
         if not verdict.get("ok", True):
