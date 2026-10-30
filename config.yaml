@@ -25,9 +25,28 @@ produkte:
     beschreibung: "Kostenloses Webinar: wie man Schritt für Schritt einen Social-Media-Account für Affiliate-Marketing mit digitalen Produkten aufbaut"
     passt_zu: "Einstieg ins Affiliate-Marketing, Social-Media-Account aufbauen, digitale Produkte empfehlen, erste Schritte neben dem Job, kostenlos lernen"
 
-# Anteil der Videos, die ein Produkt bewerben (0.4 = 40 %).
-# Der Rest ist reiner Mehrwert-Content – das baut Vertrauen und Reichweite auf.
-werbe_anteil: 0.4
+# Content-Strategie: Ziele und Formate wechseln sich der Reihe nach ab.
+# Nur "monetarisierung" bewirbt ein Produkt – der Rest baut Reichweite und Vertrauen auf.
+strategie:
+  ziel_rotation: ["wachstum", "interaktion", "monetarisierung"]
+  format_rotation: ["reel", "reel", "karussell"]
+  ziele:
+    wachstum: >-
+      Reichweite und neue Follower. Breites, teilbares Thema mit überraschender Erkenntnis oder
+      typischem Fehler, den viele machen. Mehrwert, den man speichern will.
+      Call-to-Action: Speichern, an einen Freund schicken oder Folgen für mehr.
+    interaktion: >-
+      Kommentare und Gespräche. Meinungsfrage, Entweder-oder, kleine Challenge oder
+      "Welcher Typ bist du?". Die Zielgruppe soll sich wiedererkennen und antworten wollen.
+      Call-to-Action: konkrete, leicht zu beantwortende Frage oder "Kommentiere 1 oder 2".
+    monetarisierung: >-
+      Klicks auf den Link in der Bio. Konkretes Problem der Zielgruppe, ehrliche Lösung,
+      das Produkt als logischer nächster Schritt – ohne Druck und ohne Versprechen.
+      Call-to-Action: "Link in meiner Bio".
+  hashtags:
+    anzahl_instagram: 5   # Instagram empfiehlt 3-5 gezielte Hashtags
+    anzahl_tiktok: 4
+    marke: "dfdigitalefreiheit"
 
 recherche:
   suchbegriffe:

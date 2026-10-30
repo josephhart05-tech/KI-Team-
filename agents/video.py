@@ -74,7 +74,7 @@ def _group_words(words, max_words=3, max_chars=16):
     return groups
 
 
-def _write_ass(marks, vcfg, path, total):
+def _write_ass(marks, vcfg, path, total, hook_text=None):
     sub_cfg = vcfg.get("untertitel", {})
     font = vcfg["schriftart"]
     base = _ass_color(sub_cfg.get("farbe", "#FFFFFF"))
@@ -92,11 +92,17 @@ def _write_ass(marks, vcfg, path, total):
         f"Style: Default,{font},{size},&H00{base[2:-1]},&H00{base[2:-1]},&H00000000,&H96000000,-1,0,0,0,100,100,1,0,1,5,2,2,120,120,560,1",
         f"Style: Brand,{font},{brand.get('groesse', 40)},&H00{brand_color},&H00{brand_color},&H00000000,&H64000000"
         ",-1,0,0,0,100,100,3,0,1,3,1,8,60,60,150,1",
+        # Hook-Titel: groß, Gold auf schwarzem Kasten, mittig – stoppt das Scrollen
+        f"Style: Hook,{font},92,&H00{brand_color},&H00{brand_color},&H00000000,&H28000000"
+        ",-1,0,0,0,100,100,1,0,3,18,0,5,90,90,0,1",
         "", "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
     if brand.get("text"):
         lines.append(f"Dialogue: 1,{_ass_time(0)},{_ass_time(total)},Brand,,0,0,0,,{brand['text']}")
+    if hook_text:
+        clean_hook = hook_text.replace("{", "(").replace("}", ")").replace("\n", " ").upper()
+        lines.append(f"Dialogue: 2,{_ass_time(0)},{_ass_time(2.8)},Hook,,0,0,0,,{{\\fad(120,300)}}{clean_hook}")
     for gi, group in enumerate(groups):
         # Gruppe bleibt stehen bis zur nächsten (kein Flackern bei kurzen Pausen)
         next_start = groups[gi + 1][0][0] if gi + 1 < len(groups) else group[-1][1] + 0.3
@@ -206,7 +212,7 @@ def render(cfg, script, workdir):
     marks = asyncio.run(_tts(text, vcfg["stimme"], vcfg["sprechtempo"], workdir / "voice.mp3"))
     audio_len = _duration("voice.mp3", workdir)
     total = audio_len + 0.6
-    _write_ass(marks, vcfg, workdir / "subs.ass", total)
+    _write_ass(marks, vcfg, workdir / "subs.ass", total, hook_text=script.get("hook_text"))
     look = _look_filter(vcfg.get("look") or {})
 
     # Jede Szene bekommt Bildschirmzeit passend zur Länge ihres Textes

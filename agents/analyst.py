@@ -55,9 +55,11 @@ def update_learnings(cfg, posts):
     # Videos brauchen ein paar Tage, bis die Zahlen aussagekräftig sind
     rows = []
     for p in sorted(measured, key=lambda x: x.get("score", 0), reverse=True)[:40]:
-        rows.append(f"- Score {p['score']} | Thema: {p['topic']} | Hook: {p['hook']} | "
+        rows.append(f"- Score {p['score']} | {p.get('format', 'reel')} / Ziel {p.get('goal', '-')} | "
+                    f"Thema: {p['topic']} | Hook: {p['hook']} | "
                     f"Werbung: {'ja' if p.get('product_id') else 'nein'} | Zahlen: {p['metrics']}")
-    rejected_rows = [f"- Thema: {p['topic']} | Hook: {p['hook']}" for p in rejected]
+    rejected_rows = [f"- {p.get('format', 'reel')} / Ziel {p.get('goal', '-')} | Thema: {p['topic']} | Hook: {p['hook']}"
+                     for p in rejected]
 
     prompt = f"""Du bist Social-Media-Analyst. Nische: {cfg['nische']['thema']}.
 Hier sind unsere Instagram-Reels, sortiert nach Erfolg (Score = Views + 5×Shares + 3×Saves + 2×Kommentare):

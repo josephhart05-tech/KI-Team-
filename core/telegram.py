@@ -33,6 +33,20 @@ def send_video(path, caption=""):
         )
 
 
+def send_photos(paths, caption=""):
+    """Schickt bis zu 10 Bilder als ein Album (für Karussells)."""
+    import json
+    files, media = {}, []
+    for i, path in enumerate(paths[:10]):
+        files[f"f{i}"] = open(path, "rb")
+        media.append({"type": "photo", "media": f"attach://f{i}", **({"caption": caption[:1000]} if i == 0 else {})})
+    try:
+        return _api("sendMediaGroup", data={"chat_id": chat_id(), "media": json.dumps(media)}, files=files)
+    finally:
+        for f in files.values():
+            f.close()
+
+
 def get_updates(offset):
     return _api("getUpdates", json={"offset": offset, "timeout": 0, "allowed_updates": ["callback_query", "message"]})
 
