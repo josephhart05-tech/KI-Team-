@@ -4,6 +4,12 @@ name: 0 - Testlauf (ohne Posten)
 
 on:
   workflow_dispatch:
+    inputs:
+      format:
+        description: "Was testen?"
+        type: choice
+        options: ["reel", "karussell"]
+        default: "reel"
 
 jobs:
   test:
@@ -19,6 +25,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python main.py create --dry-run
         env:
+          FORCE_FORMAT: ${{ inputs.format }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
@@ -28,4 +35,5 @@ jobs:
           name: testvideo
           path: |
             output/*/final.mp4
+            output/*/folie_*.png
             output/*/skript.json
