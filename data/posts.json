@@ -279,5 +279,65 @@
     "caption_instagram": "Werbung | enthält Affiliate-Link\n\nWer Vollzeit arbeitet, kann nicht rund um die Uhr Nachrichten beantworten. Mit automatisierter DM-Auslieferung schickst du deinen Followern wertvolle Ressourcen und Affiliate-Links direkt ins Postfach – ganz ohne manuellen Aufwand und komplett faceless. Nutzt du schon Automatisierungen auf Instagram oder machst du noch alles per Hand?\n\n#nebeneinkommen #affiliatemarketingtipps #facelessgermany #onlinegeldverdienen #nebenbeiaufbauen #passiveseinkommen",
     "caption_tiktok": "So sparst du Stunden auf Instagram und sendest Affiliate-Links vollautomatisch. Mehr dazu im kostenlosen Webinar über den Link in der Bio.\n\n#nebeneinkommen #affiliatemarketingtipps #facelessgermany #onlinegeldverdienen #nebenbeiaufbauen #passiveseinkommen\n\n#werbung #affiliate",
     "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793304172/ki-team/ojaqlbd8ktu2nv3dihhk.mp4"
+  },
+  {
+    "id": "20261030-1212",
+    "status": "pending",
+    "created_at": "2026-10-30T12:13:06+00:00",
+    "goal": "monetarisierung",
+    "format": "karussell",
+    "topic": "3 riesige Fehler, warum die meisten faceless Instagram-Accounts 0 € verdienen (und wie es richtig geht)",
+    "angle": "Fehler-Analyse / 'Niemand sagt dir...': Warum ständiges Posten von Motivations-Videos ohne Strategie fehlschlägt und wie ein klarer Affiliate-Funnel neben dem Job wirklich funktioniert.",
+    "hook": "3 faceless Fehler",
+    "product_id": "tac-webinar",
+    "script": {
+      "hook_varianten": [
+        "Niemand sagt dir, warum motivierende Videos meist 0 € einbringen.",
+        "Hör auf, fremde Reels ohne eigenen Affiliate-Funnel hochzuladen.",
+        "Du brauchst kein eigenes Produkt, um konstant Provisionen aufzubauen.",
+        "3 typische Fehler, die faceless Accounts extrem bremsen.",
+        "Du willst nebenbei was aufbauen, hast aber kaum Zeit?"
+      ],
+      "hook": "3 typische Fehler, die faceless Accounts extrem bremsen.",
+      "slides": [
+        {
+          "titel": "3 faceless Fehler",
+          "text": "Warum viele Accounts 0 € verdienen und wie du es richtig machst. Wisch weiter 👉"
+        },
+        {
+          "titel": "Fehler 1: Nur Motivation",
+          "text": "Inhalt ohne Angebot bringt keine Einnahmen. Nutze stattdessen Canva für Tipps und verlinke ein konkretes Digistore24-Produkt."
+        },
+        {
+          "titel": "Fehler 2: Falsches Produkt",
+          "text": "Wähle auf dem Digistore24-Marktplatz Produkte mit niedriger Stornoquote und passendem Thema, statt irgendwas beliebig zu teilen."
+        },
+        {
+          "titel": "Fehler 3: Kein System",
+          "text": "Einfach wild posten bringt wenig. Erstelle mit Content-Planern 3 gezielte Posts pro Woche, die auf ein Angebot hinweisen."
+        },
+        {
+          "titel": "Die richtige Strategie",
+          "text": "Ein faceless Account funktioniert als Funnel: Biete Mehrwert, löse ein Problem und liefere die Lösung per Affiliate-Link."
+        },
+        {
+          "titel": "Dein nächster Schritt",
+          "text": "Lerne Schritt für Schritt, wie du deinen Account ohne Kamera aufbaust. Im Kostenlosen Webinar TAC 3.0. Link in meiner Bio."
+        }
+      ],
+      "caption_instagram": "Du postest fleißig ohne Gesicht, aber es passiert finanziell einfach nichts? 💡\n\n✅ Erstelle Content mit Nutzwert über Canva.\n✅ Wähle passende Produkte auf Digistore24.\n✅ Nutze einen klaren Affiliate-Funnel.\n\nLerne das System dahinter Schritt für Schritt im Kostenlosen Webinar TAC 3.0. 👉 Link in meiner Bio.",
+      "caption_tiktok": "3 Fehler bei faceless Accounts. Mach es direkt richtig und schau dir das Kostenlose Webinar TAC 3.0 an. Link in meiner Bio!",
+      "hashtags": [
+        "nebeneinkommen",
+        "affiliatemarketingdeutschland",
+        "digistore24",
+        "facelessmarketingdeutsch"
+      ],
+      "format": "karussell",
+      "product_id": "tac-webinar"
+    },
+    "caption_instagram": "Werbung | enthält Affiliate-Link\n\nDu postest fleißig ohne Gesicht, aber es passiert finanziell einfach nichts? 💡\n\n✅ Erstelle Content mit Nutzwert über Canva.\n✅ Wähle passende Produkte auf Digistore24.\n✅ Nutze einen klaren Affiliate-Funnel.\n\nLerne das System dahinter Schritt für Schritt im Kostenlosen Webinar TAC 3.0. 👉 Link in meiner Bio.\n\n#nebeneinkommen #affiliatemarketingdeutschland #digistore24 #facelessmarketingdeutsch #dfdigitalefreiheit",
+    "caption_tiktok": "3 Fehler bei faceless Accounts. Mach es direkt richtig und schau dir das Kostenlose Webinar TAC 3.0 an. Link in meiner Bio!\n\n#nebeneinkommen #affiliatemarketingdeutschland #digistore24 #dfdigitalefreiheit\n\n#werbung #affiliate",
+    "video_url": null
   }
 ]
