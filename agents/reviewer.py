@@ -30,6 +30,10 @@ Setze ok auf false NUR bei einem dieser echten Probleme:
 1. Konkrete Einkommensversprechen oder irreführende Aussagen (UWG, Plattform-Richtlinien).
 2. Anlage-, Steuer- oder Rechtsberatung, oder Tabu-Themen: {cfg['nische'].get('tabu_themen', '')}
 3. Das Skript widerspricht sich selbst oder hat keinerlei konkreten Mehrwert.
+4. Ein Versprechen im Skript wird nicht eingelöst (z. B. "das Wichtigste kommt am Ende", aber am Ende kommt nur Werbung).
+5. Unbelegte Tatsachenbehauptungen als Fakt formuliert ("die meisten …", "der Hauptgrund …", erfundene Prozentzahlen)
+   oder Tool-Funktionen, die vermutlich nicht so existieren. Nenne in problems die genaue Stelle und eine
+   vorsichtigere Formulierung.
 
 Stil- und Geschmacksfragen (Hook könnte stärker sein, wenig originell, Klischee) sind KEIN Grund für false –
 darüber entscheidet der Inhaber selbst. Kleine Ungenauigkeiten auch nicht.

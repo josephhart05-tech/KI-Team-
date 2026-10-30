@@ -36,7 +36,16 @@ def _hook_rules():
   Neugier-Lücke ("Niemand sagt dir, dass …"), typischer Fehler ("Hör auf, … zu machen"),
   Widerspruch/Mythos ("Du brauchst keine … um …"), konkrete Zahl ("3 Dinge, die …"),
   direkte Ansprache eines Schmerzes ("Du willst nebenbei was aufbauen, hast aber keine Zeit?").
-- Wähle davon die stärkste als "hook": max. 12 Wörter, konkret, ohne Floskeln, ohne Clickbait-Lüge."""
+  Schreib nur den Hook-Text selbst, ohne den Namen der Technik davor.
+- Wähle davon die stärkste als "hook": max. 12 Wörter, konkret, ohne Floskeln, ohne Clickbait-Lüge.
+
+EHRLICHKEIT:
+- Jedes Versprechen im Beitrag wird auch eingelöst. Wer "das Wichtigste kommt am Ende" sagt,
+  bringt den wichtigsten Inhaltspunkt auch am Ende – vor dem Call-to-Action, nicht stattdessen.
+- Keine unbelegten Tatsachenbehauptungen wie "die meisten", "der Hauptgrund", "90 % scheitern".
+  Stattdessen vorsichtig formulieren: "viele", "einer der häufigsten Gründe", "oft".
+- Anleitungen zu Tools (z. B. Digistore24) nur so beschreiben, wie sie sicher funktionieren –
+  im Zweifel allgemeiner formulieren ("achte auf die Stornoquote") statt eine Funktion zu erfinden."""
 
 
 def _caption_rules(cfg):
