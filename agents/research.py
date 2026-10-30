@@ -62,7 +62,12 @@ def pick_topic(cfg, posts, learnings, goal, fmt, avoid=None, signals=None, wish=
 
     if goal == "monetarisierung" and products:
         product_lines = "\n".join(f"- id={p['id']}: {p['name']} – {p['beschreibung']} (passt zu: {p['passt_zu']})" for p in products)
-        product_task = f"Dieser Beitrag soll ein Produkt empfehlen. Wähle das passendste:\n{product_lines}\nSetze product_id auf dessen id."
+        product_task = (f"Dieser Beitrag soll ein Produkt empfehlen. Wähle das passendste:\n{product_lines}\n"
+                        "Setze product_id auf dessen id.\n"
+                        "Das Thema MUSS eine echte, große Einstiegshürde der Zielgruppe ansprechen, die das Produkt löst – "
+                        "z. B. 'Ich weiß nicht, was ich posten soll', 'Ich habe keine Follower', "
+                        "'Wie verdient man mit Digistore24 überhaupt Geld?', 'Welches Produkt soll ich bewerben?', "
+                        "'Ich habe neben dem Job keine Zeit'. Keine Detail- oder Nebenthemen.")
     else:
         product_task = "Dieser Beitrag ist reiner Mehrwert-Content ohne Werbung. Setze product_id auf null."
 

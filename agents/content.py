@@ -45,9 +45,17 @@ def _caption_rules(cfg):
   Dann Leerzeile, 2-4 kurze Zeilen Mehrwert (sparsam Emojis wie ✅ 👉 💡), Leerzeile,
   zum Schluss ein klarer Call-to-Action passend zum Ziel. Keine Hashtags.
 - caption_tiktok: 1 Hook-Satz + Call-to-Action, max. 150 Zeichen, keine Hashtags.
-- hashtags: genau {h['anzahl_instagram'] - 1} deutsche Hashtags ohne #, als Mischung:
-  1 großer (sehr viele Beiträge), 2 mittlere, Rest Nische (spezifisch für Thema und Zielgruppe).
+- hashtags: genau {h['anzahl_instagram'] - 1} deutsche Hashtags ohne #, in dieser Reihenfolge:
+  1. ein GROSSER, bekannter Hashtag mit sehr vielen Beiträgen (z. B. nebeneinkommen, affiliatemarketing, onlinebusiness),
+  2.-3. mittlere, 4. ein Nischen-Hashtag (spezifisch für Thema und Zielgruppe).
   Keine generischen Spam-Tags wie fyp, viral, explore, love."""
+
+
+def _value_rule():
+    return """MEHRWERT-PFLICHT: Der Beitrag nennt mindestens ein KONKRETES Tool, Beispiel oder einen konkreten Schritt
+mit Namen (z. B. "Digistore24-Marktplatz nach Gravity sortieren", "Canva", "Pixabay", "3 Posts pro Woche").
+Nie nur andeuten ("es gibt Quellen", "ich zeige dir wie") – der Zuschauer muss etwas Konkretes mitnehmen,
+auch wenn er nicht auf den Link klickt."""
 
 
 def write_script(cfg, idea, learnings, feedback=None):
@@ -63,6 +71,7 @@ SKRIPT:
 - Nach dem Hook sofort Spannung halten ("Und das Wichtigste kommt am Ende"), kein langes Intro.
 - Konkret und umsetzbar, mit echtem Mehrwert. Keine Einkommensversprechen, keine Euro-Beträge als Versprechen.
 - {_cta_rule(product)}
+{_value_rule()}
 - "hook_text": der Hook als kurzer Bildschirm-Titel, max. 6 Wörter (erscheint groß in den ersten Sekunden).
 - "search" ist ein englischer Suchbegriff (2-4 Wörter) für ein passendes Stock-Video,
   z. B. "woman typing laptop", "coffee morning desk". Keine Logos, keine Texte.
@@ -95,6 +104,7 @@ FOLIEN:
   Jede Folie muss alleine verständlich sein und Lust auf die nächste machen.
 - Letzte Folie: Zusammenfassung + Call-to-Action. {_cta_rule(product)}
 - Konkret und umsetzbar, mit echtem Mehrwert. Keine Einkommensversprechen.
+{_value_rule()}
 
 CAPTION & HASHTAGS:
 {_caption_rules(cfg)}
