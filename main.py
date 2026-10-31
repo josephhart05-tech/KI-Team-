@@ -62,7 +62,7 @@ def create(dry_run=False):
 
     # Wiedererkennbare Serie, z. B. "DF-TAGEBUCH #3" – erscheint in Video, Karussell und Caption
     label = (cfg["strategie"].get("serien") or {}).get(goal)
-    if label:
+    if label and cfg["strategie"].get("serien_anzeigen", False):
         script["serie"] = f"{label} #{1 + sum(1 for p in posts if p.get('goal') == goal)}"
 
     post_id = now().strftime("%Y%m%d-%H%M")

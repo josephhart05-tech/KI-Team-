@@ -17,14 +17,15 @@ def review(cfg, script):
             problems.append("Anzahl Folien muss zwischen 6 und 8 liegen")
     else:
         words = len(text.split())
-        if not 60 <= words <= 130:
-            problems.append(f"Länge passt nicht: {words} Wörter (Ziel 70-110)")
+        if not 50 <= words <= 100:
+            problems.append(f"Länge passt nicht: {words} Wörter (Ziel 60-85, also ca. 30 Sekunden)")
         if not 4 <= len(script.get("scenes", [])) <= 8:
             problems.append("Anzahl Szenen muss zwischen 5 und 7 liegen")
 
     prompt = f"""Du prüfst ein Social-Media-Skript zum Thema "{cfg['nische']['thema']}" für den deutschen Markt.
 Skript: {text}
 Instagram-Caption: {script.get('caption_instagram')}
+TikTok-Caption: {script.get('caption_tiktok')}
 
 Setze ok auf false NUR bei einem dieser echten Probleme:
 1. Konkrete Einkommensversprechen oder irreführende Aussagen (UWG, Plattform-Richtlinien).
@@ -34,6 +35,9 @@ Setze ok auf false NUR bei einem dieser echten Probleme:
 5. Unbelegte Tatsachenbehauptungen als Fakt formuliert ("die meisten …", "der Hauptgrund …", erfundene Prozentzahlen)
    oder Tool-Funktionen, die vermutlich nicht so existieren. Nenne in problems die genaue Stelle und eine
    vorsichtigere Formulierung.
+6. Der Beitrag beschreibt in Ich-Form, wie der Inhaber arbeitet, nutzt dabei aber Tools oder Abläufe,
+   die NICHT in seinem echten Setup vorkommen. Sein echtes Setup: {cfg['nische'].get('mein_setup', '-')}
+7. Der Call-to-Action passt nicht zum Inhalt (z. B. "Kommentiere 1, 2 oder 3", aber es gibt 4 Punkte).
 
 Stil- und Geschmacksfragen (Hook könnte stärker sein, wenig originell, Klischee) sind KEIN Grund für false –
 darüber entscheidet der Inhaber selbst. Kleine Ungenauigkeiten auch nicht.

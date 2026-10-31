@@ -11,6 +11,22 @@ def _context(cfg, idea, learnings, feedback):
     if idea.get("fakten"):
         fix += (f"\nECHTE FAKTEN VOM INHABER (Ich-Perspektive). Verwende NUR diese Erlebnisse, Zahlen und Ergebnisse – "
                 f"erfinde keine weiteren Fortschritte, Zahlen oder Erfolge dazu:\n{idea['fakten']}\n")
+    story = cfg["nische"].get("meine_geschichte", "")
+    if story:
+        fix += (f"\nDIE ECHTE GESCHICHTE DES INHABERS (darf in Ich-Form verwendet werden, wenn es zum Thema passt – "
+                f"nichts hinzuerfinden, keine Details ausschmücken, die hier nicht stehen):\n{story}\n")
+    pains = cfg["nische"].get("pain_points") or []
+    if pains:
+        fix += ("\nSCHMERZPUNKTE DER ZIELGRUPPE – der Beitrag muss mindestens einen davon direkt ansprechen, "
+                "am besten schon im Hook, und dann Mut machen bzw. einen ersten machbaren Schritt zeigen:\n- "
+                + "\n- ".join(pains) + "\n")
+    setup = cfg["nische"].get("mein_setup", "")
+    if setup:
+        fix += (f"\nSO ARBEITET DER INHABER WIRKLICH (sein Content-System). Wenn der Beitrag in Ich-Form beschreibt, "
+                f"wie er arbeitet, plant oder Content erstellt: NUR das hier verwenden, keine anderen Tools, "
+                f"Abläufe oder Zeitangaben erfinden:\n{setup}\n"
+                "Allgemeine Tipps für den Zuschauer ('du kannst z. B. Canva nutzen') sind erlaubt – "
+                "aber nie als eigenes Vorgehen des Inhabers ausgeben.\n")
     return f"""Nische: {cfg['nische']['thema']}
 Zielgruppe: {cfg['nische']['zielgruppe']}
 Kernbotschaft des Kanals (der Beitrag zahlt darauf ein): {cfg['nische'].get('kernbotschaft', '')}
@@ -78,7 +94,7 @@ def write_script(cfg, idea, learnings, feedback=None):
 {_hook_rules()}
 
 SKRIPT:
-- Gesprochener Text insgesamt 70-110 Wörter (ca. 30-45 Sekunden).
+- Gesprochener Text insgesamt 60-85 Wörter (ca. 25-35 Sekunden). Kürzer ist besser – jedes Wort muss sitzen.
 - Szene 1 ist der gewählte Hook (wörtlich). 5 bis 7 Szenen, jede = 1-2 kurze Sätze zum Vorlesen.
 - Nach dem Hook sofort Spannung halten ("Und das Wichtigste kommt am Ende"), kein langes Intro.
 - Konkret und umsetzbar, mit echtem Mehrwert. Keine Einkommensversprechen, keine Euro-Beträge als Versprechen.
@@ -114,6 +130,9 @@ FOLIEN:
   der neugierig auf Folie 2 macht ("Wisch weiter 👉").
 - Folien 2 bis vorletzte: je ein konkreter Punkt. "titel" max. 6 Wörter, "text" max. 25 Wörter.
   Jede Folie muss alleine verständlich sein und Lust auf die nächste machen.
+  Titel NICHT mit "Schritt 1:", "Tipp 2:" o. Ä. beginnen – die Nummer steht schon groß auf der Folie.
+- Keine Emojis in titel oder text der Folien (nur in den Captions).
+- Der Call-to-Action muss zum Inhalt passen: "Kommentiere 1, 2 oder 3" nur, wenn es genau diese Punkte gibt.
 - Letzte Folie: Zusammenfassung + Call-to-Action. {_cta_rule(product)}
 - Konkret und umsetzbar, mit echtem Mehrwert. Keine Einkommensversprechen.
 {_value_rule()}

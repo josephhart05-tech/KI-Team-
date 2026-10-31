@@ -196,6 +196,9 @@ def _look_filter(look):
         f"colorbalance=rs={g * 0.6:.3f}:gs={g * 0.25:.3f}:bs={-g * 0.7:.3f}"
         f":rm={g * 0.5:.3f}:gm={g * 0.2:.3f}:bm={-g * 0.6:.3f}",
     ]
+    # Einheitlich dunkle Grundstimmung, egal wie hell der Original-Clip ist
+    if look.get("abdunkeln"):
+        parts.append(f"drawbox=x=0:y=0:w=iw:h=ih:color=black@{float(look['abdunkeln']):.2f}:t=fill")
     if look.get("vignette", True):
         parts.append("vignette=PI/5")
     return "," + ",".join(parts)

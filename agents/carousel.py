@@ -1,4 +1,5 @@
 """Karussell-Agent: macht aus den Folien-Texten fertige Bilder (1080x1350) im Marken-Look."""
+import re
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -19,6 +20,18 @@ def _font(kind, size):
             if path.exists():
                 return ImageFont.truetype(str(path), size)
     return ImageFont.load_default(size=size)
+
+
+_EMOJI = re.compile("[\U0001F000-\U0001FAFF☀-➿️‍←-⇿⬀-⯿]")
+_STEP_PREFIX = re.compile(r"^\s*(schritt|tipp|punkt|step|fehler|grund)\s*\d+\s*[:.\-–]\s*", re.IGNORECASE)
+
+
+def _clean(text, strip_step=False):
+    """Emojis kann die Schrift nicht darstellen (würden als □ erscheinen) – also raus."""
+    text = _EMOJI.sub("", text or "")
+    if strip_step:
+        text = _STEP_PREFIX.sub("", text)
+    return " ".join(text.split())
 
 
 def _hex(color):
@@ -78,13 +91,17 @@ def render(cfg, script, workdir):
         max_w = W - 2 * MARGIN
 
         first, last = i == 0, i == len(slides) - 1
-        title_font, title_lines = _fit(d, slide.get("titel", "").upper(), "bold",
-                                       112 if first else 78, 48, max_w, 4 if first else 3)
-        body_font, body_lines = _fit(d, slide.get("text", ""), "regular", 50 if first else 46, 32, max_w, 7)
+        title = _clean(slide.get("titel", ""), strip_step=not first).upper()
+        title_font, title_lines = _fit(d, title, "bold", 112 if first else 78, 48, max_w, 4 if first else 3)
+        body_font, body_lines = _fit(d, _clean(slide.get("text", "")), "regular", 50 if first else 46, 32, max_w, 7)
 
         title_h = len(title_lines) * int(title_font.size * 1.15)
         body_h = len(body_lines) * int(body_font.size * 1.35)
-        y = (H - title_h - 70 - body_h) // 2 if first else 230
+        # Inhalt vertikal mittig, aber nie über Abzeichen und Nummer
+        number_h = 0 if first else 110
+        y = max(230 if not first else 140, (H - number_h - title_h - 70 - body_h) // 2 + number_h)
+        if not first:
+            d.text((MARGIN, y - number_h), f"{i:02d}", font=_font("bold", 64), fill=gold)
 
         # Serien-Abzeichen oben links (z. B. "DF-TIPP #12"): schwarz auf Gold
         if script.get("serie"):
@@ -93,8 +110,6 @@ def render(cfg, script, workdir):
             bw = d.textlength(badge, font=badge_font)
             d.rectangle([MARGIN - 14, 62, MARGIN + bw + 14, 108], fill=gold)
             d.text((MARGIN, 68), badge, font=badge_font, fill=black)
-        if not first:
-            d.text((MARGIN, 130), f"{i:02d}", font=_font("bold", 64), fill=gold)
         y = _draw_lines(d, title_lines, title_font, y, gold, 1.15)
         d.line([MARGIN, y + 20, MARGIN + 140, y + 20], fill=gold, width=5)
         _draw_lines(d, body_lines, body_font, y + 60, white, 1.35)

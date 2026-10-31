@@ -8,6 +8,30 @@ nische:
   thema: "Faceless Nebeneinkommen aufbauen – mit Instagram, Digistore24 und anderen Affiliate-Partnern"
   # Die eine Botschaft, auf die JEDES Video einzahlt
   kernbotschaft: "Ich baue mir neben dem Job Schritt für Schritt ein faceless Nebeneinkommen auf – mit Instagram, Digistore24 und anderen Affiliate-Partnern – und teile ehrlich alles, was ich dabei lerne, damit du es auch kannst. Es braucht Zeit und Einsatz, aber keine Kamera und kein eigenes Produkt."
+  # Deine echte Geschichte – darf in Ich-Form erzählt werden. Nur hier eintragen, was wirklich stimmt.
+  # Mehr Details (z. B. was dich zweifeln ließ, dein erster Schritt) kannst du jederzeit ergänzen.
+  meine_geschichte: >-
+    Am Anfang hatte ich große Zweifel und kein Vertrauen – weder in mich selbst noch darin,
+    dass man sich online wirklich etwas Seriöses aufbauen kann. Ich habe mich trotzdem getraut,
+    einfach anzufangen, statt weiter nur zu überlegen.
+  # Die Schmerzpunkte deiner Zielgruppe – jeder Beitrag soll mindestens einen davon treffen.
+  pain_points:
+    - "Zweifel, ob das überhaupt funktioniert oder nur Abzocke ist"
+    - "kein Vertrauen in sich selbst – 'ich kann sowas nicht'"
+    - "Angst anzufangen und zu scheitern"
+    - "Angst, was Familie, Freunde oder Kollegen denken"
+    - "keine Zeit neben dem Job"
+    - "will nicht das eigene Gesicht zeigen"
+    - "Überforderung: zu viele Infos, zu viele Gurus, kein Plan, wo man anfangen soll"
+  # So arbeitest du WIRKLICH – das Team darf über dein Vorgehen nur das hier behaupten.
+  # Ändert sich etwas an deinem Vorgehen, hier anpassen.
+  mein_setup: >-
+    Ich habe mir ein eigenes, kostenloses KI-Team gebaut, das auf GitHub läuft.
+    Es recherchiert jeden Tag, was meine Zielgruppe bei Google, YouTube und Reddit sucht,
+    schreibt mit KI (Google Gemini) Hooks, Skripte, Captions und Hashtags,
+    erstellt daraus Reels (KI-Stimme, Stock-Videos von Pixabay, Untertitel) und Karussells im DF-Design,
+    und schickt mir alles zweimal am Tag per Telegram. Ich lese jeden Beitrag selbst, gebe ihn frei oder verwerfe ihn,
+    und lade ihn dann selbst auf Instagram und TikTok hoch. Aus meinen Entscheidungen lernt das Team, was mir gefällt.
   # Themen, die das Team NIE wählt (rechtlich heikel oder passen nicht zu deinem Business)
   tabu_themen: "Geldanlage, Aktien, ETFs, Dividenden, Krypto, Trading, Forex, Immobilien, Kredite, Steuertricks, Glücksspiel"
   zielgruppe: "Angestellte in Deutschland, 25-45 Jahre, wenig Zeit, wollen sich realistisch etwas nebenbei aufbauen – viele wollen dafür nicht vor die Kamera"
@@ -31,7 +55,8 @@ produkte:
 strategie:
   ziel_rotation: ["wachstum", "einblick", "interaktion", "wachstum", "einblick", "monetarisierung"]
   format_rotation: ["reel", "reel", "karussell"]
-  # Feste Serien = Wiedererkennung. Erscheinen als goldenes Abzeichen mit Nummer (z. B. "DF-TAGEBUCH #5").
+  # Serien-Abzeichen (z. B. "DF-TAGEBUCH #5") in Video, Karussell und Caption. true = anzeigen, false = aus.
+  serien_anzeigen: false
   serien:
     wachstum: "DF-TIPP"
     einblick: "DF-TAGEBUCH"
@@ -85,9 +110,10 @@ video:
   # Farbstimmung der Stock-Videos (Schwarz-Gold-Look)
   look:
     aktiv: true
-    helligkeit: -0.08        # negativ = dunkler
-    saettigung: 0.85         # unter 1 = gedämpftere Farben
-    gold_ton: 0.15           # 0 = neutral, 0.3 = sehr golden
+    helligkeit: -0.05        # negativ = dunkler
+    saettigung: 0.5          # unter 1 = gedämpftere Farben – niedrig = alle Clips wirken wie aus einem Guss
+    gold_ton: 0.22           # 0 = neutral, 0.3 = sehr golden
+    abdunkeln: 0.30          # dunkler Schleier über jedem Clip (0 = aus, 0.5 = sehr dunkel)
     vignette: true           # dunkler Rand
   # Dein Branding oben im Video
   marke:

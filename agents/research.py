@@ -102,6 +102,9 @@ Diese Themenbereiche sind TABU, niemals wählen: {cfg['nische'].get('tabu_themen
 {f"WICHTIG: Der Inhaber wünscht sich dieses Thema – nimm es und finde nur den besten Blickwinkel: {wish}" if wish else ""}
 {f"ECHTER TAGEBUCH-EINTRAG des Inhabers – das Thema muss genau darauf beruhen, nichts dazuerfinden: {journal}" if journal else ""}
 
+Schmerzpunkte der Zielgruppe (das Thema muss mindestens einen davon treffen):
+{chr(10).join('- ' + p for p in cfg['nische'].get('pain_points') or [])}
+
 Format: {FORMAT_NAMES[fmt]}
 Ziel dieses Beitrags: {goal_text}
 
