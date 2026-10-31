@@ -395,5 +395,66 @@
     "caption_instagram": "Viele lassen im November das größte Potenzial für ihr Nebeneinkommen liegen.\n\n✅ Nutze den Digistore24-Marktplatz\n👉 Prüfe passende Affiliate-Angebote\n💡 Bereite deine Posts rechtzeitig vor\n\nKommentiere 1 für den Vorbereiter oder 2 für den Abwarter.\n\n#affiliatemarketing #nebeneinkommen #onlinebusiness #facelessmarketing #dfdigitalefreiheit",
     "caption_tiktok": "Bereitest du deinen Faceless Account auf den Black Friday vor oder verpasst du die Chance? Kommentiere 1 oder 2.\n\n#affiliatemarketing #nebeneinkommen #onlinebusiness #dfdigitalefreiheit",
     "video_url": null
+  },
+  {
+    "id": "20261031-1146",
+    "status": "pending",
+    "created_at": "2026-10-31T11:47:55+00:00",
+    "goal": "interaktion",
+    "format": "reel",
+    "topic": "Ein eigenes KI-Content-Team für Faceless Instagram aufbauen",
+    "angle": "Hinter den Kulissen: Wie ich meinen Content komplett automatisieren lasse (von KI-Trendrecherche über Skripte bis Telegram-Freigabe) und wie der Redaktionsplan zwischen Wachstum, Interaktion und Monetarisierung wechselt.",
+    "hook": "Du willst nebenbei starten, hast aber nach der Arbeit null Zeit?",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "Niemand sagt dir, wie viel Zeit Content neben dem Job wirklich frisst.",
+        "Hör auf, stundenlang planlos vor Canva zu sitzen nach Feierabend.",
+        "Du brauchst kein teures Team, um täglich Faceless-Content zu posten.",
+        "3 Schritte, wie mein Content fast von alleine entsteht.",
+        "Du willst nebenbei starten, hast aber nach der Arbeit null Zeit?"
+      ],
+      "hook": "Du willst nebenbei starten, hast aber nach der Arbeit null Zeit?",
+      "hook_text": "Keine Zeit nach der Arbeit?",
+      "scenes": [
+        {
+          "text": "Du willst nebenbei starten, hast aber nach der Arbeit null Zeit?",
+          "search": "tired person laptop night"
+        },
+        {
+          "text": "Genau das war auch mein Problem: Nach 8 Stunden Job war der Kopf einfach leer.",
+          "search": "dark desk warm lamp"
+        },
+        {
+          "text": "Heute lasse ich ein kostenloses KI-Skript auf GitHub täglich Themen auf Reddit und Google recherchieren.",
+          "search": "code screen dark room"
+        },
+        {
+          "text": "Google Gemini schreibt die Skripte, Pixabay liefert die Videos und fertig geschnitten landet alles zweimal täglich in Telegram.",
+          "search": "smartphone dark background table"
+        },
+        {
+          "text": "Ich prüfe nur kurz, klicke auf Freigabe und lade es hoch – maximal 10 Minuten Aufwand.",
+          "search": "typing hands elegant keyboard"
+        },
+        {
+          "text": "Hand aufs Herz: Bist du Typ 1 – lieber alles manuell machen, oder Typ 2 – smarte Automatisierung nutzen?",
+          "search": "coffee mug dark aesthetic"
+        }
+      ],
+      "caption_instagram": "Vollzeitjob und trotzdem täglich posten? So spare ich jede Woche etliche Stunden Zeit.\n\nNach der Arbeit noch stundenlang Skripte schreiben und Videos schneiden? Hätte ich niemals durchgehalten.\n\n👉 Mein Workflow heute:\n💡 Trend-Recherche über GitHub & Google\n💡 Skripte via Google Gemini\n💡 Freigabe bequem über Telegram\n\nWelcher Typ bist du beim Content? Schreib 1 für 'lieber selbst tippen' oder 2 für 'alles automatisieren' in die Kommentare!",
+      "caption_tiktok": "Content neben dem Vollzeitjob? Geht auch ohne stundenlanges Schneiden. Welcher Typ bist du: 1 (selber machen) oder 2 (automatisieren)?",
+      "hashtags": [
+        "nebeneinkommen",
+        "facelesscontent",
+        "nebenbeiaufbauen",
+        "kiautomatisierung"
+      ],
+      "format": "reel",
+      "product_id": null
+    },
+    "caption_instagram": "Vollzeitjob und trotzdem täglich posten? So spare ich jede Woche etliche Stunden Zeit.\n\nNach der Arbeit noch stundenlang Skripte schreiben und Videos schneiden? Hätte ich niemals durchgehalten.\n\n👉 Mein Workflow heute:\n💡 Trend-Recherche über GitHub & Google\n💡 Skripte via Google Gemini\n💡 Freigabe bequem über Telegram\n\nWelcher Typ bist du beim Content? Schreib 1 für 'lieber selbst tippen' oder 2 für 'alles automatisieren' in die Kommentare!\n\n#nebeneinkommen #facelesscontent #nebenbeiaufbauen #kiautomatisierung #dfdigitalefreiheit",
+    "caption_tiktok": "Content neben dem Vollzeitjob? Geht auch ohne stundenlanges Schneiden. Welcher Typ bist du: 1 (selber machen) oder 2 (automatisieren)?\n\n#nebeneinkommen #facelesscontent #nebenbeiaufbauen #dfdigitalefreiheit",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793447258/ki-team/uzfqqwufzfglunbqd2sw.mp4"
   }
 ]
