@@ -44,17 +44,28 @@ def collect_signals(cfg):
 FORMAT_NAMES = {"reel": "30-45-Sekunden-Reel (Kurzvideo)", "karussell": "Karussell-Post mit 6-8 Bildern zum Durchwischen"}
 
 
-def next_plan(cfg, posts, settings):
+def active_goals(cfg, settings, has_journal):
+    """Rotation ohne die Ziele, die gerade nicht dran sein können."""
+    goals = cfg["strategie"]["ziel_rotation"]
+    goals = [g for g in goals
+             if not (g == "monetarisierung" and not settings.get("monetarisierung_aktiv"))
+             and not (g == "einblick" and not has_journal)]
+    return goals or ["wachstum"]
+
+
+def next_plan(cfg, posts, settings, has_journal=False):
     """Welches Ziel und welches Format ist als Nächstes dran? Wünsche per Telegram haben Vorrang."""
-    strat = cfg["strategie"]
-    goals, formats = strat["ziel_rotation"], strat["format_rotation"]
+    goals = active_goals(cfg, settings, has_journal)
+    formats = cfg["strategie"]["format_rotation"]
     n = len(posts)
     goal = settings.pop("naechstes_ziel", None) or goals[n % len(goals)]
+    if goal not in goals:  # z. B. /ziel einblick ohne Tagebuch-Eintrag
+        goal = goals[n % len(goals)]
     fmt = settings.pop("naechstes_format", None) or formats[n % len(formats)]
     return goal, fmt
 
 
-def pick_topic(cfg, posts, learnings, goal, fmt, avoid=None, signals=None, wish=None):
+def pick_topic(cfg, posts, learnings, goal, fmt, avoid=None, signals=None, wish=None, journal=None):
     signals = signals or collect_signals(cfg)
     products = cfg.get("produkte") or []
     recent = [p["topic"] for p in posts[-40:]]
@@ -89,6 +100,7 @@ Diese Themen hatten wir zuletzt schon (NICHT wiederholen):
 Diese Themenbereiche sind TABU, niemals wählen: {cfg['nische'].get('tabu_themen', '')}
 {f"Diese Themen sind gerade an der Prüfung gescheitert, wähle etwas deutlich anderes: {avoid}" if avoid else ""}
 {f"WICHTIG: Der Inhaber wünscht sich dieses Thema – nimm es und finde nur den besten Blickwinkel: {wish}" if wish else ""}
+{f"ECHTER TAGEBUCH-EINTRAG des Inhabers – das Thema muss genau darauf beruhen, nichts dazuerfinden: {journal}" if journal else ""}
 
 Format: {FORMAT_NAMES[fmt]}
 Ziel dieses Beitrags: {goal_text}
@@ -108,6 +120,7 @@ Antworte nur als JSON:
     if goal != "monetarisierung" or idea.get("product_id") not in {p["id"] for p in products}:
         idea["product_id"] = None
     idea["goal"], idea["format"] = goal, fmt
+    idea["fakten"] = journal
     return idea
 
 
@@ -124,7 +137,9 @@ Aktuelle Suchanfragen: {signals['google'][:30]}
 Was bei uns funktioniert: {learnings}
 Schon gemacht (nicht wiederholen): {recent}
 
-Erstelle 10 virale Ideen: 6 Reels und 4 Karussells, gemischt für die Ziele Wachstum, Interaktion und Monetarisierung.
+Erstelle 10 virale Ideen: 6 Reels und 4 Karussells, gemischt für die Ziele Wachstum, Interaktion und
+Einblick (Build in Public: wie ich mir das Business Schritt für Schritt aufbaue – als Idee formulieren,
+die der Inhaber mit seinen echten Erlebnissen füllt).
 Jede Idee: scroll-stoppender Hook + ein Satz, worum es geht. Keine Einkommensversprechen.
 Antworte nur als JSON:
 {{"ideen": [{{"format": "Reel", "ziel": "Wachstum", "hook": "...", "inhalt": "..."}}]}}"""

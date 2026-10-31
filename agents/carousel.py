@@ -86,6 +86,13 @@ def render(cfg, script, workdir):
         body_h = len(body_lines) * int(body_font.size * 1.35)
         y = (H - title_h - 70 - body_h) // 2 if first else 230
 
+        # Serien-Abzeichen oben links (z. B. "DF-TIPP #12"): schwarz auf Gold
+        if script.get("serie"):
+            badge_font = _font("bold", 30)
+            badge = script["serie"].upper()
+            bw = d.textlength(badge, font=badge_font)
+            d.rectangle([MARGIN - 14, 62, MARGIN + bw + 14, 108], fill=gold)
+            d.text((MARGIN, 68), badge, font=badge_font, fill=black)
         if not first:
             d.text((MARGIN, 130), f"{i:02d}", font=_font("bold", 64), fill=gold)
         y = _draw_lines(d, title_lines, title_font, y, gold, 1.15)

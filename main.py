@@ -32,7 +32,9 @@ def create(dry_run=False):
         print("Automatik pausiert (/weiter in Telegram startet sie wieder).")
         return
     wish = (state.get("ideen") or [None])[0]
-    goal, fmt = research.next_plan(cfg, posts, settings)
+    journal = state.get("tagebuch") or []
+    goal, fmt = research.next_plan(cfg, posts, settings, has_journal=bool(journal))
+    journal_entry = journal[0] if goal == "einblick" and journal else None
     fmt = os.environ.get("FORCE_FORMAT") or fmt  # Testlauf: Format frei wählbar
     print(f"Ziel: {goal} | Format: {fmt}")
     writer = content.write_carousel if fmt == "karussell" else content.write_script
@@ -42,7 +44,7 @@ def create(dry_run=False):
     script, ok, problems = None, False, None
     for attempt in range(3):  # bis zu 3 Themen, je 3 Skript-Versuche
         idea = research.pick_topic(cfg, posts, learnings, goal, fmt, avoid=failed_topics, signals=signals,
-                                   wish=wish if attempt == 0 else None)
+                                   wish=wish if attempt == 0 else None, journal=journal_entry)
         print(f"Thema: {idea['topic']} ({idea['angle']})")
         problems = None
         for _ in range(3):
@@ -57,6 +59,11 @@ def create(dry_run=False):
         print("Thema verworfen, wähle ein neues.")
     if not ok:
         raise RuntimeError(f"Kein Skript hat die Prüfung bestanden: {problems}")
+
+    # Wiedererkennbare Serie, z. B. "DF-TAGEBUCH #3" – erscheint in Video, Karussell und Caption
+    label = (cfg["strategie"].get("serien") or {}).get(goal)
+    if label:
+        script["serie"] = f"{label} #{1 + sum(1 for p in posts if p.get('goal') == goal)}"
 
     post_id = now().strftime("%Y%m%d-%H%M")
     workdir = OUTPUT / post_id
@@ -98,17 +105,22 @@ def create(dry_run=False):
     save_posts(posts)
     if wish and state.get("ideen"):
         state["ideen"].pop(0)
-    save_state(state)  # verbrauchte Wünsche (/idee, /ziel, /format) entfernen
+    if journal_entry and state.get("tagebuch"):
+        state["tagebuch"].pop(0)
+    save_state(state)  # verbrauchte Wünsche (/idee, /ziel, /format, /tagebuch) entfernen
     print(f"Entwurf {post_id} an Telegram geschickt.")
 
 
-GOAL_LABELS = {"wachstum": "🚀 Wachstum", "interaktion": "💬 Interaktion", "monetarisierung": "💰 Monetarisierung"}
+GOAL_LABELS = {"wachstum": "🚀 Wachstum", "einblick": "📖 Einblick", "interaktion": "💬 Interaktion",
+               "monetarisierung": "💰 Monetarisierung"}
 
 
 COMMANDS = [
     ("neu", "Sofort einen neuen Beitrag erstellen"),
     ("idee", "Themenwunsch, z. B. /idee Was ist Digistore24?"),
-    ("ziel", "Ziel für den nächsten Beitrag: wachstum, interaktion, monetarisierung"),
+    ("tagebuch", "Was du gemacht hast, z. B. /tagebuch Heute 3 Reels geplant, 2 neue Follower"),
+    ("webinar", "Webinar-Beiträge an/aus: /webinar an"),
+    ("ziel", "Ziel für den nächsten Beitrag: wachstum, einblick, interaktion"),
     ("format", "Format für den nächsten Beitrag: reel oder karussell"),
     ("ideen", "10 virale Reel- und Karussell-Ideen"),
     ("pause", "Automatische Videos anhalten"),
@@ -143,11 +155,29 @@ def _handle_command(text, state, posts, cfg):
             return "Schreib dein Thema dahinter, z. B.: /idee Was ist Digistore24?"
         state.setdefault("ideen", []).append(arg)
         return f"💡 Notiert! Kommt beim nächsten Video dran ({len(state['ideen'])} Wunsch/Wünsche in der Warteschlange)."
+    if cmd == "tagebuch":
+        if not arg:
+            return ("Erzähl mir kurz, was du gemacht hast – ehrlich, auch Rückschläge. Zum Beispiel:\n"
+                    "/tagebuch Diese Woche 5 Reels gepostet, eins hatte 800 Views, die anderen kaum. "
+                    "Gelernt: Hooks mit Frage laufen besser.")
+        state.setdefault("tagebuch", []).append(arg)
+        return f"📖 Ins Tagebuch geschrieben! Daraus wird ein Einblick-Beitrag ({len(state['tagebuch'])} Eintrag/Einträge offen)."
+    if cmd == "webinar":
+        on = arg.lower() in ("an", "on", "ja", "start")
+        if arg.lower() not in ("an", "on", "ja", "start", "aus", "off", "nein", "stop"):
+            return "Bitte /webinar an oder /webinar aus schreiben."
+        settings["monetarisierung_aktiv"] = on
+        return ("💰 Webinar-Beiträge sind jetzt AN – sie kommen ab sofort in der Rotation vor."
+                if on else "🔕 Webinar-Beiträge sind AUS – nur Mehrwert, Einblicke und Interaktion.")
     if cmd == "ziel":
-        goals = cfg["strategie"]["ziel_rotation"]
+        goals = list(dict.fromkeys(cfg["strategie"]["ziel_rotation"]))
         choice = arg.lower()
         if choice not in goals:
-            return f"Bitte eins davon angeben: {', '.join(goals)}\nz. B. /ziel monetarisierung"
+            return f"Bitte eins davon angeben: {', '.join(goals)}\nz. B. /ziel wachstum"
+        if choice == "einblick" and not state.get("tagebuch"):
+            return "Für einen Einblick brauche ich erst einen echten Tagebuch-Eintrag: /tagebuch …"
+        if choice == "monetarisierung" and not settings.get("monetarisierung_aktiv"):
+            return "Webinar-Beiträge sind noch aus. Schalte sie erst mit /webinar an frei."
         settings["naechstes_ziel"] = choice
         return f"🎯 Der nächste Beitrag hat das Ziel: {GOAL_LABELS.get(choice, choice)}"
     if cmd == "format":
@@ -170,13 +200,15 @@ def _handle_command(text, state, posts, cfg):
         return "▶️ Läuft wieder – die nächsten Videos kommen um ca. 7 und 16 Uhr."
     if cmd == "status":
         count = lambda s: sum(1 for p in posts if p.get("status") == s)
-        goal, fmt = research.next_plan(cfg, posts, dict(settings))
+        goal, fmt = research.next_plan(cfg, posts, dict(settings), has_journal=bool(state.get("tagebuch")))
         return (f"📊 Status deines KI-Teams\n\n"
                 f"Beiträge gesamt: {len(posts)}\n"
                 f"✅ Veröffentlicht: {count('published')}\n"
                 f"❌ Verworfen: {count('rejected')}\n"
                 f"⏳ Warten auf dich: {count('pending')}\n\n"
                 f"Als Nächstes: {GOAL_LABELS.get(goal, goal)} · {'Karussell' if fmt == 'karussell' else 'Reel'}\n"
+                f"Webinar-Beiträge: {'💰 an' if settings.get('monetarisierung_aktiv') else '🔕 aus'}\n"
+                f"Offene Tagebuch-Einträge: {len(state.get('tagebuch', []))}\n"
                 f"Automatik: {'⏸ pausiert' if settings.get('pausiert') else '▶️ aktiv'}\n"
                 f"Themenwünsche in der Warteschlange: {len(state.get('ideen', []))}")
     return "🤖 Das kann ich:\n\n" + "\n".join(f"/{c} – {d}" for c, d in COMMANDS)

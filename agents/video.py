@@ -74,7 +74,7 @@ def _group_words(words, max_words=3, max_chars=16):
     return groups
 
 
-def _write_ass(marks, vcfg, path, total, hook_text=None):
+def _write_ass(marks, vcfg, path, total, hook_text=None, serie=None):
     sub_cfg = vcfg.get("untertitel", {})
     font = vcfg["schriftart"]
     base = _ass_color(sub_cfg.get("farbe", "#FFFFFF"))
@@ -95,6 +95,9 @@ def _write_ass(marks, vcfg, path, total, hook_text=None):
         # Hook-Titel: groß, Gold auf schwarzem Kasten, mittig – stoppt das Scrollen
         f"Style: Hook,{font},92,&H00{brand_color},&H00{brand_color},&H00000000,&H28000000"
         ",-1,0,0,0,100,100,1,0,3,18,0,5,90,90,0,1",
+        # Serien-Abzeichen (z. B. "DF-TIPP #12"): klein, schwarzer Text auf Gold-Kasten
+        f"Style: Serie,{font},34,&H000B0B0B,&H000B0B0B,&H00{brand_color},&H00000000"
+        ",-1,0,0,0,100,100,4,0,3,10,0,8,60,60,215,1",
         "", "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
@@ -103,6 +106,14 @@ def _write_ass(marks, vcfg, path, total, hook_text=None):
     if hook_text:
         clean_hook = hook_text.replace("{", "(").replace("}", ")").replace("\n", " ").upper()
         lines.append(f"Dialogue: 2,{_ass_time(0)},{_ass_time(2.8)},Hook,,0,0,0,,{{\\fad(120,300)}}{clean_hook}")
+    if serie:  # Serien-Abzeichen unter der Marke, das ganze Video über
+        lines.append(f"Dialogue: 1,{_ass_time(0)},{_ass_time(total)},Serie,,0,0,0,,{serie.upper()}")
+    if brand.get("abspann_titel"):  # fester DF-Abspann
+        start = max(total - 2.2, 0)
+        outro = f"{{\\fad(250,0)\\fs84}}{brand['abspann_titel']}"
+        if brand.get("abspann_text"):
+            outro += f"\\N{{\\fs50\\c&HFFFFFF&}}{brand['abspann_text']}"
+        lines.append(f"Dialogue: 3,{_ass_time(start)},{_ass_time(total)},Hook,,0,0,0,,{outro}")
     for gi, group in enumerate(groups):
         # Gruppe bleibt stehen bis zur nächsten (kein Flackern bei kurzen Pausen)
         next_start = groups[gi + 1][0][0] if gi + 1 < len(groups) else group[-1][1] + 0.3
@@ -212,7 +223,7 @@ def render(cfg, script, workdir):
     marks = asyncio.run(_tts(text, vcfg["stimme"], vcfg["sprechtempo"], workdir / "voice.mp3"))
     audio_len = _duration("voice.mp3", workdir)
     total = audio_len + 0.6
-    _write_ass(marks, vcfg, workdir / "subs.ass", total, hook_text=script.get("hook_text"))
+    _write_ass(marks, vcfg, workdir / "subs.ass", total, hook_text=script.get("hook_text"), serie=script.get("serie"))
     look = _look_filter(vcfg.get("look") or {})
 
     # Jede Szene bekommt Bildschirmzeit passend zur Länge ihres Textes

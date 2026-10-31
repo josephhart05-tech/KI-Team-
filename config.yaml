@@ -7,7 +7,7 @@
 nische:
   thema: "Faceless Nebeneinkommen aufbauen – mit Instagram, Digistore24 und anderen Affiliate-Partnern"
   # Die eine Botschaft, auf die JEDES Video einzahlt
-  kernbotschaft: "Man kann sich neben dem Job ein Nebeneinkommen aufbauen, ohne sein Gesicht zu zeigen – mit einem faceless Instagram-Account, Digistore24 und anderen Affiliate-Partnern. Es braucht Zeit und Einsatz, aber keine Kamera und kein eigenes Produkt."
+  kernbotschaft: "Ich baue mir neben dem Job Schritt für Schritt ein faceless Nebeneinkommen auf – mit Instagram, Digistore24 und anderen Affiliate-Partnern – und teile ehrlich alles, was ich dabei lerne, damit du es auch kannst. Es braucht Zeit und Einsatz, aber keine Kamera und kein eigenes Produkt."
   # Themen, die das Team NIE wählt (rechtlich heikel oder passen nicht zu deinem Business)
   tabu_themen: "Geldanlage, Aktien, ETFs, Dividenden, Krypto, Trading, Forex, Immobilien, Kredite, Steuertricks, Glücksspiel"
   zielgruppe: "Angestellte in Deutschland, 25-45 Jahre, wenig Zeit, wollen sich realistisch etwas nebenbei aufbauen – viele wollen dafür nicht vor die Kamera"
@@ -26,11 +26,23 @@ produkte:
     passt_zu: "Einstieg ins Affiliate-Marketing, Social-Media-Account aufbauen, digitale Produkte empfehlen, erste Schritte neben dem Job, kostenlos lernen"
 
 # Content-Strategie: Ziele und Formate wechseln sich der Reihe nach ab.
-# Nur "monetarisierung" bewirbt ein Produkt – der Rest baut Reichweite und Vertrauen auf.
+# - "einblick" kommt nur dran, wenn du per /tagebuch etwas Echtes erzählt hast (sonst übersprungen).
+# - "monetarisierung" kommt erst dran, wenn du es per /webinar an freischaltest (sonst übersprungen).
 strategie:
-  ziel_rotation: ["wachstum", "interaktion", "monetarisierung"]
+  ziel_rotation: ["wachstum", "einblick", "interaktion", "wachstum", "einblick", "monetarisierung"]
   format_rotation: ["reel", "reel", "karussell"]
+  # Feste Serien = Wiedererkennung. Erscheinen als goldenes Abzeichen mit Nummer (z. B. "DF-TAGEBUCH #5").
+  serien:
+    wachstum: "DF-TIPP"
+    einblick: "DF-TAGEBUCH"
+    interaktion: "DF-FRAGE"
+    monetarisierung: "DF-EMPFEHLUNG"
   ziele:
+    einblick: >-
+      Build in Public: Zeig ehrlich, wie ich mir Schritt für Schritt mein faceless Business aufbaue –
+      was ich gerade mache, was funktioniert hat, was nicht, und was ich daraus gelernt habe.
+      Ich-Perspektive, nahbar, mit einer Lektion, die der Zuschauer für sich mitnehmen kann.
+      Call-to-Action: Folgen, um den Weg mitzuverfolgen, oder Frage nach den Erfahrungen der Zuschauer.
     wachstum: >-
       Reichweite und neue Follower. Breites, teilbares Thema mit überraschender Erkenntnis oder
       typischem Fehler, den viele machen. Mehrwert, den man speichern will.
@@ -82,6 +94,9 @@ video:
     text: "dfdigitalefreiheit.com"
     farbe: "#D4AF37"
     groesse: 40
+    # Fester Abspann am Ende jedes Reels (letzte ~2 Sekunden)
+    abspann_titel: "DF · DIGITALE FREIHEIT"
+    abspann_text: "Folge für mehr"
   bildstil: "dunkle, edle Szenen: Nacht, Schreibtisch mit warmem Licht, schwarze Oberflächen, Gold-Akzente, elegant"
   ersatz_suche: "person working on laptop"   # Stock-Video, falls nichts passt
 

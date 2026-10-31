@@ -8,6 +8,9 @@ def product_by_id(cfg, product_id):
 
 def _context(cfg, idea, learnings, feedback):
     fix = f"\nDer letzte Entwurf wurde abgelehnt. Behebe diese Probleme:\n{feedback}\n" if feedback else ""
+    if idea.get("fakten"):
+        fix += (f"\nECHTE FAKTEN VOM INHABER (Ich-Perspektive). Verwende NUR diese Erlebnisse, Zahlen und Ergebnisse – "
+                f"erfinde keine weiteren Fortschritte, Zahlen oder Erfolge dazu:\n{idea['fakten']}\n")
     return f"""Nische: {cfg['nische']['thema']}
 Zielgruppe: {cfg['nische']['zielgruppe']}
 Kernbotschaft des Kanals (der Beitrag zahlt darauf ein): {cfg['nische'].get('kernbotschaft', '')}
@@ -154,8 +157,9 @@ def _hashtags(cfg, script, platform):
 
 def build_caption(cfg, script, platform):
     tags = _hashtags(cfg, script, platform)
+    serie = f"— {script['serie']} | DF · Digitale Freiheit" if script.get("serie") else ""
     if platform == "instagram":
-        parts = [script["caption_instagram"], tags]
+        parts = [script["caption_instagram"], serie, tags]
         if script.get("product_id"):
             parts.insert(0, cfg["kennzeichnung"]["instagram"])
     else:
