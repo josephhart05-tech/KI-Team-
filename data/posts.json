@@ -282,7 +282,7 @@
   },
   {
     "id": "20261030-1212",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-10-30T12:13:06+00:00",
     "goal": "monetarisierung",
     "format": "karussell",
@@ -342,7 +342,7 @@
   },
   {
     "id": "20261030-1952",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-10-30T19:52:40+00:00",
     "goal": "interaktion",
     "format": "karussell",
