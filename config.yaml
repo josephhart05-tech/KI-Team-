@@ -91,6 +91,12 @@ strategie:
     anzahl_tiktok: 4
     marke: "dfdigitalefreiheit"
 
+# Deine Geschäftsführerin: plant die Woche, setzt Prioritäten, steuert die Produktion.
+geschaeftsfuehrung:
+  name: "Clara"                     # kannst du frei ändern
+  neustart_datum: "2026-11-01"      # ab hier zählt sie die Wochen
+  webinar_ab_woche: 5               # frühestens ab dieser Woche prüft sie, ob TAC 3.0 dran ist
+
 recherche:
   suchbegriffe:
     - "faceless instagram"

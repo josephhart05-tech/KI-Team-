@@ -15,7 +15,7 @@ import traceback
 from datetime import datetime, timedelta
 from urllib.parse import quote, unquote
 
-from agents import analyst, carousel, content, publisher, research, reviewer, video
+from agents import analyst, carousel, content, manager, publisher, research, reviewer, video
 from core import telegram
 from core.storage import (OUTPUT, env, load_config, load_learnings, load_posts, load_state, now, now_iso,
                           save_posts, save_state)
@@ -33,7 +33,22 @@ def create(dry_run=False):
         return
     wish = (state.get("ideen") or [None])[0]
     journal = state.get("tagebuch") or []
-    goal, fmt = research.next_plan(cfg, posts, settings, has_journal=bool(journal))
+
+    # Reihenfolge: deine direkten Wünsche (/idee, /ziel, /format) > Wochenplan der Geschäftsführerin > Rotation
+    slot = None
+    if not wish and "naechstes_ziel" not in settings and "naechstes_format" not in settings:
+        slot = manager.next_slot(state)
+        if slot and slot["ziel"] == "einblick" and not journal:
+            slot["status"] = "uebersprungen"  # ohne echten Tagebuch-Eintrag kein Einblick
+            slot = None
+    if slot:
+        goal, fmt = slot["ziel"], slot["format"]
+        if goal == "monetarisierung" and not settings.get("monetarisierung_aktiv"):
+            goal = "wachstum"
+        print(f"Wochenplan-Slot: {slot['datum']} {slot['zeit']}")
+    else:
+        goal, fmt = research.next_plan(cfg, posts, settings, has_journal=bool(journal))
+    planned_topic = slot.get("thema") if slot else None
     journal_entry = journal[0] if goal == "einblick" and journal else None
     fmt = os.environ.get("FORCE_FORMAT") or fmt  # Testlauf: Format frei wählbar
     print(f"Ziel: {goal} | Format: {fmt}")
@@ -44,7 +59,7 @@ def create(dry_run=False):
     script, ok, problems = None, False, None
     for attempt in range(3):  # bis zu 3 Themen, je 3 Skript-Versuche
         idea = research.pick_topic(cfg, posts, learnings, goal, fmt, avoid=failed_topics, signals=signals,
-                                   wish=wish if attempt == 0 else None, journal=journal_entry)
+                                   wish=(wish or planned_topic) if attempt == 0 else None, journal=journal_entry)
         print(f"Thema: {idea['topic']} ({idea['angle']})")
         problems = None
         for _ in range(3):
@@ -107,6 +122,8 @@ def create(dry_run=False):
         state["ideen"].pop(0)
     if journal_entry and state.get("tagebuch"):
         state["tagebuch"].pop(0)
+    if slot:
+        slot["status"] = "erstellt"
     save_state(state)  # verbrauchte Wünsche (/idee, /ziel, /format, /tagebuch) entfernen
     print(f"Entwurf {post_id} an Telegram geschickt.")
 
@@ -116,6 +133,12 @@ GOAL_LABELS = {"wachstum": "🚀 Wachstum", "einblick": "📖 Einblick", "intera
 
 
 COMMANDS = [
+    ("plan", "Wochenplan der Geschäftsführerin anzeigen"),
+    ("aufgaben", "Deine Aufgaben mit Prioritäten"),
+    ("erledigt", "Aufgabe abhaken, z. B. /erledigt 2"),
+    ("zahlen", "Zahlen melden, z. B. /zahlen 150 Follower, 900 Views im Schnitt"),
+    ("briefing", "Tages-Briefing jetzt anzeigen"),
+    ("wochenplan", "Wochenplan jetzt neu erstellen lassen"),
     ("neu", "Sofort einen neuen Beitrag erstellen"),
     ("idee", "Themenwunsch, z. B. /idee Was ist Digistore24?"),
     ("tagebuch", "Was du gemacht hast, z. B. /tagebuch Heute 3 Reels geplant, 2 neue Follower"),
@@ -147,6 +170,33 @@ def _handle_command(text, state, posts, cfg):
     arg = arg.strip()
     settings = state.setdefault("settings", {})
 
+    if cmd == "plan":
+        plan = manager.current_plan(state) or state.get("wochenplan")
+        if not plan:
+            return "Noch kein Wochenplan da. Mit /wochenplan erstelle ich sofort einen."
+        return manager.format_plan(cfg, plan, state)
+    if cmd == "wochenplan":
+        plan, recommendation = manager.make_week_plan(cfg, posts, state, load_learnings())
+        return manager.format_plan(cfg, plan, state, recommendation)
+    if cmd == "aufgaben":
+        return f"📋 Deine Aufgaben von {manager.name(cfg)}:\n\n{manager.format_tasks(state)}"
+    if cmd == "erledigt":
+        tasks = state.get("aufgaben", [])
+        try:
+            task = tasks[int(arg) - 1]
+        except (ValueError, IndexError):
+            return "Bitte die Nummer der Aufgabe angeben, z. B. /erledigt 2 (Liste: /aufgaben)"
+        task["erledigt"] = True
+        left = sum(1 for a in tasks if not a.get("erledigt"))
+        return f"✅ Stark! „{task['text']}“ ist erledigt. Noch {left} offen."
+    if cmd == "zahlen":
+        if not arg:
+            return ("Schick mir deine aktuellen Werte, z. B.:\n"
+                    "/zahlen 150 Follower (+20), Reels im Schnitt 900 Views, 12 Kommentare, 30 Saves")
+        state.setdefault("zahlen", []).append({"datum": now().date().isoformat(), "text": arg})
+        return f"📊 Notiert!\n\n{manager.assess_numbers(cfg, state, arg)}"
+    if cmd == "briefing":
+        return manager.briefing(cfg, state, posts)
     if cmd == "neu":
         _trigger_workflow("create.yml")
         return "🎬 Alles klar, ich erstelle ein neues Video. Es kommt in ca. 3–5 Minuten."
@@ -307,6 +357,20 @@ def check():
     save_posts(posts)
 
 
+def manage():
+    """Geschäftsführerin: sonntags Wochenplan, sonst Morgen-Briefing."""
+    cfg = load_config()
+    posts = load_posts()
+    state = load_state()
+    planning_time = now().weekday() == 6 and now().hour >= 14
+    if planning_time or not manager.current_plan(state):
+        plan, recommendation = manager.make_week_plan(cfg, posts, state, load_learnings())
+        telegram.send_message(manager.format_plan(cfg, plan, state, recommendation))
+    if not planning_time:
+        telegram.send_message(manager.briefing(cfg, state, posts))
+    save_state(state)
+
+
 def learn():
     cfg = load_config()
     posts = load_posts()
@@ -374,6 +438,8 @@ if __name__ == "__main__":
         _run_job("Freigaben prüfen", check)
     elif cmd == "learn":
         _run_job("Lernen", learn)
+    elif cmd == "manage":
+        _run_job("Geschäftsführung", manage)
     elif cmd == "refresh-ig-token":
         refresh_ig_token(sys.argv[2])
     elif cmd == "telegram-id":
