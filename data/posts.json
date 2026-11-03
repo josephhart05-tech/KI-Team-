@@ -836,5 +836,66 @@
     "caption_instagram": "Keine Zeit oder Angst vor den Kollegen: Was blockiert dich wirklich? 🤔\n\nViele schieben die Zeit vor, um sich nicht mit der Angst vor der Meinung anderer auseinanderzusetzen.\n\n👉 Ein Faceless Account löst beides:\n✅ Keine Drehzeit dank Tools wie Canva & Pixabay\n✅ 100% anonym ohne Gesicht vor der Kamera\n\nWelcher Typ bist du aktuell?\nKommentiere 1 für Zeitmangel oder 2 für Angst vor Reaktionen 👇\n\n#nebeneinkommen #facelessmarketing #angstvormachen #facelessnebenverdienst #dfdigitalefreiheit",
     "caption_tiktok": "Keine Zeit (1) oder Angst vor Reaktionen (2): Was hält dich wirklich ab? Kommentiere 1 oder 2! 👇\n\n#nebeneinkommen #facelessmarketing #angstvormachen #dfdigitalefreiheit",
     "video_url": null
+  },
+  {
+    "id": "20261103-2043",
+    "status": "pending",
+    "created_at": "2026-11-03T20:45:25+00:00",
+    "goal": "wachstum",
+    "format": "reel",
+    "topic": "Wie du deinen ersten Faceless Post in unter 30 Minuten erstellst",
+    "angle": "Der 3-Schritte-Timer-Hack für Feierabend-Anfänger: Wie du trotz Perfektionismus und Zeitmangel in 30 Minuten den ersten Post live bringst.",
+    "hook": "Du willst dir nebenbei was aufbauen, hast aber abends keine Zeit mehr?",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "Wie du trotz 40-Stunden-Job heute noch deinen ersten Faceless-Post veröffentlichst.",
+        "Hör auf, Stunden an deinem ersten Beitrag zu perfektionieren.",
+        "Du brauchst kein Video-Schnitt-Profi sein, um deinen ersten Reel zu posten.",
+        "3 einfache Schritte, die deinen ersten Post in 30 Minuten online bringen.",
+        "Du willst dir nebenbei was aufbauen, hast aber abends keine Zeit mehr?"
+      ],
+      "hook": "Du willst dir nebenbei was aufbauen, hast aber abends keine Zeit mehr?",
+      "hook_text": "In 30 Min zum ersten Post",
+      "scenes": [
+        {
+          "text": "Du willst dir nebenbei was aufbauen, hast aber abends keine Zeit mehr?",
+          "search": "dark desk warm light laptop"
+        },
+        {
+          "text": "Viele scheitern am Anfang an Perfektionismus. Und das Wichtigste dazu kommt am Ende.",
+          "search": "thoughtful man typing dark background"
+        },
+        {
+          "text": "Setze dir heute einen 30-Minuten-Timer für deinen ersten Entwurf.",
+          "search": "close up timer dark ambiance"
+        },
+        {
+          "text": "Schritt 1: Hol dir ein kostenloses Stock-Video von Pixabay. Schritt 2: Schreibe einen kurzen Tipp in Canva.",
+          "search": "laptop screen close up dark aesthetic"
+        },
+        {
+          "text": "Schritt 3: Veröffentlichen, ohne lange zu grübeln. Das Wichtigste: Perfekt wird es erst durch Praxis, nicht durch Warten.",
+          "search": "hand pressing laptop key dark light"
+        },
+        {
+          "text": "Speichere dieses Video ab, damit du heute Abend direkt starten kannst.",
+          "search": "dark cozy office aesthetic"
+        }
+      ],
+      "caption_instagram": "Keine Zeit nach dem Job? So bringst du deinen ersten Faceless Post heute noch online. ⏳\n\nVerliere dich nicht im Perfektionismus. Der Schlüssel ist, einfach anzufangen:\n\n👉 1. Kostenloses Video bei Pixabay holen\n👉 2. Kurzen Mehrwert-Text in Canva darauflegen\n👉 3. Timer auf 30 Minuten stellen & posten\n\nEs muss nicht perfekt sein, es muss nur starten. 💡\n\nSpeichere diesen Beitrag für deinen Feierabend!",
+      "caption_tiktok": "Keine Zeit nach dem Job? Erstelle deinen ersten Faceless Post in unter 30 Min! Speichere das Video für heute Abend. 💡",
+      "hashtags": [
+        "nebeneinkommen",
+        "facelesscontent",
+        "zeitmanagement",
+        "facelessgermany"
+      ],
+      "format": "reel",
+      "product_id": null
+    },
+    "caption_instagram": "Keine Zeit nach dem Job? So bringst du deinen ersten Faceless Post heute noch online. ⏳\n\nVerliere dich nicht im Perfektionismus. Der Schlüssel ist, einfach anzufangen:\n\n👉 1. Kostenloses Video bei Pixabay holen\n👉 2. Kurzen Mehrwert-Text in Canva darauflegen\n👉 3. Timer auf 30 Minuten stellen & posten\n\nEs muss nicht perfekt sein, es muss nur starten. 💡\n\nSpeichere diesen Beitrag für deinen Feierabend!\n\n#nebeneinkommen #facelesscontent #zeitmanagement #facelessgermany #dfdigitalefreiheit",
+    "caption_tiktok": "Keine Zeit nach dem Job? Erstelle deinen ersten Faceless Post in unter 30 Min! Speichere das Video für heute Abend. 💡\n\n#nebeneinkommen #facelesscontent #zeitmanagement #dfdigitalefreiheit",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793738721/ki-team/mo0tqjeghidqa0azjkt0.mp4"
   }
 ]
