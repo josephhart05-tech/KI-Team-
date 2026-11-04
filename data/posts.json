@@ -954,5 +954,66 @@
     "caption_instagram": "Kein Gesicht, keine Kamera, null Vorerfahrung – so baust du deinen Account auf.\n\n✅ Nutze kostenlose Stock-Videos von Pixabay als Basis\n✅ Konzentriere dich auf ehrliche Texte statt Selbstdarstellung\n✅ Starte nach Feierabend mit klaren Einzelschritten\n\nSpeichere diesen Beitrag, wenn du heute noch starten willst.\n\n#onlinebusiness #nebeneinkommen #facelessmarketing #instagramstart #dfdigitalefreiheit",
     "caption_tiktok": "Kein Gesicht, keine Kamera nötig. Starte deinen Faceless Account nach Feierabend. Speicher dir den Beitrag!\n\n#onlinebusiness #nebeneinkommen #facelessmarketing #dfdigitalefreiheit",
     "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793800455/ki-team/vfdlpznrptpsnc7rwkal.mp4"
+  },
+  {
+    "id": "20261104-2100",
+    "status": "pending",
+    "created_at": "2026-11-04T21:02:55+00:00",
+    "goal": "interaktion",
+    "format": "reel",
+    "topic": "Typ A vs. Typ B nach Feierabend: Wie verbringst du deine freie Zeit?",
+    "angle": "Direkter Alltagsvergleich zwischen passivem Social-Media-Konsum (Typ A: 2 Stunden Reels/TikToks scrollen) und aktivem, anonymer Nebeneinkommens-Aufbau (Typ B: 30 Minuten gezielt Faceless Content erstellen) – mit der ehrlichen Frage, welcher Typ der Zuschauer aktuell ist.",
+    "hook": "2 Stunden Reels scrollen oder 30 Minuten Content erstellen?",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "2 Stunden Reels scrollen oder 30 Minuten Content erstellen?",
+        "Hör auf, nach Feierabend nur die Erfolge anderer zu scrollen.",
+        "Du brauchst keine 4 Stunden täglich für ein faceless Nebeneinkommen.",
+        "30 Minuten nach Feierabend reichen, um etwas Eigenes zu starten.",
+        "Du bist nach dem Job müde, willst aber trotzdem was aufbauen?"
+      ],
+      "hook": "2 Stunden Reels scrollen oder 30 Minuten Content erstellen?",
+      "hook_text": "Typ A vs. Typ B",
+      "scenes": [
+        {
+          "text": "2 Stunden Reels scrollen oder 30 Minuten Content erstellen?",
+          "search": "person scrolling smartphone dark room"
+        },
+        {
+          "text": "Sehen wir uns deinen Feierabend ehrlich an. Typ A liegt auf der Couch und schaut anderen beim Erreichen ihrer Ziele zu.",
+          "search": "tired person sofa living room dark"
+        },
+        {
+          "text": "Typ B ist zwar genauso müde, nutzt aber 30 Minuten, um anonym eigenen Mehrwert zu schaffen.",
+          "search": "dark desk warm lamp laptop typing"
+        },
+        {
+          "text": "Statt stundenlang zu grübeln, wählt Typ B ein Thema und nutzt kostenlose Tools wie Canva für einfache Grafiken.",
+          "search": "hands working laptop dark moody"
+        },
+        {
+          "text": "Und das Wichtigste kommt jetzt: Es geht nicht um Perfektion, sondern um Kontinuität. 3 Posts pro Woche reichen für den Anfang völlig aus.",
+          "search": "calendar planning desk dark background"
+        },
+        {
+          "text": "Ehrliche Frage: Welcher Typ warst du heute – 1 oder 2?",
+          "search": "close up laptop screen dark aesthetic"
+        }
+      ],
+      "caption_instagram": "Wie nutzt du deine Zeit nach Feierabend wirklich? 👇\n\nTyp A scrollt 2 Stunden durch Social Media. Typ B nutzt 30 Minuten, um mit kostenlosen Tools wie Canva 1 faceless Beitrag zu erstellen.\n\n💡 Der Schlüssel ist nicht mehr Zeit, sondern Kontinuität: 3 Posts pro Woche reichen am Anfang.\n\nWelcher Typ warst du heute? Schreib 1 oder 2 in die Kommentare!",
+      "caption_tiktok": "Couch & Scrollen oder 30 Min. an der Zukunft arbeiten? Welcher Typ warst du heute: 1 oder 2? Kommentiere!",
+      "hashtags": [
+        "nebeneinkommen",
+        "facelesscontent",
+        "nebenbeiaufbauen",
+        "facelessmarketingtipps"
+      ],
+      "format": "reel",
+      "product_id": null
+    },
+    "caption_instagram": "Wie nutzt du deine Zeit nach Feierabend wirklich? 👇\n\nTyp A scrollt 2 Stunden durch Social Media. Typ B nutzt 30 Minuten, um mit kostenlosen Tools wie Canva 1 faceless Beitrag zu erstellen.\n\n💡 Der Schlüssel ist nicht mehr Zeit, sondern Kontinuität: 3 Posts pro Woche reichen am Anfang.\n\nWelcher Typ warst du heute? Schreib 1 oder 2 in die Kommentare!\n\n#nebeneinkommen #facelesscontent #nebenbeiaufbauen #facelessmarketingtipps #dfdigitalefreiheit",
+    "caption_tiktok": "Couch & Scrollen oder 30 Min. an der Zukunft arbeiten? Welcher Typ warst du heute: 1 oder 2? Kommentiere!\n\n#nebeneinkommen #facelesscontent #nebenbeiaufbauen #dfdigitalefreiheit",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793826170/ki-team/wnddkuzm0tvbkkh7j4ri.mp4"
   }
 ]
