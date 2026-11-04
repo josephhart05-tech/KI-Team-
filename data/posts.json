@@ -897,5 +897,62 @@
     "caption_instagram": "Keine Zeit nach dem Job? So bringst du deinen ersten Faceless Post heute noch online. ⏳\n\nVerliere dich nicht im Perfektionismus. Der Schlüssel ist, einfach anzufangen:\n\n👉 1. Kostenloses Video bei Pixabay holen\n👉 2. Kurzen Mehrwert-Text in Canva darauflegen\n👉 3. Timer auf 30 Minuten stellen & posten\n\nEs muss nicht perfekt sein, es muss nur starten. 💡\n\nSpeichere diesen Beitrag für deinen Feierabend!\n\n#nebeneinkommen #facelesscontent #zeitmanagement #facelessgermany #dfdigitalefreiheit",
     "caption_tiktok": "Keine Zeit nach dem Job? Erstelle deinen ersten Faceless Post in unter 30 Min! Speichere das Video für heute Abend. 💡\n\n#nebeneinkommen #facelesscontent #zeitmanagement #dfdigitalefreiheit",
     "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793738721/ki-team/mo0tqjeghidqa0azjkt0.mp4"
+  },
+  {
+    "id": "20261104-1353",
+    "status": "pending",
+    "created_at": "2026-11-04T13:54:29+00:00",
+    "goal": "wachstum",
+    "format": "reel",
+    "topic": "Wie man anonym einen Instagram Faceless Account startet, ohne jemals das eigene Gesicht zu zeigen oder Vorwissen zu haben",
+    "angle": "Der 'Null-Sichtbarkeits'-Fahrplan für Angestellte: Warum du kein Gesicht, keine Kamera und null Vorerfahrung brauchst, um nach Feierabend zu starten.",
+    "hook": "Du brauchst keine Kamera, um neben dem Job anzufangen.",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "Niemand sagt dir, dass du für Instagram kein Gesicht brauchst.",
+        "Hör auf zu glauben, dass du für Online-Business vor die Kamera musst.",
+        "Du brauchst keine teure Kamera, um neben dem Job anzufangen.",
+        "3 Schritte, um deinen Faceless Account ohne Vorkenntnisse zu starten.",
+        "Du willst nebenbei was aufbauen, hast aber Angst vor der Kamera?"
+      ],
+      "hook": "Du brauchst keine Kamera, um neben dem Job anzufangen.",
+      "hook_text": "Kein Gesicht, kein Problem",
+      "scenes": [
+        {
+          "text": "Du brauchst keine Kamera, um neben dem Job anzufangen.",
+          "search": "dark desk laptop night"
+        },
+        {
+          "text": "Der größte Fehler am Anfang ist zu glauben, man müsste sich zeigen.",
+          "search": "person typing dark room"
+        },
+        {
+          "text": "Stattdessen nutzt du kostenlose Stock-Videos von Pixabay für den Hintergrund.",
+          "search": "minimalist workspace warm light"
+        },
+        {
+          "text": "Dazu schreibst du ehrliche Texte über deinen Weg aus dem Angestelltentum.",
+          "search": "writing notebook close up"
+        },
+        {
+          "text": "Und das Wichtigste kommt am Ende: Fang einfach an, statt zu zögern.",
+          "search": "modern office night view"
+        }
+      ],
+      "caption_instagram": "Kein Gesicht, keine Kamera, null Vorerfahrung – so baust du deinen Account auf.\n\n✅ Nutze kostenlose Stock-Videos von Pixabay als Basis\n✅ Konzentriere dich auf ehrliche Texte statt Selbstdarstellung\n✅ Starte nach Feierabend mit klaren Einzelschritten\n\nSpeichere diesen Beitrag, wenn du heute noch starten willst.",
+      "caption_tiktok": "Kein Gesicht, keine Kamera nötig. Starte deinen Faceless Account nach Feierabend. Speicher dir den Beitrag!",
+      "hashtags": [
+        "onlinebusiness",
+        "nebeneinkommen",
+        "facelessmarketing",
+        "instagramstart"
+      ],
+      "format": "reel",
+      "product_id": null
+    },
+    "caption_instagram": "Kein Gesicht, keine Kamera, null Vorerfahrung – so baust du deinen Account auf.\n\n✅ Nutze kostenlose Stock-Videos von Pixabay als Basis\n✅ Konzentriere dich auf ehrliche Texte statt Selbstdarstellung\n✅ Starte nach Feierabend mit klaren Einzelschritten\n\nSpeichere diesen Beitrag, wenn du heute noch starten willst.\n\n#onlinebusiness #nebeneinkommen #facelessmarketing #instagramstart #dfdigitalefreiheit",
+    "caption_tiktok": "Kein Gesicht, keine Kamera nötig. Starte deinen Faceless Account nach Feierabend. Speicher dir den Beitrag!\n\n#onlinebusiness #nebeneinkommen #facelessmarketing #dfdigitalefreiheit",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1793800455/ki-team/vfdlpznrptpsnc7rwkal.mp4"
   }
 ]
