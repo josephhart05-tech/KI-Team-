@@ -900,7 +900,7 @@
   },
   {
     "id": "20261104-1353",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-04T13:54:29+00:00",
     "goal": "wachstum",
     "format": "reel",
@@ -957,7 +957,7 @@
   },
   {
     "id": "20261104-2100",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-04T21:02:55+00:00",
     "goal": "interaktion",
     "format": "reel",
