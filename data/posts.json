@@ -1265,5 +1265,66 @@
     "caption_instagram": "Angst, dass Arbeitskollegen deinen neuen Faceless Account entdecken? 🤫\n\nWenn du auf Instagram anonym starten willst, musst du deine Privatsphäre von Tag 1 an richtig einstellen. 💡\n\nMit den 4 Schritten aus diesem Beitrag verhinderst du, dass Instagram dein Profil Bekannten oder Kontakten aus deinem Telefonbuch vorschlägt. ✅\n\nSpeichere diesen Beitrag ab, damit du beim Einrichten deines Accounts keinen Schritt vergisst! 📌\n\n#nebeneinkommen #facelessmarketing #instagramtipps #anonymgeldverdienen #dfdigitalefreiheit",
     "caption_tiktok": "So bleibt dein Faceless Account vor Freunden und Kollegen geschützt. Speichere den Beitrag für deinen Start! 📌\n\n#nebeneinkommen #facelessmarketing #instagramtipps #dfdigitalefreiheit",
     "video_url": null
+  },
+  {
+    "id": "20261107-1916",
+    "status": "pending",
+    "created_at": "2026-11-07T19:17:51+00:00",
+    "goal": "interaktion",
+    "format": "reel",
+    "topic": "Reels posten oder Interagieren: Welcher Feierabend-Typ bist du?",
+    "angle": "Entweder-oder-Vergleich zwischen passivem Scrollen vs. aktivem Posten bei minimaler Zeit nach dem Job.",
+    "hook": "2 Feierabend-Typen nach dem Job: Welcher bist du?",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "Feierabend: Scrollst du noch oder baust du schon auf?",
+        "Hör auf, deinen Feierabend nur mit Reels-Scrollen zu verschwenden.",
+        "Du brauchst nicht stundenlang posten, um ein Nebeneinkommen aufzubauen.",
+        "2 Feierabend-Typen nach dem Job: Welcher bist du?",
+        "Du hast nach dem 8-Stunden-Job keine Zeit mehr für Nebeneinkommen?"
+      ],
+      "hook": "2 Feierabend-Typen nach dem Job: Welcher bist du?",
+      "hook_text": "Welcher Feierabend-Typ bist du?",
+      "scenes": [
+        {
+          "text": "2 Feierabend-Typen nach dem Job: Welcher bist du?",
+          "search": "dark room phone scrolling"
+        },
+        {
+          "text": "Typ 1 scrollt 2 Stunden durch TikTok und fühlt sich danach müde.",
+          "search": "exhausted person couch phone"
+        },
+        {
+          "text": "Typ 2 nutzt 30 Minuten, um 1 faceless Reel mit Pixabay und Canva zu erstellen.",
+          "search": "dark desk warm light laptop typing"
+        },
+        {
+          "text": "Kein eigenes Gesicht, kein eigenes Produkt – nur ein konkreter Schritt für ein faceless Nebeneinkommen.",
+          "search": "cozy aesthetic workspace night"
+        },
+        {
+          "text": "Der kleine Unterschied entscheidet, wo du in 6 Monaten stehst.",
+          "search": "dark mood coffee desk"
+        },
+        {
+          "text": "Schreib mal ehrlich in die Kommentare: Bist du Typ 1 oder Typ 2?",
+          "search": "hands typing laptop dark light"
+        }
+      ],
+      "caption_instagram": "Feierabend nach dem Job: Zeit verschwenden oder leise was Eigenes aufbauen?\n\nViele denken, man braucht stundenlang Zeit für ein Nebeneinkommen.\n💡 Die Wahrheit: 30 Minuten reichen oft schon aus.\n✅ Typ 1 scrollt passiv.\n✅ Typ 2 nutzt z. B. Pixabay & Canva für 1 faceless Reel.\n\nEhrlich gesagt: Typ 1 oder Typ 2 – wo stehst du aktuell?",
+      "caption_tiktok": "2 Feierabend-Typen nach dem Job: Passiv scrollen oder 30 Min. was aufbauen? Schreib 1 oder 2 in die Kommentare!",
+      "hashtags": [
+        "nebeneinkommen",
+        "affiliatemarketingdeutsch",
+        "facelesscontent",
+        "nebenbeiaufbauen"
+      ],
+      "format": "reel",
+      "product_id": null
+    },
+    "caption_instagram": "Feierabend nach dem Job: Zeit verschwenden oder leise was Eigenes aufbauen?\n\nViele denken, man braucht stundenlang Zeit für ein Nebeneinkommen.\n💡 Die Wahrheit: 30 Minuten reichen oft schon aus.\n✅ Typ 1 scrollt passiv.\n✅ Typ 2 nutzt z. B. Pixabay & Canva für 1 faceless Reel.\n\nEhrlich gesagt: Typ 1 oder Typ 2 – wo stehst du aktuell?\n\n#nebeneinkommen #affiliatemarketingdeutsch #facelesscontent #nebenbeiaufbauen #dfdigitalefreiheit",
+    "caption_tiktok": "2 Feierabend-Typen nach dem Job: Passiv scrollen oder 30 Min. was aufbauen? Schreib 1 oder 2 in die Kommentare!\n\n#nebeneinkommen #affiliatemarketingdeutsch #facelesscontent #dfdigitalefreiheit",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1794079065/ki-team/swvxrtzuaset61wdmimo.mp4"
   }
 ]
