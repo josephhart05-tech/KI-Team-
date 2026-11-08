@@ -46,135 +46,135 @@
     }
   ],
   "wochenplan": {
-    "woche_start": "2026-11-02",
-    "wochenziel": "Vertrauen bei skeptischen Angestellten vertiefen und Interaktion steigern.",
-    "fokus": "Der Wechsel von Überforderung und Angst hin zu ersten, konkreten, faceless Schritten ohne Risiko.",
+    "woche_start": "2026-11-09",
+    "wochenziel": "Vertrauen bei skeptischen Angestellten vertiefen und erste Interaktionen über einfache Einstiegsfragen generieren.",
+    "fokus": "Der Weg vom feierabendlichen Zweifel zur ersten strukturierten Faceless-Routine.",
     "slots": [
       {
-        "datum": "2026-11-02",
+        "datum": "2026-11-09",
         "zeit": "morgens",
         "ziel": "wachstum",
         "format": "reel",
-        "thema": "3 Gründe, warum Faceless Content ideal für Angestellte mit wenig Zeit ist.",
+        "thema": "Warum die meisten nach 8 Stunden Arbeit keine Motivation mehr haben (und wie 20-Minuten-Hacks das ändern).",
         "pain_point": "keine Zeit neben dem Job",
-        "status": "erstellt"
+        "status": "offen"
       },
       {
-        "datum": "2026-11-02",
+        "datum": "2026-11-09",
+        "zeit": "nachmittags",
+        "ziel": "interaktion",
+        "format": "reel",
+        "thema": "Feierabend-Check: Hast du heute schon 15 Minuten in dein eigenes Nebeneinkommen investiert oder nur gescrollt?",
+        "pain_point": "Angst anzufangen und zu scheitern",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-10",
+        "zeit": "morgens",
+        "ziel": "wachstum",
+        "format": "karussell",
+        "thema": "5 klare Signale, dass du KEIN Gesicht zeigen musst, um online seriös Vertrauen aufzubauen.",
+        "pain_point": "will nicht das eigene Gesicht zeigen",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-10",
         "zeit": "nachmittags",
         "ziel": "einblick",
         "format": "reel",
-        "thema": "Warum mein erster Versuch gescheitert ist: Mein ehrliches Fazit nach 2 Monaten 0 € Umsatz.",
-        "pain_point": "Angst anzufangen und zu scheitern",
-        "status": "uebersprungen"
+        "thema": "Tagebuch Woche 2: Die größte Hürde, die ich diesen Dienstag nach dem Feierabend überwinden musste.",
+        "pain_point": "kein Vertrauen in sich selbst – 'ich kann sowas nicht'",
+        "status": "offen"
       },
       {
-        "datum": "2026-11-03",
+        "datum": "2026-11-11",
         "zeit": "morgens",
-        "ziel": "interaktion",
-        "format": "karussell",
-        "thema": "Welche Ausrede hält dich aktuell noch ab: Keine Zeit oder Angst, was Kollegen denken?",
-        "pain_point": "Angst, was Familie, Freunde oder Kollegen denken",
-        "status": "erstellt"
-      },
-      {
-        "datum": "2026-11-03",
-        "zeit": "nachmittags",
         "ziel": "wachstum",
         "format": "reel",
-        "thema": "Wie du deinen ersten Faceless Post in unter 30 Minuten erstellst (Schritt-für-Schritt).",
+        "thema": "Warum dir 100 Online-Gurus widersprüchliche Tipps geben (und wie du den Informations-Müll filterst).",
         "pain_point": "Überforderung: zu viele Infos, zu viele Gurus, kein Plan, wo man anfangen soll",
-        "status": "erstellt"
+        "status": "offen"
       },
       {
-        "datum": "2026-11-04",
-        "zeit": "morgens",
-        "ziel": "einblick",
-        "format": "karussell",
-        "thema": "Was ich in Woche 1 meines Neustarts konkret anders gemacht habe als beim ersten Mal.",
-        "pain_point": "Zweifel, ob das überhaupt funktioniert oder nur Abzocke ist",
-        "status": "uebersprungen"
-      },
-      {
-        "datum": "2026-11-04",
+        "datum": "2026-11-11",
         "zeit": "nachmittags",
         "ziel": "interaktion",
-        "format": "reel",
-        "thema": "Typ A (stundenlang scrollen) vs. Typ B (30 Min. Faceless Account aufbauen): Welcher Typ bist du?",
-        "pain_point": "keine Zeit neben dem Job",
-        "status": "erstellt"
-      },
-      {
-        "datum": "2026-11-05",
-        "zeit": "morgens",
-        "ziel": "wachstum",
-        "format": "reel",
-        "thema": "So findest du Affiliate-Produkte auf Digistore24, die du ohne eigenes Gesicht empfehlen kannst.",
-        "pain_point": "will nicht das eigene Gesicht zeigen",
-        "status": "erstellt"
-      },
-      {
-        "datum": "2026-11-05",
-        "zeit": "nachmittags",
-        "ziel": "einblick",
-        "format": "reel",
-        "thema": "Meine Wochen-Learnings aus Woche 1: Warum Mehrwert vor Verkauf wirklich den Unterschied macht.",
-        "pain_point": "kein Vertrauen in sich selbst – 'ich kann sowas nicht'",
-        "status": "uebersprungen"
-      },
-      {
-        "datum": "2026-11-06",
-        "zeit": "morgens",
-        "ziel": "interaktion",
         "format": "karussell",
-        "thema": "Entweder-Oder: Lieber 100 € extra im Monat ohne Kamera oder 1.000 € mit Gesicht zeigen?",
-        "pain_point": "will nicht das eigene Gesicht zeigen",
-        "status": "erstellt"
-      },
-      {
-        "datum": "2026-11-06",
-        "zeit": "nachmittags",
-        "ziel": "wachstum",
-        "format": "reel",
-        "thema": "Die 3 häufigsten Mythen über Faceless Instagram Accounts im Realitätscheck.",
-        "pain_point": "Zweifel, ob das überhaupt funktioniert oder nur Abzocke ist",
-        "status": "uebersprungen"
-      },
-      {
-        "datum": "2026-11-07",
-        "zeit": "morgens",
-        "ziel": "wachstum",
-        "format": "karussell",
-        "thema": "Schritt-für-Schritt-Anleitung: So richtest du deinen Faceless Account anonym ein.",
+        "thema": "Welche Angst hält dich nach 18 Uhr eher ab: Was die Kollegen sagen oder dass es nicht klappt?",
         "pain_point": "Angst, was Familie, Freunde oder Kollegen denken",
-        "status": "erstellt"
+        "status": "offen"
       },
       {
-        "datum": "2026-11-07",
-        "zeit": "nachmittags",
-        "ziel": "interaktion",
-        "format": "reel",
-        "thema": "Was ist dein größtes Hindernis beim Starten? Schreib es in die Kommentare!",
-        "pain_point": "Angst anzufangen und zu scheitern",
-        "status": "erstellt"
-      },
-      {
-        "datum": "2026-11-08",
+        "datum": "2026-11-12",
         "zeit": "morgens",
         "ziel": "wachstum",
         "format": "reel",
-        "thema": "Wie man ohne Vorkenntnisse ansprechende B-Roll-Videos für Faceless Reels findet.",
-        "pain_point": "kein Vertrauen in sich selbst – 'ich kann sowas nicht'",
-        "status": "erstellt"
+        "thema": "Wie man seriöses Affiliate-Marketing von unseriösen Schnell-reich-werden-Versprechen unterscheidet.",
+        "pain_point": "Zweifel, ob das überhaupt funktioniert oder nur Abzocke ist",
+        "status": "offen"
       },
       {
-        "datum": "2026-11-08",
+        "datum": "2026-11-12",
+        "zeit": "nachmittags",
+        "ziel": "einblick",
+        "format": "reel",
+        "thema": "Mein ehrliches Fazit zur 2. Woche nach dem Neustart: Das sagen meine ersten (bescheidenen) Zahlen.",
+        "pain_point": "Zweifel, ob das überhaupt funktioniert oder nur Abzocke ist",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-13",
+        "zeit": "morgens",
+        "ziel": "wachstum",
+        "format": "karussell",
+        "thema": "Die 3-Schritte-Checkliste, um als Angestellter ohne Vorkenntnisse Ordnung in das Chaos zu bringen.",
+        "pain_point": "Überforderung: zu viele Infos, zu viele Gurus, kein Plan, wo man anfangen soll",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-13",
+        "zeit": "nachmittags",
+        "ziel": "interaktion",
+        "format": "reel",
+        "thema": "Entweder-Oder zum Wochenende: Lieber 30 Minuten Content erstellen oder 30 Minuten Reels schauen?",
+        "pain_point": "keine Zeit neben dem Job",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-14",
+        "zeit": "morgens",
+        "ziel": "wachstum",
+        "format": "reel",
+        "thema": "Wie du deinen Account schützt, damit Arbeitskollegen ihn nicht zufällig vorgeschlagen bekommen.",
+        "pain_point": "Angst, was Familie, Freunde oder Kollegen denken",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-14",
+        "zeit": "nachmittags",
+        "ziel": "einblick",
+        "format": "karussell",
+        "thema": "3 Dinge, die ich beim zweiten Versuch komplett gestrichen habe, um Zeit zu sparen.",
+        "pain_point": "keine Zeit neben dem Job",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-15",
+        "zeit": "morgens",
+        "ziel": "wachstum",
+        "format": "reel",
+        "thema": "Warum kleine Erfolge im Faceless Business wertvoller sind als der schnelle virale Hit.",
+        "pain_point": "Angst anzufangen und zu scheitern",
+        "status": "offen"
+      },
+      {
+        "datum": "2026-11-15",
         "zeit": "nachmittags",
         "ziel": "interaktion",
         "format": "karussell",
-        "thema": "Wochen-Feedback: Hast du diese Woche den ersten Schritt für dein Nebeneinkommen gewagt?",
-        "pain_point": "Angst anzufangen und zu scheitern",
-        "status": "erstellt"
+        "thema": "Wochen-Feedback: Welches Ziel setzt du dir für die kommende Woche für dein Nebeneinkommen?",
+        "pain_point": "kein Vertrauen in sich selbst – 'ich kann sowas nicht'",
+        "status": "offen"
       }
     ]
   }
