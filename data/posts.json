@@ -1391,5 +1391,65 @@
     "caption_instagram": "Dein Faceless-Content wirkt irgendwie unprofessionell? Das liegt meistens an einem einzigen Suchfehler. ❌\n\nWenn du kostenloses Material suchst, vermeide starre Begriffe wie „Business“.\n\n✅ Nutze Ästhetik-Begriffe: „dark mood“, „cinematic“, „cozy night“.\n👉 So wirken deine Clips sofort hochwertig und authentisch.\n\nSpeichere diesen Beitrag für deine nächste Content-Session! 💡\n\n#nebeneinkommen #facelesscontent #brolltipps #facelesscreator #dfdigitalefreiheit",
     "caption_tiktok": "So findest du in 5 Min hochwertige Faceless-Videos ohne Fake-Look. Speichere diesen Tipp für später!\n\n#nebeneinkommen #facelesscontent #brolltipps #dfdigitalefreiheit",
     "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1794142238/ki-team/b3wnqd59fchrg7nlp3qs.mp4"
+  },
+  {
+    "id": "20261108-1916",
+    "status": "pending",
+    "created_at": "2026-11-08T19:16:11+00:00",
+    "goal": "interaktion",
+    "format": "karussell",
+    "topic": "Wochen-Feedback: Hast du diese Woche den ersten Schritt für dein Nebeneinkommen gewagt?",
+    "angle": "Ehrlicher Sonntags-Check-in: 3 typische Hürden der Woche (Angst, Zeitmangel, Zweifel) vs. der eine kleine Schritt, der ausreicht. Am Ende die Frage: Wo stehst du?",
+    "hook": "Wochen-Check: Hast du angefangen?",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "Niemand sagt dir, dass ein einziger kleiner Schritt am Sonntag ausreicht.",
+        "Hör auf zu warten, bis du endlich Zeit für dein Nebeneinkommen hast.",
+        "Du brauchst kein eigenes Produkt, um diesen Sonntag den Anfang zu machen.",
+        "3 Hürden, die dich diese Woche vermutlich wieder gebremst haben.",
+        "Du willst dir nebenbei etwas aufbauen, hast aber ständige Zweifel?"
+      ],
+      "hook": "Du willst dir nebenbei etwas aufbauen, hast aber ständige Zweifel?",
+      "slides": [
+        {
+          "titel": "Wochen-Check: Hast du angefangen?",
+          "text": "Der Sonntag ist perfekt für einen ehrlichen Rückblick. Was hat dich diese Woche wirklich aufgehalten? Wisch weiter 👉"
+        },
+        {
+          "titel": "Hürde 1: Die Angst vor dem Scheitern",
+          "text": "Mein erster Versuch ist nach 2 Monaten komplett gescheitert. Scheitern gehört dazu. Wichtig ist nur, aus Fehlern zu lernen und neu auszurichten."
+        },
+        {
+          "titel": "Hürde 2: Keine Zeit neben dem Job",
+          "text": "Du brauchst keine 4 Stunden täglich. Nutze kostenlose Tools wie Canva für deine Grafiken und plane Posts einfach im Voraus."
+        },
+        {
+          "titel": "Hürde 3: Überforderung durch zu viele Infos",
+          "text": "Starte simpel. Melde dich bei Digistore24 an und suche auf dem Marktplatz nach einem passenden Produkt mit niedriger Stornoquote."
+        },
+        {
+          "titel": "Der eine kleine Schritt reicht",
+          "text": "Du musst nicht direkt alles perfekt machen. Ein erstellter Account oder eine erste Recherche reichen für die erste Woche völlig aus."
+        },
+        {
+          "titel": "Wo stehst du gerade?",
+          "text": "Welche Hürde war diese Woche deine größte? 1 = Angst, 2 = Zeitmangel, 3 = Überforderung. Schreib die Zahl in die Kommentare!"
+        }
+      ],
+      "caption_instagram": "Ehrlicher Sonntags-Check: Hast du diese Woche den ersten Schritt gewagt? 💡\n\nOft stehen wir uns selbst im Weg. Bei mir hat es erst im zweiten Anlauf geklappt, weil ich zu ungeduldig war.\n\nEs braucht keine 10 Stunden am Tag. Suche dir auf dem Digistore24-Marktplatz ein Produkt oder erstelle ein Design in Canva. Ein kleiner Schritt reicht.\n\n👉 Welcher Typ warst du diese Woche?\nSchreib 1 (Angst), 2 (Zeitmangel) oder 3 (Überforderung) in die Kommentare!",
+      "caption_tiktok": "Ehrlicher Sonntags-Check: Was hat dich diese Woche gebremst? Schreib 1 (Angst), 2 (Zeit) oder 3 (Zweifel) in die Kommentare! 👇",
+      "hashtags": [
+        "nebeneinkommen",
+        "facelessmarketing",
+        "affiliatemarketingdeutschland",
+        "nebenbeigeldverdienen"
+      ],
+      "format": "karussell",
+      "product_id": null
+    },
+    "caption_instagram": "Ehrlicher Sonntags-Check: Hast du diese Woche den ersten Schritt gewagt? 💡\n\nOft stehen wir uns selbst im Weg. Bei mir hat es erst im zweiten Anlauf geklappt, weil ich zu ungeduldig war.\n\nEs braucht keine 10 Stunden am Tag. Suche dir auf dem Digistore24-Marktplatz ein Produkt oder erstelle ein Design in Canva. Ein kleiner Schritt reicht.\n\n👉 Welcher Typ warst du diese Woche?\nSchreib 1 (Angst), 2 (Zeitmangel) oder 3 (Überforderung) in die Kommentare!\n\n#nebeneinkommen #facelessmarketing #affiliatemarketingdeutschland #nebenbeigeldverdienen #dfdigitalefreiheit",
+    "caption_tiktok": "Ehrlicher Sonntags-Check: Was hat dich diese Woche gebremst? Schreib 1 (Angst), 2 (Zeit) oder 3 (Zweifel) in die Kommentare! 👇\n\n#nebeneinkommen #facelessmarketing #affiliatemarketingdeutschland #dfdigitalefreiheit",
+    "video_url": null
   }
 ]
