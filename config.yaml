@@ -158,7 +158,7 @@ kennzeichnung:
 
 llm:
   gemini_modell: "gemini-3.6-flash"
-  groq_modell: "llama-3.3-70b-versatile"   # Ersatz, falls Gemini nicht erreichbar ist
+  groq_modell: "openai/gpt-oss-120b"   # Ersatz, falls Gemini nicht erreichbar ist
 
 # Wörter, die bei diesem Thema schnell irreführend oder unseriös wirken.
 # Der Prüfer-Agent lehnt Skripte mit diesen Formulierungen ab.
