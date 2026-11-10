@@ -1,6 +1,7 @@
 """Video-Agent: KI-Stimme + Stock-Videos + Untertitel = fertiges Hochkant-Video (1080x1920)."""
 import asyncio
 import subprocess
+import time
 from pathlib import Path
 
 import requests
@@ -130,13 +131,22 @@ def _write_ass(marks, vcfg, path, total, hook_text=None, serie=None):
 # ---------- Stock-Videos ----------
 
 def _pixabay_clip(query, used_ids):
-    r = requests.get(
-        "https://pixabay.com/api/videos/",
-        params={"key": env("PIXABAY_API_KEY"), "q": query[:100], "lang": "en",
-                "safesearch": "true", "min_height": 1080, "per_page": 20},
-        timeout=30,
-    )
-    r.raise_for_status()
+    # Pixabay antwortet manchmal langsam → bis zu 3 Versuche mit je 60 s Wartezeit
+    for versuch in range(3):
+        try:
+            r = requests.get(
+                "https://pixabay.com/api/videos/",
+                params={"key": env("PIXABAY_API_KEY"), "q": query[:100], "lang": "en",
+                        "safesearch": "true", "min_height": 1080, "per_page": 20},
+                timeout=60,
+            )
+            r.raise_for_status()
+            break
+        except requests.RequestException as e:
+            print(f"Pixabay-Fehler (Versuch {versuch + 1}/3): {e}")
+            if versuch == 2:
+                raise
+            time.sleep(5)
     for hit in r.json().get("hits", []):
         if hit["id"] in used_ids:
             continue
