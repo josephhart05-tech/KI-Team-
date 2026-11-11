@@ -1636,5 +1636,62 @@
     "caption_instagram": "Dein Profil bekommt Aufrufe, aber niemand bleibt hängen? 🛑\n\nEin nackter Affiliatelink wirkt oft unseriös. Menschen suchen nach Lösungen, nicht nach reiner Werbung.\n\n✅ Tausche den Direktlink gegen ein Tool wie Linktree\n✅ Nenne deinen konkreten Mehrwert in der Bio\n✅ Nutze einen klaren Call-to-Action\n\nSpeichere diesen Beitrag, um deine Bio direkt anzupassen! 📌\n\n#nebeneinkommen #affiliatemarketingdeutschland #facelesscontent #instagramtipps #dfdigitalefreiheit",
     "caption_tiktok": "Deine Instagram-Bio konvertiert nicht? Korrigiere diesen Fehler in 3 Minuten. Speichere das Video für später!\n\n#nebeneinkommen #affiliatemarketingdeutschland #facelesscontent #dfdigitalefreiheit",
     "video_url": null
+  },
+  {
+    "id": "20261111-0107",
+    "status": "pending",
+    "created_at": "2026-11-11T01:08:42+00:00",
+    "goal": "wachstum",
+    "format": "reel",
+    "topic": "Warum dir 100 Online-Gurus widersprüchliche Tipps geben (und wie du den Informations-Müll filterst)",
+    "angle": "Überforderung im Info-Dschungel: Warum die 3 lautesten Mythen der Gurus für Angestellte nicht funktionieren und welcher einfache Filter wirklich schützt",
+    "hook": "Du willst nebenbei was aufbauen, aber weißt vor lauter Guru-Tipps nicht mehr, wo unten ist?",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "Hör auf, jedem Online-Guru zu glauben, der dir widersprüchliche Tipps gibt.",
+        "Du willst nebenbei was aufbauen, aber weißt vor lauter Guru-Tipps nicht mehr, wo unten ist?",
+        "Niemand sagt dir, dass 90 Prozent der Online-Tipps für Angestellte gar nicht funktionieren.",
+        "Drei vermeintliche Erfolgs-Mythen, die dich im Info-Dschungel nur Zeit kosten.",
+        "Wie du den Informations-Müll von echten Strategien unterscheidest."
+      ],
+      "hook": "Du willst nebenbei was aufbauen, aber weißt vor lauter Guru-Tipps nicht mehr, wo unten ist?",
+      "hook_text": "Info-Dschungel stoppen",
+      "scenes": [
+        {
+          "text": "Du willst nebenbei was aufbauen, aber weißt vor lauter Guru-Tipps nicht mehr, wo unten ist?",
+          "search": "dark desk night laptop"
+        },
+        {
+          "text": "Jeder erzählt dir etwas anderes. Der eine will, dass du täglich postest, der nächste sagt nein.",
+          "search": "stressed person working late"
+        },
+        {
+          "text": "Das führt nur zu Überforderung. Und das Wichtigste zur Lösung kommt jetzt.",
+          "search": "confused looking at screen"
+        },
+        {
+          "text": "Nutze diesen einfachen Filter: Ignoriere jeden, der dir schnellen Reichtum ohne Aufwand verspricht.",
+          "search": "minimalist workspace warm light"
+        },
+        {
+          "text": "Such dir stattdessen eine einzige bewährte Quelle und zieh das durch. Speichere diesen Beitrag für später.",
+          "search": "notepad pen dark aesthetic"
+        }
+      ],
+      "caption_instagram": "Verlierst du dich auch gerade im Info-Dschungel der Online-Gurus?\n\n✅ Statt jedem Trend zu folgen: Wähle einen klaren Weg.\n✅ Setze auf echte Lernphasen statt Hype.\n\n💡 Und das Wichtigste: Filter den Lärm.\n\nSpeichere diesen Beitrag, wenn dir das hilft.",
+      "caption_tiktok": "Überfordert von widersprüchlichen Guru-Tipps? So filterst du den Informations-Müll. Speichern für mehr!",
+      "hashtags": [
+        "onlinebusiness",
+        "nebeneinkommen",
+        "affiliatemarketing",
+        "facelessmarketing"
+      ],
+      "format": "reel",
+      "product_id": null
+    },
+    "caption_instagram": "Verlierst du dich auch gerade im Info-Dschungel der Online-Gurus?\n\n✅ Statt jedem Trend zu folgen: Wähle einen klaren Weg.\n✅ Setze auf echte Lernphasen statt Hype.\n\n💡 Und das Wichtigste: Filter den Lärm.\n\nSpeichere diesen Beitrag, wenn dir das hilft.\n\n#onlinebusiness #nebeneinkommen #affiliatemarketing #facelessmarketing #dfdigitalefreiheit",
+    "caption_tiktok": "Überfordert von widersprüchlichen Guru-Tipps? So filterst du den Informations-Müll. Speichern für mehr!\n\n#onlinebusiness #nebeneinkommen #affiliatemarketing #dfdigitalefreiheit",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1794359313/ki-team/znfkgtxbnmufvo4phgx3.mp4"
   }
 ]
