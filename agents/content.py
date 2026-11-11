@@ -95,33 +95,46 @@ def write_script(cfg, idea, learnings, feedback=None):
 {_context(cfg, idea, learnings, feedback)}
 {_hook_rules()}
 
-SKRIPT (animiertes Strichmännchen-Video OHNE Stimme – alles steht als Text im Bild):
-- 6 bis 8 Szenen, zusammen ca. 30-45 Sekunden. Jede Szene = 1 kurzer Bildschirmtext, max. 12 Wörter.
-- Der Hook steht als "hook_text" groß über Szene 1. Szene 1 greift ihn direkt auf (kein Intro).
-- Erzähle eine kleine Geschichte: Wiedererkennung/Problem → ein Bild oder eine Metapher, die man sich merkt →
-  Lösung mit Namen (z. B. "die 60-Minuten-Methode", "die 20/80-Regel") → Call-to-Action in der letzten Szene.
-- Markiere in jeder Szene 1-3 Schlüsselwörter mit *Sternchen* – sie leuchten im Video gold.
-- "motiv": genau einer dieser Schlüssel (nichts anderes): {motive}
-  Das Motiv soll den Text bildlich zeigen. Nicht zweimal dasselbe Motiv direkt hintereinander.
-- "stichwort": kurzer Text fürs Motiv, max. 14 Zeichen, z. B. "TAG 30", "5 KURSE", "1 STUNDE".
-  Bei "checkliste" 3 kurze Punkte mit | getrennt (z. B. "LERNEN|UMSETZEN|POSTEN"),
-  bei "zwei_wege" 2 Wege mit | (z. B. "KONSUM|UMSETZUNG"). Leer lassen, wenn nichts passt.
-- Konkret und umsetzbar, mit echtem Mehrwert. Keine Einkommensversprechen, keine Euro-Beträge als Versprechen.
+SKRIPT – Strichmännchen-STORY ohne Stimme (dunkler Look, leuchtende Grafiken, Untertitel unten):
+- Erzähle eine kleine Geschichte mit EINER Figur mit Vornamen (z. B. Lena, Max, Tom, Sarah), in der sich die
+  Zielgruppe wiedererkennt. Beispiel-Ablauf: "18 Uhr. Lena kommt von der Arbeit und sagt: Ich hab keine Zeit." →
+  "Dann scrollt sie 2,5 Stunden durchs Handy." → "Dabei bräuchte sie nur eine Stunde am Tag." →
+  "Eine Stunde pro Tag sind 365 Stunden im Jahr." → Methode mit 3 Schritten → Ergebnis → Pointe.
+- 6 bis 8 Szenen in dieser Reihenfolge:
+  1. Hook-Szene: Alltagssituation + großer Leucht-"titel" (max. 3 Wörter, z. B. „KEINE ZEIT.“, titel_farbe "rot").
+  2.-3. Problem / Wiedererkennung (konkrete Zahl oder Situation).
+  4. Wendepunkt mit Zahl ("zahl" oder "ring").
+  5. GENAU EINE "regeln"-Szene = der Mehrwert: Methode mit Namen + 3 konkrete Schritte.
+  6. Ergebnis ("vergleich" oder "treppe").
+  7. Pointe in einem Satz.
+- "text" = Untertitel: genau EIN kurzer Satz, HÖCHSTENS 10 Wörter. Kürzer ist besser. Normale Groß-/Kleinschreibung.
+  1-3 Schlüsselwörter oder Zahlen in *Sternchen* (leuchten gold), Probleme in ~Tilden~ (leuchten rot).
+- "visual": genau einer dieser Schlüssel: {motive}
+  Felder je nach visual: "titel", "titel_farbe" (gold|rot|weiss), "pose", "zahl", "label" (max. 3 Wörter),
+  "anteil" (0-1), "links", "rechts" (je 1 Wort).
+- "regeln"-Szene: KEIN "text". "titel" = Name der Methode (max. 18 Zeichen, z. B. "60-MINUTEN-METHODE"),
+  "regeln" = genau 3 Einträge ["kurz" (max. 6 Zeichen, z. B. "20 MIN", "1.", "STOP"), "Stichwort" (1-2 Wörter),
+  "Erklärung" (max. 8 Wörter, konkret und umsetzbar)].
+- Keine Einkommensversprechen, keine Euro-Beträge als Versprechen. Zahlen nur, wenn sie logisch stimmen.
 - {_cta_rule(product)}
 {_value_rule()}
-- "hook_text": der Hook als großer Titel, max. 7 Wörter, die stärksten Wörter in *Sternchen*.
+- "abspann": Aufforderung für die Schlusskarte, max. 6 Wörter (z. B. "Speicher dir die 60-Minuten-Methode").
+- "hook_text": der Hook in max. 7 Wörtern (für die Übersicht).
 
 CAPTION & HASHTAGS:
 {_caption_rules(cfg)}
 
 Antworte nur als JSON:
-{{"hook_varianten": ["...", "...", "...", "...", "..."], "hook": "...", "hook_text": "...",
-"scenes": [{{"text": "...", "motiv": "...", "stichwort": "..."}}], "caption_instagram": "...", "caption_tiktok": "...", "hashtags": ["..."]}}"""
+{{"hook_varianten": ["...", "...", "...", "...", "..."], "hook": "...", "hook_text": "...", "abspann": "...",
+"scenes": [{{"visual": "uhr", "titel": "...", "titel_farbe": "rot", "text": "..."}},
+  {{"visual": "zahl", "zahl": "365", "label": "STUNDEN IM JAHR", "text": "..."}},
+  {{"visual": "regeln", "titel": "...", "regeln": [["...", "...", "..."], ["...", "...", "..."], ["...", "...", "..."]]}}], "caption_instagram": "...", "caption_tiktok": "...", "hashtags": ["..."]}}"""
 
     script = llm.ask(prompt, cfg, json_mode=True)
     for sc in script.get("scenes", []):
-        if sc.get("motiv") not in MOTIVE:
-            sc["motiv"] = "zahl" if sc.get("stichwort") else "figur_denkt"
+        if sc.get("visual") not in MOTIVE:
+            sc["visual"] = "zahl" if sc.get("zahl") else "figur"
+        sc.setdefault("text", "")
     script["format"] = "reel"
     script["product_id"] = product["id"] if product else None
     return script
@@ -163,13 +176,18 @@ def spoken_text(script):
     """Der eigentliche Inhalt als Fließtext (für den Prüfer)."""
     if script.get("format") == "karussell":
         return " ".join(f"{s.get('titel', '')}. {s.get('text', '')}" for s in script.get("slides", []))
-    return " ".join(s["text"].replace("*", "").strip() for s in script["scenes"])
+    parts = []
+    for s in script["scenes"]:
+        parts.append((s.get("text") or "").replace("*", "").replace("~", "").strip())
+        parts += [" – ".join(str(x) for x in r) + "." for r in s.get("regeln") or []]
+    return " ".join(p for p in parts if p)
 
 
 def first_line(script):
     if script.get("format") == "karussell":
         return script["slides"][0]["titel"]
-    return (script.get("hook_text") or script["scenes"][0]["text"]).replace("*", "")
+    first = script["scenes"][0] if script.get("scenes") else {}
+    return (script.get("hook_text") or first.get("text") or first.get("titel") or "").replace("*", "").replace("~", "")
 
 
 def _hashtags(cfg, script, platform):

@@ -1,11 +1,14 @@
-"""Strichmännchen-Video: animierte Szenen, Text Wort für Wort, eigene Musik – keine Stimme, keine Stock-Videos.
+"""DF-Story-Video: dunkle Strichmännchen-Geschichte mit Leucht-Effekten, Untertitel Wort für Wort,
+eigene Musik – keine Stimme, keine Stock-Videos. (Stil der Reels vom 9. November.)
 
-Jede Szene im Skript hat:
-  text     – Bildschirmtext (max. ~12 Wörter). Wörter in *Sternchen* leuchten gold.
-  motiv    – eins der Motive aus MOTIVE (siehe unten)
-  stichwort – optional: kurze Zahl/Wort fürs Motiv (z. B. "TAG 30", "5 KURSE", "1 STD")
+Jede Szene im Skript (script["scenes"]) hat:
+  text    – Untertitel unten, 1 kurzer Satz (max. 12 Wörter). *Wort* = gold, ~Wort~ = rot.
+  visual  – eins der Bilder aus MOTIVE
+  titel   – optional: großer Leucht-Titel (max. 4 Wörter), titel_farbe: gold | rot | weiss
+  zahl, label, anteil, pose, links, rechts, regeln – je nach visual (siehe MOTIVE)
 """
 import math
+import re
 import subprocess
 import wave
 from pathlib import Path
@@ -14,49 +17,80 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 W, H = 1080, 1920
 FPS = 30
+G = 1140                      # Boden-Linie (Füße der Figuren)
 
-BG = (10, 10, 10)
-GOLD = (201, 162, 39)
-CREAM = (243, 238, 227)
-GREY = (120, 116, 108)
-RED = (214, 72, 60)
+WHITE = (240, 242, 246)
+GOLD = (246, 197, 68)
+RED = (255, 84, 84)
+GREY = (154, 160, 170)
 
 MOTIVE = {
-    "figur_denkt": "Figur grübelt, Fragezeichen über dem Kopf",
-    "figur_frust": "Figur lässt den Kopf hängen, graue Wolke",
-    "figur_jubel": "Figur reißt die Arme hoch, Funken",
-    "figur_laptop": "Figur sitzt am Laptop und arbeitet",
-    "figur_handy": "Figur starrt aufs Handy, Zeit verrinnt",
-    "figur_laeuft": "Figur läuft los Richtung Ziel-Flagge",
-    "treppe": "Figur steigt Stufe für Stufe eine Treppe hoch",
-    "stapel": "Figur neben einem wachsenden Bücher-/Kurs-Stapel",
-    "uhr": "große Uhr, Zeiger dreht sich",
-    "kalender": "Kalenderblatt, Tage zählen hoch (stichwort = z. B. TAG 30)",
-    "checkliste": "3 Punkte werden abgehakt",
-    "chart": "Kurve: lange flach, dann steil nach oben",
-    "zwei_wege": "Figur an einer Weggabelung",
-    "gluehbirne": "Glühbirne geht über der Figur an",
-    "zahl": "große Zahl/Wort zählt hoch (stichwort)",
+    "figur": "Figur in der Landschaft (pose: steht | laeuft | jubel | handy | denkt | frust | laptop), optional mit titel",
+    "uhr": "große Uhr mit drehendem Zeiger über der Figur, optional titel darunter (z. B. „KEINE ZEIT.“)",
+    "zahl": "große leuchtende Zahl zählt hoch (zahl = z. B. 365, label = z. B. STUNDEN IM JAHR)",
+    "ring": "Fortschrittsring (zahl = z. B. 1h, label = z. B. VON 24, anteil = z. B. 0.04)",
+    "stapel": "Figur neben wachsendem Kurs-/Bücherstapel (label = z. B. 5 KURSE)",
+    "treppe": "Figur steigt eine leuchtende Treppe hoch (label optional)",
+    "vergleich": "zwei Figuren: links grau (links = Wort), rechts gold leuchtend (rechts = Wort)",
+    "frage": "Figur mit leuchtenden Fragezeichen über dem Kopf",
+    "regeln": "Mehrwert-Karte: titel (z. B. 20/80-REGEL) + regeln = 3 Zeilen [kurz, Stichwort, Erklärung max. 8 Wörter]",
+    "ende": "Schlusskarte mit Aufforderung (titel = z. B. Speicher dir die 20/80-Regel)",
 }
 
-_FONT_CANDIDATES = [
-    "/usr/share/fonts/truetype/google-fonts/Poppins-Bold.ttf",
-    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
-    "/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-]
+# ---------- Schriften ----------
+
+_CACHE = Path.home() / ".cache" / "df-fonts"
+_FONT_DIRS = [Path(__file__).resolve().parent.parent / "assets" / "fonts", _CACHE, Path("/usr/share/fonts/opentype/inter")]
+_FALLBACK = ["/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+             "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"]
+_INTER_ZIP = "https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip"
+_WEIGHTS = ("Medium", "SemiBold", "Bold", "ExtraBold")
 _fonts = {}
+_checked = False
 
 
-def _font(size):
-    if size not in _fonts:
-        for p in _FONT_CANDIDATES:
-            if Path(p).exists():
-                _fonts[size] = ImageFont.truetype(p, size)
+def _ensure_fonts():
+    """Schrift Inter (wie in den Original-Reels) bei Bedarf einmal von GitHub laden."""
+    global _checked
+    if _checked:
+        return
+    _checked = True
+    if any((d / f"Inter-Bold{e}").exists() for d in _FONT_DIRS for e in (".ttf", ".otf")):
+        return
+    try:
+        import io
+        import zipfile
+
+        import requests
+        r = requests.get(_INTER_ZIP, timeout=90)
+        r.raise_for_status()
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        _CACHE.mkdir(parents=True, exist_ok=True)
+        names = z.namelist()
+        for wgt in _WEIGHTS:
+            for ext in (".ttf", ".otf"):
+                hit = [n for n in names if n.endswith(f"/Inter-{wgt}{ext}") or n == f"Inter-{wgt}{ext}"]
+                if hit:
+                    (_CACHE / f"Inter-{wgt}{ext}").write_bytes(z.read(sorted(hit, key=len)[0]))
+                    break
+        print("Schrift Inter geladen:", sorted(p.name for p in _CACHE.iterdir()))
+    except Exception as e:  # ohne Internet: Ersatzschrift
+        print("Schrift Inter nicht ladbar, nutze Ersatzschrift:", e)
+
+
+def _font(size, weight="Bold"):
+    _ensure_fonts()
+    key = (size, weight)
+    if key not in _fonts:
+        cands = [d / f"Inter-{weight}{ext}" for d in _FONT_DIRS for ext in (".ttf", ".otf")] + \
+                [d / f"Inter-Bold{ext}" for d in _FONT_DIRS for ext in (".ttf", ".otf")] + [Path(p) for p in _FALLBACK]
+        for p in cands:
+            if p.exists():
+                _fonts[key] = ImageFont.truetype(str(p), size)
                 break
         else:
-            _fonts[size] = ImageFont.load_default(size)
-    return _fonts[size]
+            _fonts[key] = ImageFont.load_default(size)
+    return _fonts[key]
 
 
 def _ffmpeg():
@@ -69,325 +103,461 @@ def _ffmpeg():
     return imageio_ffmpeg.get_ffmpeg_exe()
 
 
-def _ease(x):
-    x = max(0.0, min(1.0, x))
-    return 1 - (1 - x) ** 3
+# ---------- Hilfen ----------
+
+def _cl(x):
+    return max(0.0, min(1.0, x))
 
 
 def _seg(t, a, b):
-    return max(0.0, min(1.0, (t - a) / (b - a))) if b > a else 1.0
+    return _cl((t - a) / (b - a)) if b > a else 1.0
 
 
-def _mix(c, a):
-    """Farbe c mit Deckkraft a auf schwarzem Grund."""
-    return tuple(int(BG[i] + (c[i] - BG[i]) * a) for i in range(3))
+def _ease(x):
+    x = _cl(x)
+    return x * x * (3 - 2 * x)
+
+
+def _eo(x):
+    x = _cl(x)
+    return 1 - (1 - x) ** 3
+
+
+def _lerp(a, b, t):
+    return a + (b - a) * t
+
+
+def _rgba(c, a=1.0):
+    return (int(c[0]), int(c[1]), int(c[2]), int(255 * _cl(a)))
+
+
+class Frame:
+    """Zwei Ebenen: scharf (sharp) und Leuchten (glow) – das Leuchten wird weichgezeichnet."""
+
+    def __init__(self, base):
+        self.base = base
+        self.sharp = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        self.glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        self.d = ImageDraw.Draw(self.sharp)
+        self.g = ImageDraw.Draw(self.glow)
+        self.has_glow = False
+
+    def line(self, pts, col, width, a=1.0, glow=False):
+        self.d.line(pts, fill=_rgba(col, a), width=int(width), joint="curve")
+        if glow:
+            self.g.line(pts, fill=_rgba(col, a), width=int(width * 3))
+            self.has_glow = True
+
+    def ellipse(self, box, outline=None, fill=None, width=1, a=1.0, glow=False):
+        self.d.ellipse(box, outline=_rgba(outline, a) if outline else None,
+                       fill=_rgba(fill, a) if fill else None, width=int(width))
+        if glow:
+            self.g.ellipse(box, outline=_rgba(outline, a) if outline else None,
+                           fill=_rgba(fill, a) if fill else None, width=int(width * 3))
+            self.has_glow = True
+
+    def rect(self, box, outline=None, fill=None, width=1, a=1.0, glow=False, radius=0):
+        self.d.rounded_rectangle(box, radius=radius, outline=_rgba(outline, a) if outline else None,
+                                 fill=_rgba(fill, a) if fill else None, width=int(width))
+        if glow:
+            self.g.rounded_rectangle(box, radius=radius, outline=_rgba(outline, a) if outline else None,
+                                     fill=_rgba(fill, a) if fill else None, width=int(width * 3))
+            self.has_glow = True
+
+    def text(self, s, x, y, size, col, weight="Bold", align="center", a=1.0, glow=False, spacing=0):
+        if a <= 0 or not s:
+            return
+        f = _font(size, weight)
+        if spacing:
+            w = sum(self.d.textlength(ch, font=f) for ch in s) + spacing * (len(s) - 1)
+        else:
+            w = self.d.textlength(s, font=f)
+        x0 = x - w / 2 if align == "center" else x
+        y0 = y - size * 0.8
+        targets = [self.d] + ([self.g] if glow else [])
+        for dr in targets:
+            if spacing:
+                cx = x0
+                for ch in s:
+                    dr.text((cx, y0), ch, font=f, fill=_rgba(col, a))
+                    cx += dr.textlength(ch, font=f) + spacing
+            else:
+                dr.text((x0, y0), s, font=f, fill=_rgba(col, a))
+        if glow:
+            self.has_glow = True
+
+    def compose(self, fade=0.0):
+        img = self.base.copy()
+        if self.has_glow:
+            small = self.glow.resize((W // 4, H // 4), Image.BILINEAR).filter(ImageFilter.GaussianBlur(7))
+            halo = small.resize((W, H), Image.BILINEAR)
+            img.alpha_composite(halo)
+            img.alpha_composite(halo)
+        img.alpha_composite(self.sharp)
+        out = img.convert("RGB")
+        if fade > 0:
+            out = Image.blend(out, Image.new("RGB", (W, H), (0, 0, 0)), _cl(fade))
+        return out
+
+
+# ---------- Hintergründe (einmal berechnet, dann wiederverwendet) ----------
+
+_bg_cache = {}
+
+
+def _background(kind="scene", gold=0.0):
+    key = (kind, round(gold, 2))
+    if key in _bg_cache:
+        return _bg_cache[key]
+    import numpy as np
+    y = np.linspace(0, 1, H)[:, None]
+    x = np.linspace(0, 1, W)[None, :]
+    top, bot = np.array([24, 27, 35]), np.array([9, 10, 14])
+    img = top[None, None, :] * (1 - y[..., None]) + bot[None, None, :] * y[..., None]
+    img = np.broadcast_to(img, (H, W, 3)).copy()
+    if gold > 0:  # warmes Leuchten in der Mitte
+        dx, dy = (x - 0.5) * W, (y - 0.38) * H
+        r = np.sqrt(dx ** 2 + dy ** 2) / 900
+        warm = np.clip(1 - r, 0, 1) ** 2 * gold
+        img += warm[..., None] * np.array([95, 62, 14])[None, None, :]
+    vx, vy = (x - 0.5) * 2, (y - 0.5) * 2
+    vig = np.clip(1 - 0.35 * (vx ** 2 + vy ** 2), 0.45, 1)
+    img *= vig[..., None]
+    im = Image.fromarray(np.clip(img, 0, 255).astype("uint8"), "RGB").convert("RGBA")
+    if kind == "scene":
+        d = ImageDraw.Draw(im)
+        far = [(0, 1000), (120, 930), (230, 975), (360, 880), (470, 950), (600, 860), (720, 940),
+               (850, 890), (960, 960), (1080, 910), (1080, G), (0, G)]
+        near = [(0, 1060), (150, 1000), (300, 1050), (420, 990), (560, 1060), (700, 1010), (840, 1070),
+                (980, 1015), (1080, 1050), (1080, G), (0, G)]
+        d.polygon(far, fill=(31, 35, 45, 255))
+        d.polygon(near, fill=(25, 28, 37, 255))
+        gy = np.linspace(0, 1, H - G)[:, None, None]
+        ground = np.array([16, 18, 25]) * (1 - gy) + np.array([5, 6, 9]) * gy
+        ground = np.broadcast_to(ground, (H - G, W, 3)).astype("uint8")
+        im.paste(Image.fromarray(ground, "RGB").convert("RGBA"), (0, G))
+        d.line([(0, G), (W, G)], fill=(70, 78, 96, 255), width=3)
+    _bg_cache[key] = im
+    return im
 
 
 # ---------- Strichmännchen ----------
 
-def _figure(d, x, y, s=1.0, pose="steht", t=0.0, color=CREAM, a=1.0):
-    """Zeichnet eine Figur mit Füßen bei (x, y)."""
-    c = _mix(color, a)
-    lw = int(12 * s)
-    head_r = 42 * s
-    hip = (x, y - 150 * s)
-    neck = (x, y - 300 * s)
-    sway = math.sin(t * 6) * 4 * s
+def _fig(fr, x, y, s=1.0, pose="steht", t=0.0, col=WHITE, a=1.0, glow=True, amt=1.0):
+    lw = 8 * s
+    hr = 19 * s
+    hip = (x, y - 92 * s)
+    neck = (x, y - 172 * s)
+    head = (x, neck[1] - hr - 5 * s)
     if pose == "frust":
-        neck = (x + 18 * s, y - 280 * s)
-        head = (x + 45 * s, y - 300 * s - head_r * 0.6)
-    else:
-        head = (x + sway * 0.3, neck[1] - head_r - 6 * s)
-    # Körper
-    d.line([hip, neck], fill=c, width=lw)
-    d.ellipse([head[0] - head_r, head[1] - head_r, head[0] + head_r, head[1] + head_r], outline=c, width=lw)
-    # Beine
+        neck = (x + 10 * s, y - 165 * s)
+        head = (x + 30 * s, neck[1] - hr * 0.4)
+
+    def L(pts):
+        fr.line(pts, col, lw, a, glow)
+
+    L([hip, neck])
+    fr.ellipse([head[0] - hr, head[1] - hr, head[0] + hr, head[1] + hr], outline=col, width=lw, a=a, glow=glow)
     if pose == "laeuft":
-        ph = math.sin(t * 14)
-        d.line([hip, (x + 60 * s * ph, y)], fill=c, width=lw)
-        d.line([hip, (x - 60 * s * ph, y)], fill=c, width=lw)
-    elif pose == "sitzt":
-        knee = (x + 80 * s, y - 150 * s)
-        d.line([hip, knee], fill=c, width=lw)
-        d.line([knee, (x + 80 * s, y)], fill=c, width=lw)
+        ph = math.sin(t * 12) * 34 * s
+        L([hip, (x + ph, y)])
+        L([hip, (x - ph, y)])
+    elif pose == "laptop":
+        knee = (x + 48 * s, y - 92 * s)
+        L([hip, knee])
+        L([knee, (x + 48 * s, y)])
     else:
-        d.line([hip, (x - 45 * s, y)], fill=c, width=lw)
-        d.line([hip, (x + 45 * s, y)], fill=c, width=lw)
-    # Arme
-    sh = (neck[0], neck[1] + 25 * s)
+        L([hip, (x - 26 * s, y)])
+        L([hip, (x + 26 * s, y)])
+    sh = (neck[0], neck[1] + 14 * s)
     if pose == "jubel":
-        lift = math.sin(t * 10) * 15 * s
-        d.line([sh, (x - 90 * s, sh[1] - 120 * s - lift)], fill=c, width=lw)
-        d.line([sh, (x + 90 * s, sh[1] - 120 * s + lift)], fill=c, width=lw)
+        up = amt * (1 + 0.15 * math.sin(t * 8))
+        L([sh, (x - 55 * s, sh[1] + _lerp(70, -75, up) * s)])
+        L([sh, (x + 55 * s, sh[1] + _lerp(70, -75, up) * s)])
     elif pose == "denkt":
-        d.line([sh, (x + 60 * s, sh[1] + 40 * s)], fill=c, width=lw)
-        d.line([(x + 60 * s, sh[1] + 40 * s), (head[0] + 20 * s, head[1] + head_r)], fill=c, width=lw)
-        d.line([sh, (x - 60 * s, sh[1] + 110 * s)], fill=c, width=lw)
-    elif pose in ("tippt", "sitzt"):
-        tap = math.sin(t * 30) * 8 * s
-        d.line([sh, (x + 110 * s, sh[1] + 60 * s + tap)], fill=c, width=lw)
-        d.line([sh, (x + 100 * s, sh[1] + 70 * s - tap)], fill=c, width=lw)
+        L([sh, (x + 38 * s, sh[1] + 30 * s), (head[0] + 12 * s, head[1] + hr)])
+        L([sh, (x - 34 * s, sh[1] + 68 * s)])
     elif pose == "handy":
-        d.line([sh, (x + 50 * s, sh[1] + 20 * s)], fill=c, width=lw)
-        d.line([(x + 50 * s, sh[1] + 20 * s), (x + 55 * s, head[1] + 10 * s)], fill=c, width=lw)
-        d.rounded_rectangle([x + 40 * s, head[1] - 30 * s, x + 75 * s, head[1] + 30 * s],
-                            radius=int(6 * s), outline=_mix(GOLD, a), width=int(6 * s))
-        d.line([sh, (x - 50 * s, sh[1] + 120 * s)], fill=c, width=lw)
+        L([sh, (x + 32 * s, sh[1] + 18 * s), (x + 36 * s, head[1] + 12 * s)])
+        L([sh, (x - 34 * s, sh[1] + 68 * s)])
+        fr.rect([x + 26 * s, head[1] - 10 * s, x + 50 * s, head[1] + 30 * s], outline=GOLD, width=4 * s,
+                a=a, glow=True, radius=int(5 * s))
+    elif pose == "laptop":
+        tap = math.sin(t * 25) * 5 * s
+        L([sh, (x + 70 * s, sh[1] + 40 * s + tap)])
+        L([sh, (x + 64 * s, sh[1] + 46 * s - tap)])
     elif pose == "frust":
-        d.line([sh, (x - 10 * s, sh[1] + 150 * s)], fill=c, width=lw)
-        d.line([sh, (x + 30 * s, sh[1] + 150 * s)], fill=c, width=lw)
+        L([sh, (x + 2 * s, sh[1] + 85 * s)])
+        L([sh, (x + 22 * s, sh[1] + 85 * s)])
     else:
-        d.line([sh, (x - 70 * s, sh[1] + 110 * s)], fill=c, width=lw)
-        d.line([sh, (x + 70 * s, sh[1] + 110 * s)], fill=c, width=lw)
+        sw = math.sin(t * 2) * 4 * s
+        L([sh, (x - 36 * s, sh[1] + 70 * s + sw)])
+        L([sh, (x + 36 * s, sh[1] + 70 * s - sw)])
     return head
 
 
-def _ground(d, y=1420, a=1.0):
-    d.line([(140, y), (940, y)], fill=_mix(GREY, 0.6 * a), width=4)
+def _laptop(fr, x, a=1.0):
+    fr.line([(x - 20, G - 140), (x + 160, G - 140)], WHITE, 6, a)
+    fr.line([(x + 140, G - 140), (x + 140, G)], WHITE, 6, a)
+    fr.line([(x + 10, G - 144), (x + 100, G - 144), (x + 115, G - 230), (x + 30, G - 230), (x + 10, G - 144)],
+            GOLD, 6, a, glow=True)
 
 
-def _label(d, text, cx, cy, size, color, a=1.0):
-    f = _font(size)
-    w = d.textlength(text, font=f)
-    d.text((cx - w / 2, cy - size / 2), text, font=f, fill=_mix(color, a))
+# ---------- Bild-Elemente ----------
+
+def _clock(fr, cx, cy, r, t, a=1.0, col=WHITE):
+    fr.ellipse([cx - r, cy - r, cx + r, cy + r], outline=col, width=10, a=a, glow=True)
+    for i in range(12):
+        an = i / 12 * 2 * math.pi
+        fr.line([(cx + math.cos(an) * (r - 28), cy + math.sin(an) * (r - 28)),
+                 (cx + math.cos(an) * (r - 12), cy + math.sin(an) * (r - 12))], col, 5, a)
+    an = t * 2.4 - math.pi / 2
+    fr.line([(cx, cy), (cx + math.cos(an) * r * 0.75, cy + math.sin(an) * r * 0.75)], col, 8, a, glow=True)
+    fr.line([(cx, cy), (cx, cy - r * 0.5)], col, 10, a)
+    fr.ellipse([cx - 10, cy - 10, cx + 10, cy + 10], fill=col, a=a)
 
 
-# ---------- Motive ----------
+def _num_text(z, p):
+    """'365' zählt hoch, '2,5 STD' bleibt Text."""
+    m = re.match(r"^(\d[\d.]*)(.*)$", z.strip())
+    if not m or "," in z:
+        return z
+    digits = m.group(1).replace(".", "")
+    if not digits.isdigit() or len(digits) > 7:
+        return z
+    v = int(round(int(digits) * p))
+    return f"{v:,}".replace(",", ".") + m.group(2)
 
-def _motif(d, motiv, t, stichwort, a):
-    G = 1420
-    sw = (stichwort or "").upper()[:14]
-    if motiv == "figur_denkt":
-        _ground(d, G, a)
-        head = _figure(d, 540, G, 1.1, "denkt", t, a=a)
-        for i, dx in enumerate((-110, 0, 110)):
-            q = _ease(_seg(t, 0.1 + i * 0.15, 0.35 + i * 0.15))
-            bob = math.sin(t * 8 + i) * 10
-            _label(d, "?", head[0] + dx, head[1] - 150 - 40 * q + bob, 90, GOLD, a * q)
-    elif motiv == "figur_frust":
-        _ground(d, G, a)
-        head = _figure(d, 540, G, 1.1, "frust", t, a=a)
-        cy = head[1] - 190
-        for dx, r in ((-70, 55), (0, 75), (75, 55)):
-            d.ellipse([head[0] + dx - r, cy - r, head[0] + dx + r, cy + r], fill=_mix((70, 70, 72), a))
-        for i in range(7):
-            yy = cy + 60 + ((t * 600 + i * 47) % 160)
-            xx = head[0] - 90 + i * 30
-            d.line([(xx, yy), (xx - 6, yy + 24)], fill=_mix((110, 130, 160), a * 0.8), width=4)
-        if sw:
-            _label(d, sw, 540, G + 110, 64, RED, a)
-    elif motiv == "figur_jubel":
-        _ground(d, G, a)
-        jump = abs(math.sin(t * 9)) * 40
-        head = _figure(d, 540, G - jump, 1.1, "jubel", t, a=a)
-        for i in range(10):
-            ang = i / 10 * 2 * math.pi + t * 2
-            rr = 170 + 30 * math.sin(t * 7 + i)
-            px, py = head[0] + math.cos(ang) * rr, head[1] + math.sin(ang) * rr
-            d.ellipse([px - 7, py - 7, px + 7, py + 7], fill=_mix(GOLD, a))
-        if sw:
-            _label(d, sw, 540, G + 110, 64, GOLD, a)
-    elif motiv == "figur_laptop":
-        _ground(d, G, a)
-        d.rectangle([380, G - 175, 440, G - 150], fill=_mix(GREY, a))  # Hocker
-        _figure(d, 410, G, 1.0, "sitzt", t, a=a)
-        d.line([(500, G - 230), (760, G - 230)], fill=_mix(CREAM, a), width=10)  # Tisch
-        d.line([(740, G - 230), (740, G)], fill=_mix(CREAM, a), width=10)
-        d.polygon([(560, G - 236), (700, G - 236), (720, G - 380), (590, G - 380)],
-                  outline=_mix(GOLD, a), width=8)
-        glow = 0.5 + 0.5 * math.sin(t * 6)
-        d.line([(610, G - 340), (690, G - 340)], fill=_mix(GOLD, a * glow), width=6)
-        if sw:
-            _label(d, sw, 540, G + 110, 64, GOLD, a)
-    elif motiv == "figur_handy":
-        _ground(d, G, a)
-        _figure(d, 470, G, 1.1, "handy", t, a=a)
-        cx, cy, r = 760, G - 470, 85
-        d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=_mix(CREAM, a), width=8)
-        ang = t * 2 * math.pi * 3 - math.pi / 2
-        d.line([(cx, cy), (cx + math.cos(ang) * 65, cy + math.sin(ang) * 65)], fill=_mix(RED, a), width=8)
-        _label(d, sw or "2,5 STD", 760, cy + 140, 54, RED, a)
-    elif motiv == "figur_laeuft":
-        _ground(d, G, a)
-        x = 220 + 480 * _ease(t)
-        _figure(d, x, G, 1.0, "laeuft", t, a=a)
-        d.line([(860, G), (860, G - 280)], fill=_mix(CREAM, a), width=8)
-        wave_ = math.sin(t * 10) * 10
-        d.polygon([(860, G - 280), (980, G - 245 + wave_), (860, G - 210)], fill=_mix(GOLD, a))
-        if sw:
-            _label(d, sw, 860, G - 330, 54, GOLD, a)
-    elif motiv == "treppe":
-        steps = 6
-        sx, sy, stw, sth = 180, G, 120, 90
-        shown = steps * _ease(_seg(t, 0, 0.7))
+
+def _wrap(s, n):
+    out, cur = [], ""
+    for w in str(s).split():
+        if cur and len(cur) + 1 + len(w) > n:
+            out.append(cur)
+            cur = w
+        else:
+            cur = (cur + " " + w).strip()
+    if cur:
+        out.append(cur)
+    return out
+
+
+def _titel(fr, sc, lt, y=560, size=96):
+    t = (sc.get("titel") or "").strip()
+    if not t:
+        return
+    col = {"rot": RED, "weiss": WHITE}.get((sc.get("titel_farbe") or "gold").lower(), GOLD)
+    lines = _wrap(t.upper(), 14)[:3]
+    sz = size if max(len(l) for l in lines) <= 12 else int(size * 0.82)
+    for i, ln in enumerate(lines):
+        a = _ease(_seg(lt, 0.15 + i * 0.25, 0.5 + i * 0.25))
+        fr.text(ln, 540, y + i * sz * 1.08, sz, col, "ExtraBold", a=a, glow=col != WHITE)
+
+
+def _visual(fr, sc, lt, d):
+    v = sc.get("visual", "figur")
+    label = (sc.get("label") or "").upper()
+    if v == "uhr":
+        _fig(fr, 470, G, 1, "steht", lt)
+        _clock(fr, 540, 470, 150, lt, _ease(_seg(lt, 0, 0.3)))
+        _titel(fr, sc, lt, y=760)
+    elif v == "zahl":
+        z = str(sc.get("zahl") or "")
+        p = _eo(_seg(lt, 0.2, min(2.2, d * 0.5)))
+        fr.text(_num_text(z, p), 540, 640, 210 if len(z) <= 4 else 150, GOLD, "ExtraBold",
+                a=_ease(_seg(lt, 0, 0.3)), glow=True)
+        fr.text(label, 540, 730, 36, WHITE, "SemiBold", a=_ease(_seg(lt, 0.3, 0.6)), spacing=6)
+        if sc.get("titel"):
+            fr.text(sc["titel"], 540, 830, 44, WHITE, "SemiBold", a=_ease(_seg(lt, 1.2, 1.6)))
+    elif v == "ring":
+        cx, cy, r = 540, 560, 175
+        fr.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(70, 74, 86), width=22)
+        try:
+            frac = float(sc.get("anteil") or 0.1)
+        except (TypeError, ValueError):
+            frac = 0.1
+        end = -90 + 360 * _cl(frac) * _eo(_seg(lt, 0.3, 1.4))
+        if end > -89:
+            fr.d.arc([cx - r, cy - r, cx + r, cy + r], -90, end, fill=_rgba(GOLD), width=22)
+            fr.g.arc([cx - r, cy - r, cx + r, cy + r], -90, end, fill=_rgba(GOLD), width=50)
+            fr.has_glow = True
+        fr.text(str(sc.get("zahl") or ""), cx, cy + 30, 120, GOLD, "ExtraBold", a=_ease(_seg(lt, 0.2, 0.5)), glow=True)
+        fr.text(label, cx, cy + 90, 32, GREY, "SemiBold", a=_ease(_seg(lt, 0.4, 0.7)), spacing=6)
+    elif v == "stapel":
+        _fig(fr, 330, G, 1, "denkt", lt)
+        n = 1 + int(6 * _eo(_seg(lt, 0.2, 2.0)))
+        cols = [(120, 90, 180), (80, 140, 200), (200, 110, 90), (90, 170, 130), (190, 160, 80), (150, 150, 160)]
+        for i in range(n):
+            off = (i % 2) * 14 - 7
+            fr.rect([600 + off, G - (i + 1) * 46, 820 + off, G - i * 46 - 4], fill=cols[i % 6], a=0.75, radius=6)
+        if label:
+            fr.text(label, 710, G - n * 46 - 60, 52, RED, "ExtraBold", a=_ease(_seg(lt, 1.0, 1.4)), glow=True)
+        _titel(fr, sc, lt, y=520)
+    elif v == "treppe":
+        steps = 7
+        shown = steps * _eo(_seg(lt, 0.2, d * 0.7))
         for i in range(steps):
-            q = max(0.0, min(1.0, shown - i))
+            q = _cl(shown - i)
             if q <= 0:
                 continue
-            x0, y0 = sx + i * stw, sy - (i + 1) * sth
-            d.rectangle([x0, y0, x0 + stw - 8, sy], outline=_mix(GOLD, a * q), width=6)
+            x0 = 200 + i * 95
+            fr.rect([x0, G - (i + 1) * 70, x0 + 88, G], outline=GOLD, width=5, a=q, glow=True, radius=4)
         k = min(steps - 1, int(shown))
-        fx = sx + k * stw + stw / 2
-        fy = sy - (k + 1) * sth
-        _figure(d, fx, fy, 0.75, "steht", t, a=a)
-        if sw:
-            _label(d, sw, 540, G + 110, 64, GOLD, a)
-    elif motiv == "stapel":
-        _ground(d, G, a)
-        _figure(d, 330, G, 1.0, "denkt", t, a=a)
-        n = 1 + int(6 * _ease(_seg(t, 0, 0.8)))
-        for i in range(n):
-            y1 = G - i * 62
-            off = (i % 2) * 18
-            d.rectangle([560 + off, y1 - 58, 820 + off, y1], outline=_mix(CREAM, a), width=6)
-            d.line([(585 + off, y1 - 29), (700 + off, y1 - 29)], fill=_mix(GOLD, a), width=5)
-        if sw:
-            _label(d, sw, 690, G - n * 62 - 70, 58, RED, a)
-    elif motiv == "uhr":
-        cx, cy, r = 540, 1150, 230
-        d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=_mix(CREAM, a), width=12)
-        for i in range(12):
-            ang = i / 12 * 2 * math.pi
-            d.line([(cx + math.cos(ang) * (r - 30), cy + math.sin(ang) * (r - 30)),
-                    (cx + math.cos(ang) * (r - 8), cy + math.sin(ang) * (r - 8))], fill=_mix(GREY, a), width=6)
-        ang = t * 2 * math.pi * 2 - math.pi / 2
-        d.line([(cx, cy), (cx + math.cos(ang) * 170, cy + math.sin(ang) * 170)], fill=_mix(GOLD, a), width=12)
-        d.line([(cx, cy), (cx + math.cos(ang / 12 - 1) * 110, cy + math.sin(ang / 12 - 1) * 110)],
-               fill=_mix(CREAM, a), width=14)
-        if sw:
-            _label(d, sw, 540, cy + r + 90, 72, GOLD, a)
-    elif motiv == "kalender":
-        x0, y0 = 340, 900
-        d.rounded_rectangle([x0, y0, x0 + 400, y0 + 440], radius=24, outline=_mix(CREAM, a), width=10)
-        d.rectangle([x0 + 5, y0 + 5, x0 + 395, y0 + 110], fill=_mix(RED, a))
-        for rx in (x0 + 90, x0 + 310):
-            d.line([(rx, y0 - 40), (rx, y0 + 30)], fill=_mix(CREAM, a), width=12)
-        digits = "".join(ch for ch in sw if ch.isdigit())
-        word = sw.replace(digits, "").strip() or "TAG"
-        target = int(digits) if digits else 30
-        val = max(1, int(round(target * _ease(_seg(t, 0, 0.65)))))
-        _label(d, word, x0 + 200, y0 + 58, 56, CREAM, a)
-        _label(d, str(val), x0 + 200, y0 + 270, 170, GOLD, a)
-    elif motiv == "checkliste":
-        items = [s.strip() for s in (stichwort or "").split("|") if s.strip()][:3] or ["", "", ""]
-        for i in range(3):
-            y = 940 + i * 170
-            d.rounded_rectangle([200, y, 290, y + 90], radius=14, outline=_mix(CREAM, a), width=8)
-            q = _ease(_seg(t, 0.15 + i * 0.22, 0.32 + i * 0.22))
-            if q > 0:
-                p1, p2, p3 = (218, y + 48), (240, y + 72), (275, y + 18)
-                if q < 0.5:
-                    m = q / 0.5
-                    d.line([p1, (p1[0] + (p2[0] - p1[0]) * m, p1[1] + (p2[1] - p1[1]) * m)], fill=_mix(GOLD, a), width=12)
-                else:
-                    m = (q - 0.5) / 0.5
-                    d.line([p1, p2, (p2[0] + (p3[0] - p2[0]) * m, p2[1] + (p3[1] - p2[1]) * m)],
-                           fill=_mix(GOLD, a), width=12, joint="curve")
-            if items[i] if i < len(items) else "":
-                f = _font(56)
-                d.text((330, y + 16), items[i].upper()[:18], font=f, fill=_mix(CREAM, a))
-            else:
-                d.line([(330, y + 45), (840, y + 45)], fill=_mix(GREY, a), width=10)
-    elif motiv == "chart":
-        x0, y0, x1, y1 = 180, 1450, 900, 850
-        d.line([(x0, y1 - 20), (x0, y0), (x1, y0)], fill=_mix(GREY, a), width=6)
-        p = _ease(_seg(t, 0, 0.8))
-        pts = []
-        for i in range(int(80 * p) + 1):
-            u = i / 80
-            v = 0.08 * u + (max(0, u - 0.62) / 0.38) ** 2 * 0.9
-            pts.append((x0 + u * (x1 - x0), y0 - v * (y0 - y1)))
-        if len(pts) > 1:
-            d.line(pts, fill=_mix(GOLD, a), width=12, joint="curve")
-            ex, ey = pts[-1]
-            d.ellipse([ex - 14, ey - 14, ex + 14, ey + 14], fill=_mix(GOLD, a))
-        if sw:
-            _label(d, sw, 720, y1 - 60, 60, GOLD, a * _seg(t, 0.6, 0.8))
-    elif motiv == "zwei_wege":
-        _ground(d, G, a)
-        d.line([(540, G), (540, G - 160)], fill=_mix(GREY, a), width=10)
-        d.line([(540, G - 160), (300, G - 420)], fill=_mix(GREY, a), width=10)
-        d.line([(540, G - 160), (780, G - 420)], fill=_mix(GOLD, a), width=10)
-        parts = [s.strip() for s in (stichwort or "").split("|")]
-        if len(parts) == 2:
-            _label(d, parts[0].upper()[:10], 280, G - 480, 50, GREY, a)
-            _label(d, parts[1].upper()[:10], 800, G - 480, 50, GOLD, a)
-        _figure(d, 540, G + 10, 0.7, "denkt", t, a=a)
-    elif motiv == "gluehbirne":
-        _ground(d, G, a)
-        head = _figure(d, 540, G, 1.1, "steht", t, a=a)
-        on = _seg(t, 0.3, 0.45)
-        bx, by = head[0], head[1] - 230
-        if on > 0:
-            for i in range(8):
-                ang = i / 8 * 2 * math.pi
-                d.line([(bx + math.cos(ang) * 95, by + math.sin(ang) * 95),
-                        (bx + math.cos(ang) * 135, by + math.sin(ang) * 135)], fill=_mix(GOLD, a * on), width=8)
-        d.ellipse([bx - 70, by - 80, bx + 70, by + 60], outline=_mix(GOLD if on else CREAM, a), width=10,
-                  fill=_mix(GOLD, a * on * 0.35) if on else None)
-        d.rectangle([bx - 30, by + 60, bx + 30, by + 95], outline=_mix(CREAM, a), width=8)
-    else:  # "zahl" und Rückfall
-        txt = sw or "!"
-        digits = "".join(ch for ch in txt if ch.isdigit())
-        if digits and len(digits) <= 6:
-            val = int(round(int(digits) * _ease(_seg(t, 0, 0.6))))
-            txt = txt.replace(digits, f"{val:,}".replace(",", "."), 1)
-        size = 220 if len(txt) <= 5 else 150
-        _label(d, txt, 540, 1150, size, GOLD, a)
-        d.line([(300, 1300), (780, 1300)], fill=_mix(GOLD, a * 0.6), width=6)
+        _fig(fr, 244 + k * 95, G - (k + 1) * 70, 0.85, "jubel" if shown >= steps - 0.1 else "steht", lt,
+             amt=_ease(_seg(lt, d * 0.7, d * 0.8)))
+        if label:
+            fr.text(label, 540, 520, 64, GOLD, "ExtraBold", a=_ease(_seg(lt, 0.3, 0.7)), glow=True)
+        _titel(fr, sc, lt, y=520)
+    elif v == "vergleich":
+        a = _ease(_seg(lt, 0, 0.4))
+        fr.line([(540, 420), (540, G + 40)], WHITE, 3, a * 0.15)
+        _fig(fr, 270, G, 1, "frust", lt, col=(154, 156, 163), a=a, glow=False)
+        g = _ease(_seg(lt, 0.6, 1.4))
+        _fig(fr, 810, G, 1, "jubel", lt, col=(255, 230, 170), a=a, amt=g)
+        fr.text((sc.get("links") or "").upper(), 270, 560, 54, GREY, "ExtraBold", a=a, spacing=3)
+        fr.text((sc.get("rechts") or "").upper(), 810, 560, 54, GOLD, "ExtraBold", a=_ease(_seg(lt, 0.6, 1.0)),
+                glow=True, spacing=3)
+        if sc.get("titel"):
+            fr.text(sc["titel"].upper(), 540, 300, 40, GREY, "ExtraBold", a=a, spacing=6)
+    elif v == "frage":
+        head = _fig(fr, 540, G, 1.1, "denkt", lt)
+        for i, dx in enumerate((-90, 0, 90)):
+            q = _ease(_seg(lt, 0.3 + i * 0.35, 0.6 + i * 0.35))
+            fr.text("?", head[0] + dx, head[1] - 110 - 30 * q + math.sin(lt * 3 + i) * 8, 80, GOLD, "ExtraBold",
+                    a=q, glow=True)
+        _titel(fr, sc, lt, y=520)
+    elif v == "regeln":
+        a = _ease(_seg(lt, 0, 0.4))
+        fr.text("DIE", 540, 330, 40, GREY, "ExtraBold", a=a, spacing=8)
+        title = (sc.get("titel") or "METHODE").upper()
+        fr.text(title, 540, 440, 92 if len(title) <= 14 else 70, GOLD, "ExtraBold", a=a, glow=True)
+        rows = sc.get("regeln") or []
+        for i, row in enumerate(rows[:3]):
+            row = (list(row) + ["", "", ""])[:3]
+            q = _ease(_seg(lt, 0.9 + i * 1.3, 1.4 + i * 1.3))
+            y = 600 + i * 230
+            fr.rect([110, y, 970, y + 190], fill=(255, 255, 255), a=0.05 * q, radius=26)
+            fr.rect([110, y, 970, y + 190], outline=GOLD, width=2, a=0.35 * q, radius=26)
+            fr.text(str(row[0]).upper()[:6], 210, y + 115, 50, GOLD, "ExtraBold", a=q, glow=True)
+            fr.text(str(row[1])[:22], 320, y + 82, 46, WHITE, "Bold", align="left", a=q)
+            for k, ln in enumerate(_wrap(str(row[2]), 34)[:2]):
+                fr.text(ln, 320, y + 132 + k * 38, 32, GREY, "Medium", align="left", a=q)
+    elif v == "ende":
+        a = _ease(_seg(lt, 0, 0.5))
+        fr.ellipse([440, 420, 640, 620], outline=GOLD, width=6, a=a, glow=True)
+        fr.text("DF", 540, 555, 90, GOLD, "ExtraBold", a=a, glow=True)
+        for k, ln in enumerate(_wrap(sc.get("titel") or "Folge für mehr", 22)[:3]):
+            fr.text(ln, 540, 780 + k * 72, 62, WHITE, "ExtraBold", a=_ease(_seg(lt, 0.4 + k * 0.2, 0.8 + k * 0.2)))
+        fr.text("@df_digitalefreiheit", 540, 1040, 38, GREY, "Medium", a=_ease(_seg(lt, 1.0, 1.4)))
+    else:  # "figur"
+        pose = sc.get("pose") or "steht"
+        if pose == "laufen":
+            pose = "laeuft"
+        x = _lerp(260, 640, _eo(_seg(lt, 0, d * 0.8))) if pose == "laeuft" else 540
+        if pose == "laptop":
+            _laptop(fr, 600)
+            x = 480
+        _fig(fr, x, G, 1.1, pose, lt, amt=_ease(_seg(lt, 0.4, 1.0)))
+        if label:
+            fr.text(label, 760, G - 300, 50, RED if pose in ("handy", "frust") else GOLD, "ExtraBold",
+                    a=_ease(_seg(lt, 0.6, 1.0)), glow=True)
+        _titel(fr, sc, lt, y=560)
 
 
-# ---------- Text ----------
+# ---------- Untertitel ----------
 
 def _words(text):
-    """'Das ist *wichtig*' → [(Wort, gold?)]."""
-    out, inside = [], False
+    """'Er hat *sofort* angefangen, ~nie~ aufgehört' → [(Wort, Farbe|None)]."""
+    out, mode = [], None
     for w in text.replace("\n", " ").split():
-        gold = inside or "*" in w
-        inside = (inside + w.count("*")) % 2 == 1
-        out.append((w.replace("*", "").upper(), gold))
-    return [(w, g) for w, g in out if w]
+        col = mode
+        opened = GOLD if w.count("*") % 2 == 1 else (RED if w.count("~") % 2 == 1 else None)
+        if "*" in w and w.count("*") % 2 == 0:
+            col = GOLD
+        if "~" in w and w.count("~") % 2 == 0:
+            col = RED
+        if opened:
+            if mode:
+                mode = None
+            else:
+                mode = opened
+                col = opened
+        clean = w.replace("*", "").replace("~", "")
+        if clean:
+            out.append((clean, col))
+    return out
 
 
-def _layout(words, size, max_w, draw):
-    f = _font(size)
-    lines, cur, cur_w = [], [], 0
-    space = draw.textlength(" ", font=f)
-    for w, g in words:
-        ww = draw.textlength(w, font=f)
-        if cur and cur_w + space + ww > max_w:
-            lines.append(cur)
-            cur, cur_w = [], 0
-        cur.append((w, g, ww))
-        cur_w += (space if cur_w else 0) + ww
-    if cur:
-        lines.append(cur)
-    return lines, f, space
-
-
-def _draw_text(img, d, text, lt, top=430, size=82, start=0.04, per_word=0.06):
+def _caption(fr, text, lt, t0, t1, y=1330, size=58):
     words = _words(text)
     if not words:
         return
-    while size > 52:
-        lines, f, space = _layout(words, size, 900, d)
-        if len(lines) <= 4:
+    f = _font(size, "Bold")
+    for _ in range(4):
+        sp = fr.d.textlength(" ", font=f)
+        lines, lw = [[]], 0
+        for w, c in words:
+            ww = fr.d.textlength(w, font=f)
+            if lines[-1] and lw + ww > 900:
+                lines.append([])
+                lw = 0
+            lines[-1].append((w, c, ww))
+            lw += ww + sp
+        if len(lines) <= 3:
             break
         size -= 6
-    lh = int(size * 1.18)
-    per_word = min(per_word, 0.45 / max(1, len(words)))  # alle Wörter bis zur Szenenmitte sichtbar
-    k = 0
-    for li, line in enumerate(lines):
-        total = sum(w[2] for w in line) + space * (len(line) - 1)
-        x = (W - total) / 2
-        y = top + li * lh
-        for w, g, ww in line:
-            q = _ease(_seg(lt, start + k * per_word, start + k * per_word + 0.12))
+        f = _font(size, "Bold")
+    n, k = len(words), 0
+    for li, ln in enumerate(lines):
+        tot = sum(x[2] for x in ln) + sp * (len(ln) - 1)
+        x = 540 - tot / 2
+        for w, c, ww in ln:
+            tw = _lerp(t0, t1, k / n)
+            on = _seg(lt, tw, tw + 0.12)
+            col = c if (c and on > 0.5) else WHITE
+            a = _lerp(0.25, 1, on)
+            yy = y + li * size * 1.25 + (1 - _ease(on)) * 6 - size * 0.8
+            fr.d.text((x, yy), w, font=f, fill=_rgba(col, a))
+            if c and on > 0.5:
+                fr.g.text((x, yy), w, font=f, fill=_rgba(col, 0.9))
+                fr.has_glow = True
+            x += ww + sp
             k += 1
-            if q > 0:
-                col = GOLD if g else CREAM
-                d.text((x, y + (1 - q) * 18), w, font=f, fill=_mix(col, q))
-            x += ww + space
+
+
+def _watermark(fr):
+    fr.text("DIGITALE FREIHEIT", 540, 1560, 26, (200, 200, 205), "SemiBold", a=0.35, spacing=7)
+
+
+# ---------- Skript vorbereiten ----------
+
+def _split_long(scenes, max_words=12):
+    """Zu lange Untertitel automatisch auf zwei Szenen verteilen."""
+    out = []
+    for sc in scenes:
+        words = (sc.get("text") or "").split()
+        if len(words) <= max_words or sc.get("visual") in ("regeln", "ende"):
+            out.append(sc)
+            continue
+        cut = len(words) // 2
+        for i in range(len(words) // 2, len(words) - 2):
+            if words[i - 1][-1:] in ".,:!?–":
+                cut = i
+                break
+        first = dict(sc, text=" ".join(words[:cut]))
+        second = dict(sc, text=" ".join(words[cut:]))
+        out += _split_long([first], max_words) + _split_long([second], max_words)
+    return out
+
+
+def _duration(sc):
+    v = sc.get("visual")
+    if v == "regeln":
+        return 6.8
+    if v == "ende":
+        return 3.4
+    n = len((sc.get("text") or "").split())
+    return max(3.0, min(6.0, 1.6 + n * 0.3))
 
 
 # ---------- Musik ----------
@@ -398,39 +568,35 @@ def _music(path, total, cuts, mood="ruhig"):
     n = int(total * sr)
     t = np.arange(n) / sr
     out = np.zeros(n)
-    # Akkordfolge (Am – F – C – G), weiche Flächen
     chords = [(220.0, 261.63, 329.63), (174.61, 220.0, 261.63), (130.81, 196.0, 261.63), (196.0, 246.94, 293.66)]
-    bar = 2.4 if mood == "ruhig" else 1.8
+    bar = 2.6 if mood == "ruhig" else 1.9
     for ci in range(int(total / bar) + 1):
-        s, e = int(ci * bar * sr), min(n, int((ci + 1) * bar * sr) + int(0.3 * sr))
+        s, e = int(ci * bar * sr), min(n, int((ci + 1) * bar * sr) + int(0.4 * sr))
         if s >= n:
             break
         tt = np.arange(e - s) / sr
-        env = np.minimum(1, tt / 0.4) * np.exp(-tt * 0.5)
+        env = np.minimum(1, tt / 0.6) * np.exp(-tt * 0.4)
         for f in chords[ci % 4]:
-            out[s:e] += 0.05 * env * (np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(2 * np.pi * 2 * f * tt))
-        # Bass
-        out[s:e] += 0.08 * env * np.sin(2 * np.pi * chords[ci % 4][0] / 2 * tt)
-    # leiser Puls (Kick) auf jedem Viertel
-    beat = bar / 4
-    for bi in range(int(total / beat)):
-        s = int(bi * beat * sr)
-        tt = np.arange(int(0.25 * sr)) / sr
-        f = 50 + 70 * np.exp(-tt * 30)
-        seg = 0.18 * np.exp(-tt * 14) * np.sin(2 * np.pi * np.cumsum(f) / sr)
-        out[s:s + len(seg)] += seg[: n - s]
-    # Whoosh an jedem Szenenwechsel
+            out[s:e] += 0.045 * env * (np.sin(2 * np.pi * f * tt) + 0.25 * np.sin(2 * np.pi * 2.003 * f * tt))
+        out[s:e] += 0.07 * env * np.sin(2 * np.pi * chords[ci % 4][0] / 2 * tt)
+        for k, f in enumerate(chords[ci % 4]):  # leises Glöckchen
+            s2 = s + int(k * bar / 3 * sr)
+            if s2 < n:
+                tt2 = np.arange(min(int(0.8 * sr), n - s2)) / sr
+                out[s2:s2 + len(tt2)] += 0.03 * np.exp(-tt2 * 5) * np.sin(2 * np.pi * f * 4 * tt2)
     rng = np.random.default_rng(7)
-    for c in cuts:
-        s = int(max(0, c - 0.25) * sr)
-        ln = int(0.5 * sr)
-        nz = np.convolve(rng.standard_normal(ln), np.ones(40) / 40, "same")
+    for c in cuts:  # weicher Whoosh bei jedem Szenenwechsel
+        s = int(max(0, c - 0.3) * sr)
+        ln = int(0.6 * sr)
+        nz = np.convolve(rng.standard_normal(ln), np.ones(60) / 60, "same")
         env = np.sin(np.linspace(0, np.pi, ln)) ** 2
-        out[s:s + ln] += (0.35 * env * nz)[: max(0, n - s)]
-    fade = np.minimum(1, t / 0.5) * np.minimum(1, (total - t) / 1.5)
+        out[s:s + ln] += (0.3 * env * nz)[: max(0, n - s)]
+    tt = np.arange(min(int(2.0 * sr), n)) / sr  # tiefer Boom am Anfang
+    out[: len(tt)] += 0.45 * np.exp(-tt * 2.2) * np.sin(2 * np.pi * np.cumsum(35 + 50 * np.exp(-tt * 1.5)) / sr)
+    fade = np.minimum(1, t / 0.3) * np.minimum(1, (total - t) / 1.5)
     out *= fade
-    out /= max(np.abs(out).max(), 1e-6) / 0.7
-    st = np.stack([out, np.roll(out, 250)], 1)
+    out /= max(np.abs(out).max(), 1e-6) / 0.75
+    st = np.stack([out, np.roll(out, 300)], 1)
     data = (st * 32767).astype(np.int16)
     with wave.open(str(path), "wb") as w:
         w.setnchannels(2)
@@ -441,83 +607,55 @@ def _music(path, total, cuts, mood="ruhig"):
 
 # ---------- Zusammenbau ----------
 
-def _scene_len(scene, first):
-    n = len(scene.get("text", "").split())
-    return max(3.0 if first else 3.2, min(6.0, 1.4 + n * 0.38))
-
-
-def _base(vignette):
-    img = Image.new("RGB", (W, H), BG)
-    return Image.composite(img, Image.new("RGB", (W, H), (0, 0, 0)), vignette)
-
-
-def _vignette():
-    m = Image.new("L", (W, H), 0)
-    ImageDraw.Draw(m).ellipse([-300, -200, W + 300, H + 200], fill=255)
-    return m.filter(ImageFilter.GaussianBlur(220))
+_SCENE_BG = {"figur": ("scene", 0), "uhr": ("scene", 0), "stapel": ("scene", 0), "frage": ("scene", 0),
+             "treppe": ("scene", 0.5), "vergleich": ("plain", 0.3), "zahl": ("plain", 0.7), "ring": ("plain", 0.6),
+             "regeln": ("plain", 0.45), "ende": ("plain", 0.9)}
 
 
 def render(cfg, script, workdir):
     workdir = Path(workdir)
     workdir.mkdir(parents=True, exist_ok=True)
     vcfg = cfg.get("video", {})
-    brand = (vcfg.get("marke") or {})
-    scenes = [s for s in script["scenes"] if s.get("text")]
-    hook = (script.get("hook_text") or "").strip()
-
-    # Szene 0 = großer Hook-Titel über dem ersten Motiv
-    lens = [_scene_len(s, i == 0) for i, s in enumerate(scenes)]
-    outro = 2.2 if brand.get("abspann_titel") else 0
-    total = sum(lens) + outro
+    scenes = _split_long([s for s in script["scenes"] if s.get("text") or s.get("visual") in ("regeln", "ende")])
+    if scenes and scenes[-1].get("visual") != "ende":
+        scenes.append({"visual": "ende", "titel": script.get("abspann") or (vcfg.get("marke") or {}).get(
+            "abspann_text", "Folge für mehr")})
+    lens = [_duration(s) for s in scenes]
+    total = sum(lens)
     cuts, acc = [], 0.0
     for ln in lens:
         cuts.append(acc)
         acc += ln
-    _music(workdir / "musik.wav", total, cuts + [acc], vcfg.get("musik_stimmung", "ruhig"))
+    _music(workdir / "musik.wav", total, cuts[1:], vcfg.get("musik_stimmung", "ruhig"))
 
-    vig = _vignette()
-    base = _base(vig)
     cmd = [_ffmpeg(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
            "-r", str(FPS), "-i", "-", "-i", "musik.wav", "-map", "0:v", "-map", "1:a",
            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
            "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", "final.mp4"]
     proc = subprocess.Popen(cmd, cwd=workdir, stdin=subprocess.PIPE)
-    frames = int(total * FPS)
-    for fi in range(frames):
+    cover = None
+    for fi in range(int(total * FPS)):
         now = fi / FPS
-        img = base.copy()
-        d = ImageDraw.Draw(img)
-        if now < acc:
-            si = max(i for i, c in enumerate(cuts) if c <= now)
-            sc, ln = scenes[si], lens[si]
-            lt = (now - cuts[si]) / ln
-            fade = min(1.0, (now - cuts[si]) / 0.25, (cuts[si] + ln - now) / 0.2) if si < len(scenes) else 1
-            fade = max(0.0, fade)
-            _motif(d, sc.get("motiv", "zahl"), lt, sc.get("stichwort"), fade)
-            if si == 0 and hook:
-                _draw_text(img, d, hook if "*" in hook else f"*{hook}*", lt, top=300, size=96, start=0.0, per_word=0.05)
-                # kleiner Text darunter erst nach dem Hook
-                if lt > 0.35:
-                    _draw_text(img, d, sc["text"], (lt - 0.35) / 0.65, top=640, size=58, start=0, per_word=0.05)
-            else:
-                _draw_text(img, d, sc["text"], lt, top=380)
-        else:  # Abspann
-            q = _ease((now - acc) / 0.5)
-            _label(d, brand.get("abspann_titel", ""), 540, 860, 84, GOLD, q)
-            if brand.get("abspann_text"):
-                _label(d, brand["abspann_text"], 540, 980, 54, CREAM, q)
-        if brand.get("text"):
-            _label(d, brand["text"], 540, 190, 36, GOLD, 0.7)
-        if script.get("serie"):
-            _label(d, script["serie"].upper(), 540, 245, 32, CREAM, 0.6)
+        si = max(i for i, c in enumerate(cuts) if c <= now)
+        sc, d = scenes[si], lens[si]
+        lt = now - cuts[si]
+        kind, gold = _SCENE_BG.get(sc.get("visual"), ("scene", 0))
+        fr = Frame(_background(kind, gold))
+        _visual(fr, sc, lt, d)
+        if sc.get("visual") not in ("regeln", "ende"):
+            n = len((sc.get("text") or "").split())
+            _caption(fr, sc.get("text") or "", lt, 0.2, min(d - 1.0, 0.2 + n * 0.26))
+        if sc.get("visual") != "ende":
+            _watermark(fr)
+        fin = 0.1 if si == 0 else 0.25
+        fout = 0.5 if si == len(scenes) - 1 else 0.25
+        img = fr.compose(max(1 - lt / fin, 1 - (d - lt) / fout, 0))
+        if si == 0 and cover is None and lt >= min(2.2, d - 0.4):
+            cover = img
         proc.stdin.write(img.tobytes())
     proc.stdin.close()
     if proc.wait() != 0:
-        raise RuntimeError("ffmpeg-Fehler beim Strichmännchen-Video")
-    # Titelbild (Hook-Szene, Mitte)
-    try:
-        subprocess.run([_ffmpeg(), "-y", "-loglevel", "error", "-ss", f"{min(lens[0] * 0.9, 2.5):.2f}",
-                        "-i", "final.mp4", "-frames:v", "1", "titelbild.jpg"], cwd=workdir, check=True)
-    except Exception:
-        pass
+        raise RuntimeError("ffmpeg-Fehler beim Story-Video")
+    if cover is not None:
+        cover.save(workdir / "titelbild.jpg", quality=92)
     return workdir / "final.mp4"

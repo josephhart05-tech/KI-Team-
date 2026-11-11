@@ -17,10 +17,10 @@ def review(cfg, script):
             problems.append("Anzahl Folien muss zwischen 6 und 8 liegen")
     else:
         words = len(text.split())
-        if not 50 <= words <= 100:
-            problems.append(f"Länge passt nicht: {words} Wörter (Ziel 60-85, also ca. 30 Sekunden)")
+        if not 35 <= words <= 110:
+            problems.append(f"Länge passt nicht: {words} Wörter (Ziel 45-90 inkl. Methoden-Karte)")
         if not 4 <= len(script.get("scenes", [])) <= 8:
-            problems.append("Anzahl Szenen muss zwischen 5 und 7 liegen")
+            problems.append("Anzahl Szenen muss zwischen 6 und 8 liegen")
 
     prompt = f"""Du prüfst ein Social-Media-Skript zum Thema "{cfg['nische']['thema']}" für den deutschen Markt.
 Skript: {text}
