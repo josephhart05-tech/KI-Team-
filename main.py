@@ -17,19 +17,24 @@ from urllib.parse import quote, unquote
 
 from agents import analyst, carousel, content, manager, publisher, research, reviewer, video
 from core import telegram
-from core.storage import (OUTPUT, env, load_config, load_learnings, load_posts, load_state, now, now_iso,
-                          save_posts, save_state)
+from core.storage import (OUTPUT, PROFIL, env, load_config, load_learnings, load_posts, load_state, now, now_iso,
+                          profile_posts, save_posts, save_state)
 
 
 def create(dry_run=False):
     cfg = load_config()
-    posts = load_posts()
+    all_posts = load_posts()
+    posts = profile_posts(all_posts)  # nur die Beiträge dieses Profils
     state = load_state()
     learnings = load_learnings()
 
     settings = state.setdefault("settings", {})
     if os.environ.get("GITHUB_EVENT_NAME") == "schedule" and settings.get("pausiert"):
         print("Automatik pausiert (/weiter in Telegram startet sie wieder).")
+        return
+    if os.environ.get("GITHUB_EVENT_NAME") == "schedule" and cfg.get("aktiv_bis") and \
+            now().date().isoformat() > str(cfg["aktiv_bis"]):
+        print(f"Profil {PROFIL} pausiert seit {cfg['aktiv_bis']} (aktiv_bis in der Konfiguration).")
         return
     wish = (state.get("ideen") or [None])[0]
     journal = state.get("tagebuch") or []
@@ -75,6 +80,9 @@ def create(dry_run=False):
     if not ok:
         raise RuntimeError(f"Kein Skript hat die Prüfung bestanden: {problems}")
 
+    if cfg.get("immer_kennzeichnen") and not script.get("product_id"):
+        script["product_id"] = cfg["immer_kennzeichnen"]  # z. B. Geschenkheld: Seite mit Affiliate-Links
+
     # Wiedererkennbare Serie, z. B. "DF-TAGEBUCH #3" – erscheint in Video, Karussell und Caption
     label = (cfg["strategie"].get("serien") or {}).get(goal)
     if label and cfg["strategie"].get("serien_anzeigen", False):
@@ -96,7 +104,7 @@ def create(dry_run=False):
         return
 
     product = content.product_by_id(cfg, script.get("product_id"))
-    label = f"{GOAL_LABELS.get(goal, goal)} · {'Karussell' if fmt == 'karussell' else 'Reel'}"
+    label = f"{cfg.get('profil_label', 'DF')} · {GOAL_LABELS.get(goal, goal)} · Reel"
     if fmt == "karussell":
         video_url = None
         telegram.send_photos(media, f"Neuer Entwurf ({label}): {idea['topic']}")
@@ -110,14 +118,14 @@ def create(dry_run=False):
         buttons=[[{"text": "✅ Posten", "callback_data": f"ok:{post_id}"},
                   {"text": "❌ Verwerfen", "callback_data": f"no:{post_id}"}]],
     )
-    posts.append({
-        "id": post_id, "status": "pending", "created_at": now_iso(),
+    all_posts.append({
+        "id": post_id, "status": "pending", "created_at": now_iso(), "profil": PROFIL,
         "goal": goal, "format": fmt,
         "topic": idea["topic"], "angle": idea["angle"], "hook": content.first_line(script),
         "product_id": script.get("product_id"), "script": script,
         "caption_instagram": caption_ig, "caption_tiktok": caption_tt, "video_url": video_url,
     })
-    save_posts(posts)
+    save_posts(all_posts)
     if wish and state.get("ideen"):
         state["ideen"].pop(0)
     if journal_entry and state.get("tagebuch"):
@@ -260,6 +268,8 @@ def _handle_command(text, state, posts, cfg):
 
 
 def _publish(cfg, p):
+    if p.get("profil", "df") != "df":
+        cfg = load_config(p["profil"])  # z. B. Geschenkheld: nur TikTok
     plats = cfg["plattformen"]
     if p.get("format") == "karussell":
         # Karussells werden immer selbst gepostet (Bilder liegen oben im Chat)
@@ -355,7 +365,7 @@ def check():
 def manage():
     """Geschäftsführerin: sonntags Wochenplan, sonst Morgen-Briefing."""
     cfg = load_config()
-    posts = load_posts()
+    posts = profile_posts(load_posts())
     state = load_state()
     planning_time = now().weekday() == 6 and now().hour >= 14
     if planning_time or not manager.current_plan(state):
@@ -373,7 +383,7 @@ def learn():
     if ig["aktiv"] and ig.get("modus") != "telegram":
         print(f"Zahlen für {analyst.collect_metrics(cfg, posts)} Videos aktualisiert")
     save_posts(posts)
-    text = analyst.update_learnings(cfg, posts)
+    text = analyst.update_learnings(cfg, profile_posts(posts))
     if text and now().weekday() == 6:  # sonntags Wochenbericht
         telegram.send_message(f"📊 Wochenbericht deines KI-Teams\n\n{text}")
 
@@ -428,7 +438,7 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "create":
         dry = "--dry-run" in sys.argv
-        create(dry) if dry else _run_job("Video erstellen", create)
+        create(dry) if dry else _run_job("Video erstellen" + ("" if PROFIL == "df" else f" ({PROFIL})"), create)
     elif cmd == "check":
         _run_job("Freigaben prüfen", check)
     elif cmd == "learn":

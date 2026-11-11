@@ -1,0 +1,85 @@
+# ============================================================
+#  Profil GESCHENKHELD – ergänzt/überschreibt config.yaml.
+#  Wird benutzt, wenn der Ablauf mit PROFIL=geschenkheld läuft
+#  (Workflow "6 - Geschenkheld-Video erstellen").
+#  Alles, was hier NICHT steht, kommt aus config.yaml.
+# ============================================================
+
+profil_label: "🎁 GESCHENKHELD"
+
+nische:
+  thema: "Geschenkideen für jeden Anlass – Geschenkheld rettet dich, wenn dir nichts einfällt (geschenkheld.com)"
+  kernbotschaft: "Dir fällt kein Geschenk ein? Geschenkheld rettet dich – mit konkreten, liebevollen Ideen für jedes Budget auf geschenkheld.com."
+  meine_geschichte: ""
+  mein_setup: ""
+  pain_points:
+    - "keine Idee, was man schenken soll"
+    - "wenig Zeit, Last-Minute-Stress"
+    - "kleines Budget, Geschenk soll trotzdem persönlich wirken"
+    - "schwierige Empfänger: 'Ich will nichts', Chef, Schwiegereltern, Teenager"
+    - "Angst, etwas Langweiliges oder Unpassendes zu schenken"
+    - "Wichteln: Was schenkt man für 10 oder 20 Euro?"
+  tabu_themen: "Geldanlage, Krypto, Glücksspiel, Alkohol als Hauptgeschenk, Tabak, Waffen, Erwachsenenartikel"
+  zielgruppe: "Erwachsene in Deutschland, die Geschenke für Familie, Freunde, Partner und Kollegen suchen – oft unter Zeitdruck und mit kleinem Budget"
+  tonalitaet: "warm, witzig, hilfsbereit, per du, festlich – nie belehrend"
+  sprache: "Deutsch"
+
+# Alle Videos verweisen auf geschenkheld.com (dort gibt es Affiliate-Links) → immer als Werbung kennzeichnen.
+produkte:
+  - id: geschenkheld
+    name: "geschenkheld.com"
+    link: "https://geschenkheld.com"
+    beschreibung: "Geschenk-Guides mit Ideen für jeden Anlass und jedes Budget"
+    passt_zu: "Geschenkideen, Weihnachten, Wichteln, Last-Minute"
+immer_kennzeichnen: "geschenkheld"
+
+kennzeichnung:
+  instagram: "Werbung | enthält Affiliate-Links"
+  tiktok: "#werbung #affiliate"
+
+plattformen:
+  instagram:
+    aktiv: false          # Geschenkheld ist (noch) nur auf TikTok
+  tiktok:
+    aktiv: true
+    modus: "telegram"
+
+strategie:
+  ziel_rotation: ["wachstum", "interaktion", "wachstum"]
+  format_rotation: ["reel"]
+  serien_anzeigen: false
+  serien: {}
+  ziele:
+    wachstum: >-
+      Reichweite: Eine Figur steckt in Geschenke-Panik (Anlass oder Empfänger aus dem Thema),
+      Geschenkheld rettet sie mit 3 konkreten Ideen. Teilbar ("Schick das dem, der immer zu spät dran ist").
+      Call-to-Action: Speichern oder "Mehr Ideen auf geschenkheld.com".
+    interaktion: >-
+      Kommentare: Wiedererkennung ("Welcher Geschenke-Typ bist du?", "Was war dein schlimmstes Geschenk?"),
+      trotzdem mit 3 konkreten Ideen. Call-to-Action: leicht zu beantwortende Frage für die Kommentare.
+  hashtags:
+    anzahl_instagram: 5
+    anzahl_tiktok: 4
+    marke: "geschenkheld"
+
+recherche:
+  suchbegriffe:
+    - "geschenkideen"
+    - "weihnachtsgeschenk"
+    - "wichtelgeschenk"
+    - "geschenk für mama"
+    - "geschenk für papa"
+    - "last minute geschenk"
+    - "geschenk für freund"
+  subreddits: []
+
+video:
+  look: "geschenkheld"
+  musik_stimmung: "festlich"
+  marke:
+    text: "geschenkheld.com"
+    abspann_titel: "geschenkheld.com"
+    abspann_text: "Jedes Geschenk kann ein Held sein."
+
+# Zeitraum: ab dem 25.12. macht der Geschenkheld-Ablauf Pause (Datum hier ändern = neuer Zeitraum)
+aktiv_bis: "2026-12-24"
