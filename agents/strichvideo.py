@@ -37,6 +37,28 @@ MOTIVE = {
     "ende": "Schlusskarte mit Aufforderung (titel = z. B. Speicher dir die 20/80-Regel)",
 }
 
+# Zusätzliche Bilder nur für Geschenkheld (video.look = "geschenkheld")
+MOTIVE_GH = {
+    "panik": "Figur in Panik, rote Ränder, großer roter titel (z. B. PANIK.)",
+    "blasen": "Figur mit 3 Sprechblasen (fragen = 3 kurze Fragen, z. B. Für Mama?)",
+    "held": "Geschenkheld fliegt mit Lichtblitz ein und landet neben der Figur",
+    "held_gross": "Geschenkheld groß in der Mitte, winkt (Vorstellung)",
+    "ideen": "Geschenkideen-Karte: titel (z. B. 3 IDEEN UNTER 20 €) + regeln = 3 Zeilen [Preis/kurz, Idee, Warum]",
+    "baum": "Happy End: Figur jubelt am Weihnachtsbaum mit Geschenken",
+}
+MOTIVE.update(MOTIVE_GH)
+_DF_ONLY = {"regeln"}
+
+
+def motive_liste(cfg):
+    """Welche Bilder das Skript für dieses Profil benutzen darf."""
+    gh = (cfg.get("video") or {}).get("look") == "geschenkheld"
+    return {k: v for k, v in MOTIVE.items() if (gh or k not in MOTIVE_GH) and not (gh and k in _DF_ONLY)}
+
+
+_LOOK = {"gh": False}
+HRED = (214, 48, 56)
+
 # ---------- Schriften ----------
 
 _CACHE = Path.home() / ".cache" / "df-fonts"
@@ -296,6 +318,102 @@ def _fig(fr, x, y, s=1.0, pose="steht", t=0.0, col=WHITE, a=1.0, glow=True, amt=
     return head
 
 
+def _mascot(fr, x, y, s=1.0, t=0.0, fly=0.0, arm="hips", a=1.0):
+    """Geschenkheld: goldenes Geschenk mit Maske, roter Schleife und rotem Umhang. (x, y) = Mitte."""
+    S = 220 * s
+    cw = math.sin(t * 6) * 0.08 * S
+    trail = _lerp(0.55, 1.05, fly) * S
+    cape = [(x - 0.42 * S, y - 0.3 * S), (x - 0.6 * S - fly * 0.5 * S, y + 0.15 * S),
+            (x - 0.45 * S - fly * 0.55 * S + cw, y + trail), (x - 0.1 * S - fly * 0.3 * S, y + trail * 0.92 + cw),
+            (x + 0.2 * S - fly * 0.4 * S - cw, y + trail + cw * 0.5), (x + 0.42 * S, y - 0.3 * S)]
+    fr.d.polygon(cape, fill=_rgba((196, 42, 46), a))
+    leg = (185, 134, 28)
+    if fly < 0.5:
+        for dx in (-0.18, 0.18):
+            fr.line([(x + dx * S, y + 0.45 * S), (x + dx * S * 1.2, y + 0.68 * S)], leg, 0.06 * S, a)
+    else:
+        for i, dx in enumerate((-0.15, 0.15)):
+            fr.line([(x + dx * S, y + 0.45 * S), (x + dx * S - 0.25 * S, y + (0.6 + i * 0.05) * S)], leg, 0.06 * S, a)
+    if arm == "up" or fly > 0.5:
+        hand = (x + 0.72 * S, y - 0.38 * S)
+        fr.line([(x + 0.45 * S, y - 0.05 * S), hand], leg, 0.06 * S, a)
+    elif arm == "wave":
+        w = math.sin(t * 10) * 0.12 * S
+        hand = (x + 0.72 * S + w, y - 0.3 * S)
+        fr.line([(x + 0.45 * S, y), hand], leg, 0.06 * S, a)
+    else:
+        hand = (x + 0.5 * S, y + 0.28 * S)
+        fr.line([(x + 0.45 * S, y), (x + 0.66 * S, y + 0.12 * S), hand], leg, 0.06 * S, a)
+    fr.line([(x - 0.45 * S, y), (x - 0.66 * S, y + 0.12 * S), (x - 0.5 * S, y + 0.28 * S)], leg, 0.06 * S, a)
+    for hx, hy in (hand, (x - 0.5 * S, y + 0.28 * S)):
+        fr.ellipse([hx - 0.06 * S, hy - 0.06 * S, hx + 0.06 * S, hy + 0.06 * S], fill=(233, 179, 47), a=a)
+    # Körper (Geschenk) mit Leuchten
+    box = [x - 0.45 * S, y - 0.45 * S, x + 0.45 * S, y + 0.45 * S]
+    fr.g.rounded_rectangle(box, radius=int(0.08 * S), fill=_rgba((246, 197, 68), 0.8 * a))
+    fr.has_glow = True
+    fr.rect(box, fill=(233, 179, 47), outline=(185, 134, 28), width=0.03 * S, a=a, radius=int(0.08 * S))
+    fr.rect([x - 0.07 * S, y - 0.45 * S, x + 0.07 * S, y + 0.45 * S], fill=HRED, a=a)
+    fr.rect([x - 0.45 * S, y + 0.08 * S, x + 0.45 * S, y + 0.2 * S], fill=HRED, a=a)
+    # Maske
+    fr.rect([x - 0.45 * S, y - 0.3 * S, x + 0.45 * S, y - 0.08 * S], fill=(20, 20, 26), a=a, radius=int(0.05 * S))
+    for ex in (-0.18, 0.18):
+        fr.ellipse([x + (ex - 0.08) * S, y - 0.25 * S, x + (ex + 0.08) * S, y - 0.13 * S], fill=WHITE, a=a)
+        fr.ellipse([x + (ex - 0.03) * S, y - 0.22 * S, x + (ex + 0.03) * S, y - 0.16 * S], fill=(20, 20, 26), a=a)
+    fr.d.arc([x - 0.14 * S, y - 0.08 * S, x + 0.14 * S, y + 0.06 * S], 20, 160, fill=_rgba((120, 70, 10), a),
+             width=int(0.025 * S))
+    # Schleife
+    for dx in (-0.16, 0.16):
+        fr.ellipse([x + (dx - 0.14) * S, y - 0.66 * S, x + (dx + 0.14) * S, y - 0.44 * S], outline=HRED,
+                   width=0.06 * S, a=a)
+    fr.ellipse([x - 0.07 * S, y - 0.56 * S, x + 0.07 * S, y - 0.43 * S], fill=HRED, a=a)
+
+
+def _snow(fr, t, a=0.8):
+    for i in range(70):
+        f1 = (math.sin(i * 12.9898) * 43758.5453) % 1
+        f2 = (math.sin(i * 78.233) * 12345.678) % 1
+        sp = 40 + f2 * 60
+        x = (f1 * W + math.sin(t * 0.8 + i) * 20) % W
+        y = (f2 * H + t * sp) % H
+        r = 2 + f1 * 3
+        fr.d.ellipse([x - r, y - r, x + r, y + r], fill=_rgba(WHITE, a * (0.25 + 0.5 * f2)))
+
+
+def _gift(fr, x, w, col, rib, a=1.0):
+    fr.rect([x - w / 2, G - w, x + w / 2, G], fill=col, a=a, radius=6)
+    fr.rect([x - w * 0.08, G - w, x + w * 0.08, G], fill=rib, a=a)
+    for dx in (-0.15, 0.15):
+        fr.ellipse([x + (dx - 0.13) * w, G - w - 0.22 * w, x + (dx + 0.13) * w, G - w], outline=rib, width=5, a=a)
+
+
+def _tree(fr, x, t, a=1.0):
+    fr.rect([x - 18, G - 70, x + 18, G], fill=(90, 60, 30), a=a)
+    for i, (wd, y0) in enumerate(((240, G - 60), (190, G - 160), (140, G - 250))):
+        fr.d.polygon([(x - wd / 2, y0), (x + wd / 2, y0), (x, y0 - 150)], fill=_rgba((30, 110, 60), a))
+    for i in range(14):
+        fx = x + math.sin(i * 2.3) * (90 - (i % 5) * 14)
+        fy = G - 90 - (i * 23) % 260
+        on = 0.5 + 0.5 * math.sin(t * 4 + i)
+        col = (GOLD, HRED, WHITE)[i % 3]
+        fr.ellipse([fx - 7, fy - 7, fx + 7, fy + 7], fill=col, a=a * (0.6 + 0.4 * on), glow=True)
+    cx, cy, ro, ri = x, G - 405, 36, 15
+    star = [(cx + (ro if k % 2 == 0 else ri) * math.cos(-math.pi / 2 + k * math.pi / 5),
+             cy + (ro if k % 2 == 0 else ri) * math.sin(-math.pi / 2 + k * math.pi / 5)) for k in range(10)]
+    fr.d.polygon(star, fill=_rgba(GOLD, a))
+    fr.g.polygon(star, fill=_rgba(GOLD, a))
+    fr.has_glow = True
+
+
+def _bubble(fr, x, y, text, a=1.0):
+    if a <= 0:
+        return
+    f = _font(44, "Bold")
+    w = fr.d.textlength(text, font=f) + 60
+    fr.rect([x - w / 2, y - 45, x + w / 2, y + 40], fill=(255, 255, 255), a=0.92 * a, radius=30)
+    fr.d.polygon([(x - 20, y + 38), (x + 10, y + 38), (x - 25, y + 70)], fill=_rgba((255, 255, 255), 0.92 * a))
+    fr.text(text, x, y + 14, 44, (25, 28, 35), "Bold", a=a)
+
+
 def _laptop(fr, x, a=1.0):
     fr.line([(x - 20, G - 140), (x + 160, G - 140)], WHITE, 6, a)
     fr.line([(x + 140, G - 140), (x + 140, G)], WHITE, 6, a)
@@ -426,10 +544,13 @@ def _visual(fr, sc, lt, d):
             fr.text("?", head[0] + dx, head[1] - 110 - 30 * q + math.sin(lt * 3 + i) * 8, 80, GOLD, "ExtraBold",
                     a=q, glow=True)
         _titel(fr, sc, lt, y=520)
-    elif v == "regeln":
+    elif v in ("regeln", "ideen"):
         a = _ease(_seg(lt, 0, 0.4))
-        fr.text("DIE", 540, 330, 40, GREY, "ExtraBold", a=a, spacing=8)
-        title = (sc.get("titel") or "METHODE").upper()
+        if v == "regeln":
+            fr.text("DIE", 540, 330, 40, GREY, "ExtraBold", a=a, spacing=8)
+        else:
+            _mascot(fr, 540, 250, 0.45, lt, arm="wave", a=a)
+        title = (sc.get("titel") or ("METHODE" if v == "regeln" else "3 GESCHENKIDEEN")).upper()
         fr.text(title, 540, 440, 92 if len(title) <= 14 else 70, GOLD, "ExtraBold", a=a, glow=True)
         rows = sc.get("regeln") or []
         for i, row in enumerate(rows[:3]):
@@ -442,6 +563,13 @@ def _visual(fr, sc, lt, d):
             fr.text(str(row[1])[:22], 320, y + 82, 46, WHITE, "Bold", align="left", a=q)
             for k, ln in enumerate(_wrap(str(row[2]), 34)[:2]):
                 fr.text(ln, 320, y + 132 + k * 38, 32, GREY, "Medium", align="left", a=q)
+    elif v == "ende" and _LOOK["gh"]:
+        _snow(fr, lt, 0.7)
+        _mascot(fr, 540, 640, 1.2, lt, arm="up", a=_ease(_seg(lt, 0, 0.4)))
+        a = _ease(_seg(lt, 0.4, 0.8))
+        fr.text("geschenkheld.com", 540, 1050, 84, WHITE, "ExtraBold", a=a, glow=True)
+        for k, ln in enumerate(_wrap(sc.get("titel") or "Jedes Geschenk kann ein Held sein.", 30)[:2]):
+            fr.text(ln, 540, 1130 + k * 52, 40, GOLD, "Bold", a=_ease(_seg(lt, 0.8, 1.2)))
     elif v == "ende":
         a = _ease(_seg(lt, 0, 0.5))
         fr.ellipse([440, 420, 640, 620], outline=GOLD, width=6, a=a, glow=True)
@@ -449,6 +577,51 @@ def _visual(fr, sc, lt, d):
         for k, ln in enumerate(_wrap(sc.get("titel") or "Folge für mehr", 22)[:3]):
             fr.text(ln, 540, 780 + k * 72, 62, WHITE, "ExtraBold", a=_ease(_seg(lt, 0.4 + k * 0.2, 0.8 + k * 0.2)))
         fr.text("@df_digitalefreiheit", 540, 1040, 38, GREY, "Medium", a=_ease(_seg(lt, 1.0, 1.4)))
+    elif v == "panik":
+        jx = math.sin(lt * 70) * 6
+        _fig(fr, 540 + jx, G, 1.15, "jubel", lt)
+        for k in range(3):
+            p = (lt * 1.6 + k / 3) % 1
+            dx, dy = 540 + (k - 1) * 50, G - 260 + p * 80
+            fr.ellipse([dx - 9, dy - 14, dx + 9, dy + 14], fill=(143, 208, 255), a=1 - p)
+        if not sc.get("titel"):
+            sc = dict(sc, titel="PANIK.", titel_farbe="rot")
+        sz = 1 + 0.1 * math.sin(lt * 14) * (1 - _seg(lt, 0, 1.5))
+        _titel(fr, sc, lt, y=600, size=int(150 * sz))
+    elif v == "blasen":
+        fr_q = (sc.get("fragen") or ["Für Mama?", "Für Papa?", "Für wen?!"])[:3]
+        for i, (bx, by) in enumerate(((290, 700), (790, 600), (540, 450))):
+            if i < len(fr_q):
+                _bubble(fr, bx, by, str(fr_q[i])[:18], _ease(_seg(lt, 0.2 + i * 0.8, 0.5 + i * 0.8)))
+        _fig(fr, 540, G, 1.1, "denkt", lt)
+    elif v == "held":
+        flash = _seg(lt, 1.0, 1.3) - _seg(lt, 1.3, 2.0)
+        _fig(fr, 360, G, 1.0, "steht", lt)
+        p = _eo(_seg(lt, 1.1, 2.4))
+        mx = _lerp(1250, 720, p)
+        my = _lerp(250, G - 150, p) - math.sin(p * math.pi) * 120
+        fly = 1 - _seg(lt, 2.2, 2.6)
+        if lt > 1.0:
+            _mascot(fr, mx, my, 0.95, lt, fly=fly, arm="up" if lt > 2.6 else "hips")
+        if lt > 2.3:
+            q = _seg(lt, 2.3, 3.3)
+            for i in range(12):
+                an = i / 12 * 2 * math.pi
+                px, py = 720 + math.cos(an) * q * 260, G - 150 + math.sin(an) * q * 200
+                fr.ellipse([px - 6, py - 6, px + 6, py + 6], fill=GOLD, a=1 - q, glow=True)
+        if flash > 0:
+            fr.rect([0, 0, W, H], fill=(255, 240, 200), a=flash * 0.8)
+    elif v == "held_gross":
+        _snow(fr, lt, 0.6)
+        _mascot(fr, 540, 780, 1.6 * (1 + 0.03 * math.sin(lt * 2)), lt, arm="wave")
+        _titel(fr, sc, lt, y=330, size=80)
+    elif v == "baum":
+        _tree(fr, 820, lt)
+        _gift(fr, 700, 70, HRED, GOLD)
+        _gift(fr, 905, 64, (47, 125, 225), WHITE)
+        _fig(fr, 400, G, 1.0, "jubel", lt, col=(255, 230, 170), amt=_ease(_seg(lt, 0.4, 1.2)))
+        _mascot(fr, 560, G - 110, 0.55, lt, arm="up")
+        _titel(fr, sc, lt, y=480)
     else:  # "figur"
         pose = sc.get("pose") or "steht"
         if pose == "laufen":
@@ -526,7 +699,10 @@ def _caption(fr, text, lt, t0, t1, y=1330, size=58):
 
 
 def _watermark(fr):
-    fr.text("DIGITALE FREIHEIT", 540, 1560, 26, (200, 200, 205), "SemiBold", a=0.35, spacing=7)
+    if _LOOK["gh"]:
+        fr.text("geschenkheld.com", 540, 1560, 30, WHITE, "Medium", a=0.5)
+    else:
+        fr.text("DIGITALE FREIHEIT", 540, 1560, 26, (200, 200, 205), "SemiBold", a=0.35, spacing=7)
 
 
 # ---------- Skript vorbereiten ----------
@@ -536,7 +712,7 @@ def _split_long(scenes, max_words=12):
     out = []
     for sc in scenes:
         words = (sc.get("text") or "").split()
-        if len(words) <= max_words or sc.get("visual") in ("regeln", "ende"):
+        if len(words) <= max_words or sc.get("visual") in ("regeln", "ideen", "ende"):
             out.append(sc)
             continue
         cut = len(words) // 2
@@ -552,8 +728,10 @@ def _split_long(scenes, max_words=12):
 
 def _duration(sc):
     v = sc.get("visual")
-    if v == "regeln":
+    if v in ("regeln", "ideen"):
         return 6.8
+    if v == "held":
+        return max(4.6, 1.6 + len((sc.get("text") or "").split()) * 0.3)
     if v == "ende":
         return 3.4
     n = len((sc.get("text") or "").split())
@@ -569,7 +747,9 @@ def _music(path, total, cuts, mood="ruhig"):
     t = np.arange(n) / sr
     out = np.zeros(n)
     chords = [(220.0, 261.63, 329.63), (174.61, 220.0, 261.63), (130.81, 196.0, 261.63), (196.0, 246.94, 293.66)]
-    bar = 2.6 if mood == "ruhig" else 1.9
+    if mood == "festlich":  # Dur-Akkorde (C – G – Am – F), hellere Glöckchen
+        chords = [(261.63, 329.63, 392.0), (196.0, 246.94, 293.66), (220.0, 261.63, 329.63), (174.61, 220.0, 261.63)]
+    bar = 2.6 if mood == "ruhig" else (2.2 if mood == "festlich" else 1.9)
     for ci in range(int(total / bar) + 1):
         s, e = int(ci * bar * sr), min(n, int((ci + 1) * bar * sr) + int(0.4 * sr))
         if s >= n:
@@ -583,7 +763,8 @@ def _music(path, total, cuts, mood="ruhig"):
             s2 = s + int(k * bar / 3 * sr)
             if s2 < n:
                 tt2 = np.arange(min(int(0.8 * sr), n - s2)) / sr
-                out[s2:s2 + len(tt2)] += 0.03 * np.exp(-tt2 * 5) * np.sin(2 * np.pi * f * 4 * tt2)
+                bell = 0.06 if mood == "festlich" else 0.03
+                out[s2:s2 + len(tt2)] += bell * np.exp(-tt2 * 5) * np.sin(2 * np.pi * f * 4 * tt2)
     rng = np.random.default_rng(7)
     for c in cuts:  # weicher Whoosh bei jedem Szenenwechsel
         s = int(max(0, c - 0.3) * sr)
@@ -609,14 +790,17 @@ def _music(path, total, cuts, mood="ruhig"):
 
 _SCENE_BG = {"figur": ("scene", 0), "uhr": ("scene", 0), "stapel": ("scene", 0), "frage": ("scene", 0),
              "treppe": ("scene", 0.5), "vergleich": ("plain", 0.3), "zahl": ("plain", 0.7), "ring": ("plain", 0.6),
-             "regeln": ("plain", 0.45), "ende": ("plain", 0.9)}
+             "regeln": ("plain", 0.45), "ende": ("plain", 0.9), "panik": ("scene", 0), "blasen": ("scene", 0),
+             "held": ("scene", 0.6), "held_gross": ("plain", 1.0), "ideen": ("plain", 0.6), "baum": ("scene", 0.5)}
 
 
 def render(cfg, script, workdir):
     workdir = Path(workdir)
     workdir.mkdir(parents=True, exist_ok=True)
     vcfg = cfg.get("video", {})
-    scenes = _split_long([s for s in script["scenes"] if s.get("text") or s.get("visual") in ("regeln", "ende")])
+    _LOOK["gh"] = vcfg.get("look") == "geschenkheld"
+    keep = ("regeln", "ideen", "ende")
+    scenes = _split_long([s for s in script["scenes"] if s.get("text") or s.get("visual") in keep])
     if scenes and scenes[-1].get("visual") != "ende":
         scenes.append({"visual": "ende", "titel": script.get("abspann") or (vcfg.get("marke") or {}).get(
             "abspann_text", "Folge für mehr")})
@@ -641,8 +825,12 @@ def render(cfg, script, workdir):
         lt = now - cuts[si]
         kind, gold = _SCENE_BG.get(sc.get("visual"), ("scene", 0))
         fr = Frame(_background(kind, gold))
+        if sc.get("visual") == "panik":
+            fr.rect([0, 0, W, H], fill=(200, 20, 30), a=0.18 * _ease(_seg(lt, 0, 0.4)))
         _visual(fr, sc, lt, d)
-        if sc.get("visual") not in ("regeln", "ende"):
+        if _LOOK["gh"] and kind == "scene":
+            _snow(fr, now)
+        if sc.get("visual") not in keep:
             n = len((sc.get("text") or "").split())
             _caption(fr, sc.get("text") or "", lt, 0.2, min(d - 1.0, 0.2 + n * 0.26))
         if sc.get("visual") != "ende":

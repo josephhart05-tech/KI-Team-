@@ -86,16 +86,29 @@ Nie nur andeuten ("es gibt Quellen", "ich zeige dir wie") – der Zuschauer muss
 auch wenn er nicht auf den Link klickt."""
 
 
-def write_script(cfg, idea, learnings, feedback=None):
-    """Reel: animiertes Strichmännchen-Video mit Szenen (Text im Bild, keine Stimme)."""
-    from agents.strichvideo import MOTIVE
-    product = product_by_id(cfg, idea.get("product_id"))
-    motive = ", ".join(f"{k} ({v})" for k, v in MOTIVE.items())
-    prompt = f"""Du bist ein erfahrener Texter für virale Strichmännchen-Erklärvideos auf Instagram und TikTok (ohne Stimme, Text im Bild).
-{_context(cfg, idea, learnings, feedback)}
-{_hook_rules()}
-
-SKRIPT – Strichmännchen-STORY ohne Stimme (dunkler Look, leuchtende Grafiken, Untertitel unten):
+def _story_rules(cfg, motive, product):
+    """Skript-Regeln je Profil: Geschenkheld-Story oder Digitale-Freiheit-Story."""
+    if (cfg.get("video") or {}).get("look") == "geschenkheld":
+        return f"""SKRIPT – Geschenkheld-STORY ohne Stimme (Winternacht, Schnee, leuchtende Grafiken, Untertitel unten):
+- Eine Figur mit Vornamen (z. B. Tom, Anna, Lisa, Ben) steckt in Geschenke-Not – passend zu Thema, Anlass und Empfänger.
+  Das Maskottchen GESCHENKHELD (goldenes Geschenk mit Maske, roter Schleife und Umhang) rettet sie.
+- 7 bis 9 Szenen in dieser Reihenfolge:
+  1. Hook-Szene ("uhr" oder "figur"): Situation + großer Leucht-"titel" (max. 3 Wörter, z. B. „NOCH 3 TAGE.“, titel_farbe "rot").
+  2. Problem: "blasen" mit "fragen" = 3 kurze Fragen (z. B. ["Für Mama?", "Für den Chef?", "Für Papa?!"]) oder "figur" mit pose "handy".
+  3. "panik" (titel optional, Standard „PANIK.“).
+  4. "held" mit einem Satz wie „Doch dann … kommt *Hilfe.*“
+  5. "held_gross": Geschenkheld stellt sich vor (titel "GESCHENKHELD").
+  6. GENAU EINE "ideen"-Szene = der Mehrwert: 3 konkrete Geschenkideen.
+  7. "baum": Happy End („Und Tom? Ist plötzlich der *Held* unterm *Weihnachtsbaum.*“ – an den Anlass anpassen).
+- "text" = Untertitel: genau EIN kurzer Satz, HÖCHSTENS 10 Wörter. *Sternchen* = gold, ~Tilden~ = rot.
+- "visual": genau einer dieser Schlüssel: {motive}
+- "ideen"-Szene: KEIN "text". "titel" (max. 20 Zeichen, z. B. "3 IDEEN UNTER 20 €"), "regeln" = genau 3 Einträge
+  ["Preis/kurz" (max. 6 Zeichen, z. B. "15 €", "DIY"), "Idee" (Produktart, 1-3 Wörter), "Warum" (max. 8 Wörter, passend zum Empfänger)].
+  Nur allgemeine Produktarten (z. B. "Fotokalender", "Grillgewürz-Set"), keine erfundenen Marken; Preise als realistische Richtwerte.
+- Keine Rabatt- oder Preisversprechen, keine erfundenen Tests oder Bewertungen.
+- "abspann": max. 6 Wörter, z. B. "Mehr Ideen auf geschenkheld.com".
+- "hook_text": der Hook in max. 7 Wörtern (für die Übersicht)."""
+    return f"""SKRIPT – Strichmännchen-STORY ohne Stimme (dunkler Look, leuchtende Grafiken, Untertitel unten):
 - Erzähle eine kleine Geschichte mit EINER Figur mit Vornamen (z. B. Lena, Max, Tom, Sarah), in der sich die
   Zielgruppe wiedererkennt. Beispiel-Ablauf: "18 Uhr. Lena kommt von der Arbeit und sagt: Ich hab keine Zeit." →
   "Dann scrollt sie 2,5 Stunden durchs Handy." → "Dabei bräuchte sie nur eine Stunde am Tag." →
@@ -119,7 +132,19 @@ SKRIPT – Strichmännchen-STORY ohne Stimme (dunkler Look, leuchtende Grafiken,
 - {_cta_rule(product)}
 {_value_rule()}
 - "abspann": Aufforderung für die Schlusskarte, max. 6 Wörter (z. B. "Speicher dir die 60-Minuten-Methode").
-- "hook_text": der Hook in max. 7 Wörtern (für die Übersicht).
+- "hook_text": der Hook in max. 7 Wörtern (für die Übersicht)."""
+
+
+def write_script(cfg, idea, learnings, feedback=None):
+    """Reel: animiertes Strichmännchen-Video mit Szenen (Text im Bild, keine Stimme)."""
+    from agents.strichvideo import MOTIVE, motive_liste
+    product = product_by_id(cfg, idea.get("product_id"))
+    motive = ", ".join(f"{k} ({v})" for k, v in motive_liste(cfg).items())
+    prompt = f"""Du bist ein erfahrener Texter für virale Strichmännchen-Erklärvideos auf Instagram und TikTok (ohne Stimme, Text im Bild).
+{_context(cfg, idea, learnings, feedback)}
+{_hook_rules()}
+
+{_story_rules(cfg, motive, product)}
 
 CAPTION & HASHTAGS:
 {_caption_rules(cfg)}
