@@ -140,7 +140,7 @@ Aktuelle Suchanfragen: {signals['google'][:30]}
 Was bei uns funktioniert: {learnings}
 Schon gemacht (nicht wiederholen): {recent}
 
-Erstelle 10 virale Ideen: 6 Reels und 4 Karussells, gemischt für die Ziele Wachstum, Interaktion und
+Erstelle 10 virale Ideen für animierte Strichmännchen-Videos ohne Stimme (jede mit einem Bild/Motiv, das man animieren kann), gemischt für die Ziele Wachstum, Interaktion und
 Einblick (Build in Public: wie ich mir das Business Schritt für Schritt aufbaue – als Idee formulieren,
 die der Inhaber mit seinen echten Erlebnissen füllt).
 Jede Idee: scroll-stoppender Hook + ein Satz, worum es geht. Keine Einkommensversprechen.

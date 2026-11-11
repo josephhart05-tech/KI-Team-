@@ -87,32 +87,41 @@ auch wenn er nicht auf den Link klickt."""
 
 
 def write_script(cfg, idea, learnings, feedback=None):
-    """Reel: gesprochenes Skript mit Szenen."""
+    """Reel: animiertes Strichmännchen-Video mit Szenen (Text im Bild, keine Stimme)."""
+    from agents.strichvideo import MOTIVE
     product = product_by_id(cfg, idea.get("product_id"))
-    prompt = f"""Du bist ein erfahrener Short-Video-Texter für virale Instagram Reels und TikToks.
+    motive = ", ".join(f"{k} ({v})" for k, v in MOTIVE.items())
+    prompt = f"""Du bist ein erfahrener Texter für virale Strichmännchen-Erklärvideos auf Instagram und TikTok (ohne Stimme, Text im Bild).
 {_context(cfg, idea, learnings, feedback)}
 {_hook_rules()}
 
-SKRIPT:
-- Gesprochener Text insgesamt 60-85 Wörter (ca. 25-35 Sekunden). Kürzer ist besser – jedes Wort muss sitzen.
-- Szene 1 ist der gewählte Hook (wörtlich). 5 bis 7 Szenen, jede = 1-2 kurze Sätze zum Vorlesen.
-- Nach dem Hook sofort Spannung halten ("Und das Wichtigste kommt am Ende"), kein langes Intro.
+SKRIPT (animiertes Strichmännchen-Video OHNE Stimme – alles steht als Text im Bild):
+- 6 bis 8 Szenen, zusammen ca. 30-45 Sekunden. Jede Szene = 1 kurzer Bildschirmtext, max. 12 Wörter.
+- Der Hook steht als "hook_text" groß über Szene 1. Szene 1 greift ihn direkt auf (kein Intro).
+- Erzähle eine kleine Geschichte: Wiedererkennung/Problem → ein Bild oder eine Metapher, die man sich merkt →
+  Lösung mit Namen (z. B. "die 60-Minuten-Methode", "die 20/80-Regel") → Call-to-Action in der letzten Szene.
+- Markiere in jeder Szene 1-3 Schlüsselwörter mit *Sternchen* – sie leuchten im Video gold.
+- "motiv": genau einer dieser Schlüssel (nichts anderes): {motive}
+  Das Motiv soll den Text bildlich zeigen. Nicht zweimal dasselbe Motiv direkt hintereinander.
+- "stichwort": kurzer Text fürs Motiv, max. 14 Zeichen, z. B. "TAG 30", "5 KURSE", "1 STUNDE".
+  Bei "checkliste" 3 kurze Punkte mit | getrennt (z. B. "LERNEN|UMSETZEN|POSTEN"),
+  bei "zwei_wege" 2 Wege mit | (z. B. "KONSUM|UMSETZUNG"). Leer lassen, wenn nichts passt.
 - Konkret und umsetzbar, mit echtem Mehrwert. Keine Einkommensversprechen, keine Euro-Beträge als Versprechen.
 - {_cta_rule(product)}
 {_value_rule()}
-- "hook_text": der Hook als kurzer Bildschirm-Titel, max. 6 Wörter (erscheint groß in den ersten Sekunden).
-- "search" ist ein englischer Suchbegriff (2-4 Wörter) für ein passendes Stock-Video,
-  z. B. "woman typing laptop", "coffee morning desk". Keine Logos, keine Texte.
-  Bevorzugter Bildstil: {cfg['video'].get('bildstil', 'passend zum Thema')}.
+- "hook_text": der Hook als großer Titel, max. 7 Wörter, die stärksten Wörter in *Sternchen*.
 
 CAPTION & HASHTAGS:
 {_caption_rules(cfg)}
 
 Antworte nur als JSON:
 {{"hook_varianten": ["...", "...", "...", "...", "..."], "hook": "...", "hook_text": "...",
-"scenes": [{{"text": "...", "search": "..."}}], "caption_instagram": "...", "caption_tiktok": "...", "hashtags": ["..."]}}"""
+"scenes": [{{"text": "...", "motiv": "...", "stichwort": "..."}}], "caption_instagram": "...", "caption_tiktok": "...", "hashtags": ["..."]}}"""
 
     script = llm.ask(prompt, cfg, json_mode=True)
+    for sc in script.get("scenes", []):
+        if sc.get("motiv") not in MOTIVE:
+            sc["motiv"] = "zahl" if sc.get("stichwort") else "figur_denkt"
     script["format"] = "reel"
     script["product_id"] = product["id"] if product else None
     return script
@@ -154,13 +163,13 @@ def spoken_text(script):
     """Der eigentliche Inhalt als Fließtext (für den Prüfer)."""
     if script.get("format") == "karussell":
         return " ".join(f"{s.get('titel', '')}. {s.get('text', '')}" for s in script.get("slides", []))
-    return " ".join(s["text"].strip() for s in script["scenes"])
+    return " ".join(s["text"].replace("*", "").strip() for s in script["scenes"])
 
 
 def first_line(script):
     if script.get("format") == "karussell":
         return script["slides"][0]["titel"]
-    return script["scenes"][0]["text"]
+    return (script.get("hook_text") or script["scenes"][0]["text"]).replace("*", "")
 
 
 def _hashtags(cfg, script, platform):

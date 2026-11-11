@@ -93,7 +93,7 @@ Aktuelle Suchanfragen der Zielgruppe: {signals['google'][:25]}
 
 ERLAUBTE ZIELE (nur diese verwenden):
 {goal_texts}
-Formate: reel oder karussell (etwa 2/3 Reels, 1/3 Karussells).
+Format: immer "reel" (animiertes Strichmännchen-Video ohne Stimme). Keine Karussells.
 "einblick"-Beiträge brauchen einen echten Tagebuch-Eintrag des Inhabers – plane höchstens 3 pro Woche
 und lege für jeden eine Aufgabe an ("Bis Mi: Tagebuch-Eintrag zu ...").
 

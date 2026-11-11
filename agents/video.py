@@ -227,6 +227,13 @@ def _duration(path, cwd):
 
 
 def render(cfg, script, workdir):
+    if cfg["video"].get("stil", "strichmaennchen") == "strichmaennchen":
+        from agents import strichvideo
+        return strichvideo.render(cfg, script, workdir)
+    return render_stock(cfg, script, workdir)
+
+
+def render_stock(cfg, script, workdir):
     workdir = Path(workdir)
     workdir.mkdir(parents=True, exist_ok=True)
     vcfg = cfg["video"]
