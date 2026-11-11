@@ -1,0 +1,47 @@
+name: 6 - Geschenkheld-Video erstellen
+
+on:
+  schedule:
+    - cron: "37 10 * * *"    # täglich ca. 11:40 Uhr deutsche Zeit
+    - cron: "37 17 * 12 *"   # im Dezember zusätzlich ca. 18:40 Uhr
+  workflow_dispatch:          # zusätzlich per Knopfdruck startbar
+
+concurrency:
+  group: ki-team
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PROFIL: geschenkheld
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: ffmpeg + Schrift installieren (max. 2,5 Min., sonst ffmpeg aus pip)
+        run: timeout 150 bash -c "sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-liberation" || echo "Ubuntu-Paketquelle nicht erreichbar – ffmpeg kommt aus pip (imageio-ffmpeg)"
+      - run: pip install -r requirements.txt
+      - name: Geschenkheld-Video erstellen
+        run: python main.py create
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Gedächtnis speichern
+        if: always()
+        run: |
+          git config user.name "ki-team"
+          git config user.email "ki-team@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || (git commit -m "Neuer Geschenkheld-Entwurf" && git pull --rebase && git push)
