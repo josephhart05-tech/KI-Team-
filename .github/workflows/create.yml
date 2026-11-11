@@ -23,7 +23,8 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-liberation
+      - name: ffmpeg + Schrift installieren (max. 2,5 Min., sonst ffmpeg aus pip)
+        run: timeout 150 bash -c "sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-liberation" || echo "Ubuntu-Paketquelle nicht erreichbar – ffmpeg kommt aus pip (imageio-ffmpeg)"
       - run: pip install -r requirements.txt
       - name: KI-Team arbeiten lassen
         run: python main.py create
