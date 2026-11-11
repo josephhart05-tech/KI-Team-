@@ -50,7 +50,7 @@ def create(dry_run=False):
         goal, fmt = research.next_plan(cfg, posts, settings, has_journal=bool(journal))
     planned_topic = slot.get("thema") if slot else None
     journal_entry = journal[0] if goal == "einblick" and journal else None
-    fmt = os.environ.get("FORCE_FORMAT") or fmt  # Testlauf: Format frei wählbar
+    fmt = "reel"  # Nur noch Strichmännchen-Videos – Karussells kamen nicht an
     print(f"Ziel: {goal} | Format: {fmt}")
     writer = content.write_carousel if fmt == "karussell" else content.write_script
 
@@ -144,8 +144,7 @@ COMMANDS = [
     ("tagebuch", "Was du gemacht hast, z. B. /tagebuch Heute 3 Reels geplant, 2 neue Follower"),
     ("webinar", "Webinar-Beiträge an/aus: /webinar an"),
     ("ziel", "Ziel für den nächsten Beitrag: wachstum, einblick, interaktion"),
-    ("format", "Format für den nächsten Beitrag: reel oder karussell"),
-    ("ideen", "10 virale Reel- und Karussell-Ideen"),
+    ("ideen", "10 virale Video-Ideen"),
     ("pause", "Automatische Videos anhalten"),
     ("weiter", "Automatische Videos wieder starten"),
     ("status", "Überblick über deine Videos"),
@@ -231,11 +230,7 @@ def _handle_command(text, state, posts, cfg):
         settings["naechstes_ziel"] = choice
         return f"🎯 Der nächste Beitrag hat das Ziel: {GOAL_LABELS.get(choice, choice)}"
     if cmd == "format":
-        choice = arg.lower().replace("carousel", "karussell")
-        if choice not in ("reel", "karussell"):
-            return "Bitte reel oder karussell angeben, z. B. /format karussell"
-        settings["naechstes_format"] = choice
-        return f"🖼 Der nächste Beitrag wird ein {'Karussell' if choice == 'karussell' else 'Reel'}."
+        return "🎬 Es gibt nur noch ein Format: Strichmännchen-Videos ohne Stimme. Karussells sind abgeschaltet."
     if cmd == "ideen":
         ideas = research.generate_ideas(cfg, posts, load_learnings())
         lines = [f"{i}. [{x.get('format', '')} · {x.get('ziel', '')}]\n„{x.get('hook', '')}“\n{x.get('inhalt', '')}"

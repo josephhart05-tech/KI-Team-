@@ -60,7 +60,7 @@ produkte:
 # - "monetarisierung" kommt erst dran, wenn du es per /webinar an freischaltest (sonst übersprungen).
 strategie:
   ziel_rotation: ["wachstum", "einblick", "interaktion", "wachstum", "einblick", "monetarisierung"]
-  format_rotation: ["reel", "reel", "karussell"]
+  format_rotation: ["reel"]   # nur noch Strichmännchen-Videos (Karussells abgeschaltet)
   # Serien-Abzeichen (z. B. "DF-TAGEBUCH #5") in Video, Karussell und Caption. true = anzeigen, false = aus.
   serien_anzeigen: false
   serien:
@@ -112,6 +112,10 @@ recherche:
     - "InstagramMarketing"
 
 video:
+  # "strichmaennchen" = animierte Strichmännchen, Text im Bild, eigene Musik, keine Stimme
+  # "stock" = alter Stil (KI-Stimme + Pixabay-Videos)
+  stil: "strichmaennchen"
+  musik_stimmung: "ruhig"        # "ruhig" oder "schnell"
   stimme: "de-DE-ConradNeural"     # Alternativen: de-DE-KatjaNeural, de-DE-FlorianMultilingualNeural
   sprechtempo: "+8%"
   schriftart: "Arial"
