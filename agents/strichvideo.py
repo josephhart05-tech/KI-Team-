@@ -59,6 +59,16 @@ def _font(size):
     return _fonts[size]
 
 
+def _ffmpeg():
+    """ffmpeg vom System – oder aus pip (imageio-ffmpeg), falls apt bei GitHub ausfällt."""
+    import shutil
+    exe = shutil.which("ffmpeg")
+    if exe:
+        return exe
+    import imageio_ffmpeg
+    return imageio_ffmpeg.get_ffmpeg_exe()
+
+
 def _ease(x):
     x = max(0.0, min(1.0, x))
     return 1 - (1 - x) ** 3
@@ -467,7 +477,7 @@ def render(cfg, script, workdir):
 
     vig = _vignette()
     base = _base(vig)
-    cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
+    cmd = [_ffmpeg(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
            "-r", str(FPS), "-i", "-", "-i", "musik.wav", "-map", "0:v", "-map", "1:a",
            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
            "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", "final.mp4"]
@@ -506,7 +516,7 @@ def render(cfg, script, workdir):
         raise RuntimeError("ffmpeg-Fehler beim Strichmännchen-Video")
     # Titelbild (Hook-Szene, Mitte)
     try:
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{min(lens[0] * 0.9, 2.5):.2f}",
+        subprocess.run([_ffmpeg(), "-y", "-loglevel", "error", "-ss", f"{min(lens[0] * 0.9, 2.5):.2f}",
                         "-i", "final.mp4", "-frames:v", "1", "titelbild.jpg"], cwd=workdir, check=True)
     except Exception:
         pass
