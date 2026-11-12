@@ -2042,5 +2042,99 @@
     "caption_instagram": "1 Stunde Scrollen vs. 1 Faceless Reel posten: Welche Entscheidung triffst du heute Feierabend? 📲\n\nWir alle haben die gleichen 24 Stunden. Wer nach dem Job 1 Stunde nutzt, baut sich langfristig etwas Eigenes auf – ganz ohne Kamera.\n\n💡 Nutze Canva für einfache Grafiken und erstelle deinen ersten Beitrag.\n\nWelcher Typ bist du nach dem Feierabend? Kommentiere 1 oder 2! 👇\n\n#nebeneinkommen #affiliatemarketingdeutsch #facelesscontent #ohnegesicht #dfdigitalefreiheit",
     "caption_tiktok": "1 Stunde Scrollen oder 1 Reel posten? Welcher Typ bist du nach dem Job? Kommentiere 1 oder 2! 👇\n\n#nebeneinkommen #affiliatemarketingdeutsch #facelesscontent #dfdigitalefreiheit",
     "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1794494587/ki-team/qhjgt4gouncfagfaobt6.mp4"
+  },
+  {
+    "id": "20261112-1834",
+    "status": "pending",
+    "created_at": "2026-11-12T18:35:42+00:00",
+    "profil": "geschenkheld",
+    "goal": "wachstum",
+    "format": "reel",
+    "topic": "Wichtelgeschenke unter 10 Euro für Kollegen & Bekannte",
+    "angle": "POV: Du musst morgen beim Wichteln mitmachen, kennst den Kollegen kaum und hast maximal 10 Euro Budget (Kein Stress, Geschenkheld rettet dich).",
+    "hook": "Morgen Wichteln und noch keine Ahnung?",
+    "product_id": "geschenkheld",
+    "script": {
+      "hook_varianten": [
+        "Niemand sagt dir, dass Wichteln für 10 Euro super einfach ist.",
+        "Hör auf, deinen Kollegen morgen schon wieder Tassen zu schenken.",
+        "Du brauchst kein Vermögen, um beim Wichteln zu punkten.",
+        "3 Geniale Wichtelgeschenke unter 10 Euro für deinen Kollegen.",
+        "Morgen ist Wichteln und du hast absolut keine Ahnung?"
+      ],
+      "hook": "Morgen ist Wichteln und du hast absolut keine Ahnung?",
+      "hook_text": "Morgen Wichteln und noch keine Ahnung?",
+      "abspann": "Mehr Ideen auf geschenkheld.com",
+      "scenes": [
+        {
+          "visual": "uhr",
+          "titel": "MORGEN WICHTELN.",
+          "titel_farbe": "rot",
+          "text": "Morgen ist *Wichteln* und du hast ~null Idee?~"
+        },
+        {
+          "visual": "blasen",
+          "fragen": [
+            "Welcher Kollege?",
+            "Unter 10 Euro?",
+            "Was schenken?!"
+          ],
+          "text": "Ben kennt seinen Wichtel-Partner *kaum.*"
+        },
+        {
+          "visual": "panik",
+          "titel": "PANIK.",
+          "text": "Der ~Last-Minute-Stress~ kickt jetzt richtig rein."
+        },
+        {
+          "visual": "held",
+          "text": "Doch dann kommt *Geschenkheld* angeflogen!"
+        },
+        {
+          "visual": "held_gross",
+          "titel": "GESCHENKHELD",
+          "text": "Kein Stress! Hier sind *3 Top-Ideen.*"
+        },
+        {
+          "visual": "ideen",
+          "titel": "WICHTELN UNTER 10 €",
+          "regeln": [
+            [
+              "8 €",
+              "Gourmet-Gewürzmischung",
+              "Passt perfekt für jeden Kaffeeküchen-Chef"
+            ],
+            [
+              "9 €",
+              "Lustiges Kartenspiel",
+              "Sorgt sofort für Stimmung im Team"
+            ],
+            [
+              "7 €",
+              "Schreibtisch-Mini-Pflanze",
+              "Bringt Leben ins graue Büro"
+            ]
+          ],
+          "text": ""
+        },
+        {
+          "visual": "baum",
+          "text": "Und Ben? Ist der *Held* beim ~Büro-Wichteln!~"
+        }
+      ],
+      "caption_instagram": "Morgen ist Wichteln im Büro und du hast noch gar nichts? 😱 Keine Panik!\n\nMit diesen Wichtel-Ideen unter 10 Euro rettest du den Tag:\n👉 Leckeres Gourmet-Gewürz für Genießer\n👉 Ein unterhaltsames Mini-Spiel für die Pause\n👉 Eine süße Pflanze für den Schreibtisch\n\nSpeichere diesen Beitrag für die nächste Wichtelrunde! 💡",
+      "caption_tiktok": "Morgen Wichteln im Büro und keine Idee? Hier sind 3 Rettungsideen unter 10 €! Speicher den Beitrag 💡",
+      "hashtags": [
+        "geschenkideen",
+        "wichteln",
+        "wichtelgeschenk",
+        "kollegengeschenk"
+      ],
+      "format": "reel",
+      "product_id": "geschenkheld"
+    },
+    "caption_instagram": "Werbung | enthält Affiliate-Links\n\nMorgen ist Wichteln im Büro und du hast noch gar nichts? 😱 Keine Panik!\n\nMit diesen Wichtel-Ideen unter 10 Euro rettest du den Tag:\n👉 Leckeres Gourmet-Gewürz für Genießer\n👉 Ein unterhaltsames Mini-Spiel für die Pause\n👉 Eine süße Pflanze für den Schreibtisch\n\nSpeichere diesen Beitrag für die nächste Wichtelrunde! 💡\n\n#geschenkideen #wichteln #wichtelgeschenk #kollegengeschenk #geschenkheld",
+    "caption_tiktok": "Morgen Wichteln im Büro und keine Idee? Hier sind 3 Rettungsideen unter 10 €! Speicher den Beitrag 💡\n\n#geschenkideen #wichteln #wichtelgeschenk #geschenkheld\n\n#werbung #affiliate",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1794508539/ki-team/msi2g24ejaqdrdkoyr9p.mp4"
   }
 ]
