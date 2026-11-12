@@ -2136,5 +2136,99 @@
     "caption_instagram": "Werbung | enthält Affiliate-Links\n\nMorgen ist Wichteln im Büro und du hast noch gar nichts? 😱 Keine Panik!\n\nMit diesen Wichtel-Ideen unter 10 Euro rettest du den Tag:\n👉 Leckeres Gourmet-Gewürz für Genießer\n👉 Ein unterhaltsames Mini-Spiel für die Pause\n👉 Eine süße Pflanze für den Schreibtisch\n\nSpeichere diesen Beitrag für die nächste Wichtelrunde! 💡\n\n#geschenkideen #wichteln #wichtelgeschenk #kollegengeschenk #geschenkheld",
     "caption_tiktok": "Morgen Wichteln im Büro und keine Idee? Hier sind 3 Rettungsideen unter 10 €! Speicher den Beitrag 💡\n\n#geschenkideen #wichteln #wichtelgeschenk #geschenkheld\n\n#werbung #affiliate",
     "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1794508539/ki-team/msi2g24ejaqdrdkoyr9p.mp4"
+  },
+  {
+    "id": "20261112-2140",
+    "status": "pending",
+    "created_at": "2026-11-12T21:41:38+00:00",
+    "profil": "df",
+    "goal": "wachstum",
+    "format": "reel",
+    "topic": "Digistore24 und die Angst vor der Abzocke: Warum Skepsis völlig normal ist (und wie du seriöse Produkte erkennst)",
+    "angle": "Mythos vs. Wahrheit: Ist Digistore24 wirklich eine Betrugsmasche oder einfach nur eine Plattform wie Amazon für digitale Produkte?",
+    "hook": "Digistore24: Betrug oder sicher?",
+    "product_id": null,
+    "script": {
+      "hook_varianten": [
+        "Niemand sagt dir, dass Digistore24 komplett seriös ist, wenn du weißt, worauf du achten musst.",
+        "Hör auf, jede Plattform für Digistore24-Betrug zu halten, nur weil du skeptisch bist.",
+        "Du brauchst keine Angst vor Digistore24 haben, um online zu starten.",
+        "3 Gründe, warum die Skepsis gegenüber Digistore24 völlig normal ist.",
+        "Du willst nebenbei was aufbauen, hast aber Angst vor unseriösen Plattformen?"
+      ],
+      "hook": "Niemand sagt dir, dass Digistore24 seriös ist.",
+      "hook_text": "Digistore24: Betrug oder sicher?",
+      "abspann": "Speicher dir diese 3 Sicherheits-Regeln.",
+      "scenes": [
+        {
+          "visual": "uhr",
+          "titel": "ANGST VOR ABZOCKE?",
+          "titel_farbe": "rot",
+          "text": "18 Uhr. *Tom* zweifelt an der *Seriosität* von Digistore24."
+        },
+        {
+          "visual": "frage",
+          "titel": "MAßSTAB",
+          "titel_farbe": "weiss",
+          "text": "Überall gibt es schwarze Schafe und *viele* Warnungen."
+        },
+        {
+          "visual": "vergleich",
+          "titel": "DER VERGLEICH",
+          "titel_farbe": "weiss",
+          "links": "Amazon",
+          "rechts": "Digistore",
+          "text": "Es ist im Grunde wie *Amazon* für digitale Produkte."
+        },
+        {
+          "visual": "regeln",
+          "titel": "SERIÖSE PRODUKTE",
+          "regeln": [
+            [
+              "1.",
+              "Stornoquote",
+              "Achte auf eine niedrige Rückgabequote."
+            ],
+            [
+              "2.",
+              "Mehrwert",
+              "Das Produkt muss echte Probleme lösen."
+            ],
+            [
+              "3.",
+              "Vendor",
+              "Prüfe den Anbieter und den Support."
+            ]
+          ],
+          "text": ""
+        },
+        {
+          "visual": "treppe",
+          "titel": "ERKENNTNIS",
+          "titel_farbe": "gold",
+          "label": "SICHER STARTEN",
+          "text": "Mit etwas *Wissen* wird Skepsis zu einem klaren *Plan*."
+        },
+        {
+          "visual": "ende",
+          "titel": "FAZIT",
+          "titel_farbe": "weiss",
+          "text": "Informiere dich *vorher*, statt blind zu *vertrauen*."
+        }
+      ],
+      "caption_instagram": "Digistore24 und die Angst vor Abzocke – völlig normal, wenn man neu startet.\n\n✅ Plattform wie Amazon für digitale Produkte\n✅ Stornoquote und Support prüfen\n✅ Mit echtem Mehrwert starten\n\nSpeicher diesen Beitrag, wenn dir das weitergeholfen hat.",
+      "caption_tiktok": "Ist Digistore24 Betrug? So erkennst du seriöse Produkte. Speichern für später!",
+      "hashtags": [
+        "affiliatemarketing",
+        "digitale produkte",
+        "seriös online",
+        "digistore24"
+      ],
+      "format": "reel",
+      "product_id": null
+    },
+    "caption_instagram": "Digistore24 und die Angst vor Abzocke – völlig normal, wenn man neu startet.\n\n✅ Plattform wie Amazon für digitale Produkte\n✅ Stornoquote und Support prüfen\n✅ Mit echtem Mehrwert starten\n\nSpeicher diesen Beitrag, wenn dir das weitergeholfen hat.\n\n#affiliatemarketing #digitaleprodukte #seriösonline #digistore24 #dfdigitalefreiheit",
+    "caption_tiktok": "Ist Digistore24 Betrug? So erkennst du seriöse Produkte. Speichern für später!\n\n#affiliatemarketing #digitaleprodukte #seriösonline #dfdigitalefreiheit",
+    "video_url": "https://res.cloudinary.com/lo3oukih/video/upload/v1794519696/ki-team/qnhjopgjhze59pkn6n9a.mp4"
   }
 ]
