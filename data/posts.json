@@ -1515,7 +1515,7 @@
   },
   {
     "id": "20261110-1430",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-10T14:30:21+00:00",
     "goal": "wachstum",
     "format": "karussell",
@@ -1579,7 +1579,7 @@
   },
   {
     "id": "20261110-2108",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-10T21:08:37+00:00",
     "goal": "wachstum",
     "format": "karussell",
@@ -1639,7 +1639,7 @@
   },
   {
     "id": "20261111-0107",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-11T01:08:42+00:00",
     "goal": "wachstum",
     "format": "reel",
