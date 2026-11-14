@@ -1948,7 +1948,7 @@
   },
   {
     "id": "20261112-1441",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-12T14:43:10+00:00",
     "profil": "df",
     "goal": "interaktion",
@@ -2045,7 +2045,7 @@
   },
   {
     "id": "20261112-1834",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-12T18:35:42+00:00",
     "profil": "geschenkheld",
     "goal": "wachstum",
@@ -2139,7 +2139,7 @@
   },
   {
     "id": "20261112-2140",
-    "status": "pending",
+    "status": "expired",
     "created_at": "2026-11-12T21:41:38+00:00",
     "profil": "df",
     "goal": "wachstum",
